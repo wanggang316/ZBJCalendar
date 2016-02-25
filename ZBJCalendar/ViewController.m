@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #import "ZBJCalendarView.h"
 
-@interface ViewController ()
+@interface ViewController ()<ZBJCalendarDelegate>
 
 @property (nonatomic, strong) ZBJCalendarView *calendarView;
 

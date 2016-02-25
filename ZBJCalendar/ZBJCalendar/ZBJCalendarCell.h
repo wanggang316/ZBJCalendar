@@ -13,4 +13,6 @@
 
 @property (nonatomic, strong) ZBJDay *day;
 
+@property (nonatomic, strong) UILabel *dayLabel;
+
 @end

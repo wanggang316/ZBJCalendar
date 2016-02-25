@@ -19,6 +19,7 @@
 		32F7EBF91C16779F00ED2DA4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 32F7EBF71C16779F00ED2DA4 /* LaunchScreen.storyboard */; };
 		32F7EC041C16779F00ED2DA4 /* ZBJCalendarTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 32F7EC031C16779F00ED2DA4 /* ZBJCalendarTests.m */; };
 		32F7EC0F1C16779F00ED2DA4 /* ZBJCalendarUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 32F7EC0E1C16779F00ED2DA4 /* ZBJCalendarUITests.m */; };
+		DD787F091C7EA879008360A1 /* ZBJCalendarHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = DD787F081C7EA879008360A1 /* ZBJCalendarHeaderView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +64,8 @@
 		32F7EC0A1C16779F00ED2DA4 /* ZBJCalendarUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZBJCalendarUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		32F7EC0E1C16779F00ED2DA4 /* ZBJCalendarUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZBJCalendarUITests.m; sourceTree = "<group>"; };
 		32F7EC101C16779F00ED2DA4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DD787F071C7EA879008360A1 /* ZBJCalendarHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBJCalendarHeaderView.h; sourceTree = "<group>"; };
+		DD787F081C7EA879008360A1 /* ZBJCalendarHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZBJCalendarHeaderView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +98,8 @@
 			children = (
 				323F79201C7D8B4100479C2D /* ZBJCalendarView.h */,
 				323F79211C7D8B4100479C2D /* ZBJCalendarView.m */,
+				DD787F071C7EA879008360A1 /* ZBJCalendarHeaderView.h */,
+				DD787F081C7EA879008360A1 /* ZBJCalendarHeaderView.m */,
 				323F79291C7D8F6600479C2D /* ZBJCalendarSectionHeader.h */,
 				323F792A1C7D8F6600479C2D /* ZBJCalendarSectionHeader.m */,
 				323F79231C7D8B9A00479C2D /* ZBJCalendarCell.h */,
@@ -304,6 +309,7 @@
 				323F79221C7D8B4100479C2D /* ZBJCalendarView.m in Sources */,
 				323F79251C7D8B9A00479C2D /* ZBJCalendarCell.m in Sources */,
 				323F79281C7D8C2700479C2D /* ZBJCalendarEntities.m in Sources */,
+				DD787F091C7EA879008360A1 /* ZBJCalendarHeaderView.m in Sources */,
 				323F792B1C7D8F6600479C2D /* ZBJCalendarSectionHeader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
