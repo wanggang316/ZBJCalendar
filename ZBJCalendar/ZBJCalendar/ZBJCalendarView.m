@@ -88,13 +88,11 @@ static NSString *headerIdentifier = @"header";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     ZBJCalendarCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"identifier" forIndexPath:indexPath];
     NSDate *date = [self dateAtIndexPath:indexPath];
-    
     if (date) {
         NSCalendar *calendar = [NSDate gregorianCalendar];
-        NSInteger day = [calendar component:NSCalendarUnitDay fromDate:date];
-        cell.dayLabel.text = [NSString stringWithFormat:@"%ld", day];
+        cell.day = [calendar component:NSCalendarUnitDay fromDate:date];
     } else {
-        cell.dayLabel.text = nil;
+        cell.day = 0;
     }
     return cell;
 }
@@ -113,8 +111,8 @@ static NSString *headerIdentifier = @"header";
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
-    CGFloat w = [UIScreen mainScreen].bounds.size.width;
-    return CGSizeMake(w, 50);
+    CGFloat w = collectionView.bounds.size.width;
+    return CGSizeMake(w, 60);
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath

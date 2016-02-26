@@ -7,12 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ZBJCalendarEntities.h"
 
 @interface ZBJCalendarCell : UICollectionViewCell
 
-@property (nonatomic, strong) ZBJDay *day;
+@property (nonatomic, assign) NSInteger day;
 
-@property (nonatomic, strong) UILabel *dayLabel;
 
 @end

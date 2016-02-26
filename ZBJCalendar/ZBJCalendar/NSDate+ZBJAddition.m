@@ -14,6 +14,7 @@ const char * const JmoLocaleStoreKey = "jmo.locale";
 
 @implementation NSDate (ZBJAddition)
 
+#pragma mark -
 + (void)setGregorianCalendar:(NSCalendar *)gregorianCalendar
 {
     objc_setAssociatedObject(self, JmoCalendarStoreKey, gregorianCalendar, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -49,8 +50,6 @@ const char * const JmoLocaleStoreKey = "jmo.locale";
 
 
 
-
-
 #pragma mark -
 + (NSInteger)numberOfMonthsFormDate:(NSDate *)fromDate toDate:(NSDate *)toDate {
     NSCalendar *calendar = [self gregorianCalendar];
@@ -64,6 +63,7 @@ const char * const JmoLocaleStoreKey = "jmo.locale";
     return range.length;
 }
 
+#pragma mark -
 - (NSDate *)firstDateOfMonth {
     NSCalendar *calendar = [self.class gregorianCalendar];
     NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:self];
@@ -81,10 +81,7 @@ const char * const JmoLocaleStoreKey = "jmo.locale";
 
 - (NSInteger)weekday {
     NSCalendar *calendar = [self.class gregorianCalendar];
-    
-    NSDateComponents *com = [calendar components:NSCalendarUnitWeekday fromDate:self];
-    NSLog(@"=============> %@ ------->  %ld", self, com.weekday);
-    return com.weekday;
+    return [calendar component:NSCalendarUnitWeekday fromDate:self];
 }
 
 
