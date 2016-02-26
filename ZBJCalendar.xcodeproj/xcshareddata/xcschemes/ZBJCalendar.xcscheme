@@ -20,6 +20,20 @@
                ReferencedContainer = "container:ZBJCalendar.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "32F7EBFE1C16779F00ED2DA4"
+               BuildableName = "ZBJCalendarTests.xctest"
+               BlueprintName = "ZBJCalendarTests"
+               ReferencedContainer = "container:ZBJCalendar.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
