@@ -7,11 +7,13 @@
 //
 
 #import "ViewController.h"
-#import "ZBJCalendarView.h"
+#import "CalendarViewController.h"
 
-@interface ViewController ()<ZBJCalendarDelegate>
+static NSString * const ZBJCellIdentifier = @"cell";
 
-@property (nonatomic, strong) ZBJCalendarView *calendarView;
+@interface ViewController () <UITableViewDataSource, UITableViewDelegate>
+
+@property (nonatomic, strong) NSArray *tableData;
 
 @end
 
@@ -19,42 +21,39 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    NSCalendar *calendar = [NSCalendar currentCalendar];
-    [calendar setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT"]];
-    
-    NSDateComponents *components = [NSDateComponents new];
-    components.month = 2;
-    components.day = 26;
-    components.year = 2016;
-    NSDate *fromDate = [calendar dateFromComponents:components];
-    components.year = 2017;
-    components.month = 12;
-    components.day = 1;
-    NSDate *toDate = [calendar dateFromComponents:components];
-    
-    self.calendarView.firstDate = fromDate;
-    self.calendarView.lastDate = toDate;
-    
-    [self.view addSubview:self.calendarView];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 
-#pragma mark -
-- (ZBJCalendarView *)calendarView {
-    if (!_calendarView) {
-        CGFloat w = [UIScreen mainScreen].bounds.size.width;
-        CGFloat h = [UIScreen mainScreen].bounds.size.height;
-        _calendarView = [[ZBJCalendarView alloc] initWithFrame:CGRectMake(0, 80, w, h - 100)];
-        _calendarView.backgroundColor = [UIColor lightGrayColor];
+#pragma mark - UITableViewDataSource
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.tableData.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ZBJCellIdentifier forIndexPath:indexPath];
+    cell.textLabel.text = self.tableData[indexPath.row];
+    return cell;
+}
+
+
+#pragma mark - UITableViewDelegate
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    CalendarViewController *calendarViewController = [CalendarViewController new];
+    calendarViewController.title = self.tableData[indexPath.row];
+    [self.navigationController pushViewController:calendarViewController animated:YES];
+}
+
+#pragma mark - getter
+- (NSArray *)tableData {
+    if (!_tableData) {
+        _tableData = @[@"General", @"Today", @"Selected"];
     }
-    return _calendarView;
+    return _tableData;
 }
-
 
 @end
