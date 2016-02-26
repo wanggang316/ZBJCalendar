@@ -10,4 +10,6 @@
 
 @interface ZBJCalendarSectionHeader : UICollectionReusableView
 
+@property (nonatomic, strong) UILabel *calendarLabel;
+
 @end

@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ZBJCalendarHeaderView : UICollectionReusableView
+@interface ZBJCalendarHeaderView : UIView
 
-@property (nonatomic, strong) UILabel *calendarLabel;
+
 
 @end

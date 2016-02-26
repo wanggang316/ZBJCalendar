@@ -8,6 +8,7 @@
 
 #import "CalendarViewController.h"
 #import "ZBJCalendarView.h"
+#import "UINavigationBar+ZBJAddition.h"
 
 @interface CalendarViewController() <ZBJCalendarDelegate>
 
@@ -17,11 +18,21 @@
 
 @implementation CalendarViewController
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.navigationController.navigationBar hidenHairLine:YES];
+}
+
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self.navigationController.navigationBar hidenHairLine:NO];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor whiteColor];
+   
     
     NSCalendar *calendar = [NSCalendar currentCalendar];
     [calendar setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT"]];

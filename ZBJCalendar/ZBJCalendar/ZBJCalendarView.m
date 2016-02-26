@@ -8,12 +8,13 @@
 
 #import "ZBJCalendarView.h"
 #import "ZBJCalendarCell.h"
-#import "ZBJCalendarHeaderView.h"
+#import "ZBJCalendarSectionHeader.h"
 #import "NSDate+ZBJAddition.h"
+#import "ZBJCalendarHeaderView.h"
 
 @interface ZBJCalendarView() <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 
-@property (nonatomic, strong) UIView *headerView;
+@property (nonatomic, strong) ZBJCalendarHeaderView *headerView;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSMutableArray *calendarData;
 
@@ -67,8 +68,15 @@ static NSString *headerIdentifier = @"header";
     self = [super initWithFrame:frame];
     if (self) {
         [self addSubview:self.collectionView];
+        [self addSubview:self.headerView];
     }
     return self;
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    self.headerView.frame = CGRectMake(0, 64, CGRectGetWidth(self.frame), 20);
+    self.collectionView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
 }
 
 #pragma mark UICollectionViewDataSource
@@ -100,13 +108,13 @@ static NSString *headerIdentifier = @"header";
 #pragma mark UICollectionViewDelegateFlowLayout
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
-    ZBJCalendarHeaderView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:headerIdentifier forIndexPath:indexPath];
+    ZBJCalendarSectionHeader *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:headerIdentifier forIndexPath:indexPath];
     
     NSDate *firstDateOfMonth = [self dateForFirstDayInSection:indexPath.section];
     
     NSCalendar *calendar = [NSDate gregorianCalendar];
     NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:firstDateOfMonth];
-    headerView.calendarLabel.text = [NSString stringWithFormat:@"%ld年%ld月", components.year, components.month];
+    headerView.calendarLabel.text = [NSString stringWithFormat:@" %ld年%ld月", components.year, components.month];
     return headerView;
 }
 
@@ -122,7 +130,16 @@ static NSString *headerIdentifier = @"header";
     return CGSizeMake(cellWidth, cellWidth);
 }
 
-#pragma mark - Getters & Setters
+#pragma mark - getters
+
+- (ZBJCalendarHeaderView *)headerView {
+    if (!_headerView) {
+        _headerView = [[ZBJCalendarHeaderView alloc] initWithFrame:CGRectMake(0, 64, CGRectGetWidth(self.frame), 20)];
+    }
+    return _headerView;
+}
+
+
 
 - (UICollectionView *)collectionView {
     if (!_collectionView) {
@@ -134,7 +151,7 @@ static NSString *headerIdentifier = @"header";
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
          [_collectionView registerClass:[ZBJCalendarCell class] forCellWithReuseIdentifier:@"identifier"];
-        [_collectionView registerClass:[ZBJCalendarHeaderView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:headerIdentifier];
+        [_collectionView registerClass:[ZBJCalendarSectionHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:headerIdentifier];
     }
     return _collectionView;
 }
