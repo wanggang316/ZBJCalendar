@@ -20,6 +20,22 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    [calendar setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT"]];
+    
+    NSDateComponents *components = [NSDateComponents new];
+    components.month = 2;
+    components.day = 26;
+    components.year = 2016;
+    NSDate *fromDate = [calendar dateFromComponents:components];
+    components.year = 2017;
+    components.month = 12;
+    components.day = 1;
+    NSDate *toDate = [calendar dateFromComponents:components];
+    
+    self.calendarView.firstDate = fromDate;
+    self.calendarView.lastDate = toDate;
+    
     [self.view addSubview:self.calendarView];
 }
 

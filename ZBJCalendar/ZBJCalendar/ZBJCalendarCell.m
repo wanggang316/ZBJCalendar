@@ -17,10 +17,10 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        CGFloat w = [UIScreen mainScreen].bounds.size.width;
-        self.dayLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 5,(w - 80)/7,30)];
+        self.dayLabel = [[UILabel alloc] initWithFrame:self.bounds];
+        self.dayLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:_dayLabel];
-        _dayLabel.backgroundColor = [UIColor redColor];
+        _dayLabel.backgroundColor = [UIColor colorWithRed:249.0f/255.0f green:249.0f/255.0f blue:249.0f/255.0f alpha:1.0];
         self.backgroundColor = [UIColor greenColor];
     }
     return self;
