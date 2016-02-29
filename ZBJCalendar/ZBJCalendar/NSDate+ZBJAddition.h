@@ -16,10 +16,11 @@
 + (NSInteger)numberOfMonthsFormDate:(NSDate *)fromDate toDate:(NSDate *)toDate;
 + (NSInteger)numberOfDaysInMonth:(NSDate *)date;
 
-
 - (NSDate *)firstDateOfMonth;
 
 - (NSDate *)lastDateOfMonth;
 
 - (NSInteger)weekday;
+
+- (BOOL)isToday;
 @end

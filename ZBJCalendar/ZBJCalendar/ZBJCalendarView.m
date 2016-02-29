@@ -20,6 +20,7 @@
 
 @property (nonatomic, strong) NSCalendar *calendar;
 
+@property (nonatomic, strong) NSIndexPath *selectedIndexPath;
 
 @end
 
@@ -99,11 +100,65 @@ static NSString *headerIdentifier = @"header";
     if (date) {
         NSCalendar *calendar = [NSDate gregorianCalendar];
         cell.day = [calendar component:NSCalendarUnitDay fromDate:date];
+        cell.isToday = [date isToday];
     } else {
         cell.day = 0;
+        cell.isToday = NO;
     }
+    
+    cell.selected = [self.selectedIndexPath isEqual:indexPath];
+    
     return cell;
 }
+
+#pragma mark - UICollectionViewDelegate
+
+//- (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
+//    return NO;
+//}
+
+
+//- (void)collectionView:(UICollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
+//    ZBJCalendarCell *cell = (ZBJCalendarCell *)[collectionView cellForItemAtIndexPath:indexPath];
+//    cell.selected = NO;
+//}
+
+//- (void)collectionView:(UICollectionView *)collectionView didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
+//    ZBJCalendarCell *cell = (ZBJCalendarCell *)[collectionView cellForItemAtIndexPath:indexPath];
+//    cell.selected = YES;
+//}
+
+
+
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    if ([self.selectedIndexPath isEqual:indexPath]) {
+        return NO;
+    }
+    return YES;
+}
+
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
+    if ([self.selectedIndexPath isEqual:indexPath]) {
+        return YES;
+    }
+    return NO;
+}
+
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+//    ZBJCalendarCell *cell = (ZBJCalendarCell *)[collectionView cellForItemAtIndexPath:indexPath];
+//    cell.selected = YES;
+    self.selectedIndexPath = indexPath;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
+//    ZBJCalendarCell *cell = (ZBJCalendarCell *)[collectionView cellForItemAtIndexPath:indexPath];
+//    cell.selected = NO;
+}
+
+
+
+
 
 #pragma mark UICollectionViewDelegateFlowLayout
 

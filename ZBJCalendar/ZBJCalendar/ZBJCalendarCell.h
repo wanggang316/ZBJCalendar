@@ -11,6 +11,6 @@
 @interface ZBJCalendarCell : UICollectionViewCell
 
 @property (nonatomic, assign) NSInteger day;
-
+@property (nonatomic, assign) BOOL isToday;
 
 @end

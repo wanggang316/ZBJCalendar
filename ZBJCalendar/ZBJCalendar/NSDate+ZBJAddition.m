@@ -84,6 +84,18 @@ const char * const JmoLocaleStoreKey = "jmo.locale";
     return [calendar component:NSCalendarUnitWeekday fromDate:self];
 }
 
+- (BOOL)isToday {
+    NSCalendar *calendar = [self.class gregorianCalendar];
+    NSDateComponents *otherDay = [calendar components:NSCalendarUnitEra | NSCalendarUnitYear |NSCalendarUnitMonth | NSCalendarUnitDay fromDate:self];
+    NSDateComponents *today = [[NSCalendar currentCalendar] components:NSCalendarUnitEra | NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:[NSDate date]];
+    if([today day] == [otherDay day] &&
+       [today month] == [otherDay month] &&
+       [today year] == [otherDay year] &&
+       [today era] == [otherDay era]) {
+        return YES;
+    }
+    return NO;
+}
 
 
 
