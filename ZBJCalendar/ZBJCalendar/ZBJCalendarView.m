@@ -10,7 +10,12 @@
 #import "ZBJCalendarCell.h"
 #import "ZBJCalendarSectionHeader.h"
 #import "NSDate+ZBJAddition.h"
+#import "NSDate+IndexPath.h"
 #import "ZBJCalendarHeaderView.h"
+#import "ZBJCalendarSingleDelegate.h"
+#import "ZBJCalendarMultiDelegate.h"
+
+static NSString * const headerIdentifier = @"header";
 
 @interface ZBJCalendarView() <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 
@@ -20,40 +25,40 @@
 
 @property (nonatomic, strong) NSCalendar *calendar;
 
-@property (nonatomic, strong) NSIndexPath *selectedIndexPath;
+
 
 @end
 
-static NSString *headerIdentifier = @"header";
+
 
 @implementation ZBJCalendarView
 
-- (NSDate *)dateForFirstDayInSection:(NSInteger)section {
-    
-    NSCalendar *calendar = [NSDate gregorianCalendar];
-    
-    NSDateComponents *dateComponents = [NSDateComponents new];
-    dateComponents.month = section;
-    return [calendar dateByAddingComponents:dateComponents toDate:[self.firstDate firstDateOfMonth] options:0];
-}
-
-- (NSDate *)dateAtIndexPath:(NSIndexPath *)indexPath {
-    NSDate *firstDay = [self dateForFirstDayInSection:indexPath.section];
-    NSInteger weekDay = [firstDay weekday];
-    NSDate *dateToReturn = nil;
-    
-    if (indexPath.row < (weekDay-1)) {
-        dateToReturn = nil;
-    } else {
-        NSCalendar *calendar = [NSDate gregorianCalendar];
-
-        NSDateComponents *components = [calendar components:NSCalendarUnitMonth | NSCalendarUnitDay fromDate:firstDay];
-        [components setDay:indexPath.row - (weekDay - 1)];
-        [components setMonth:indexPath.section];
-        dateToReturn = [calendar dateByAddingComponents:components toDate:[self.firstDate firstDateOfMonth] options:0];
-    }
-    return dateToReturn;
-}
+//- (NSDate *)dateForFirstDayInSection:(NSInteger)section {
+//    
+//    NSCalendar *calendar = [NSDate gregorianCalendar];
+//    
+//    NSDateComponents *dateComponents = [NSDateComponents new];
+//    dateComponents.month = section;
+//    return [calendar dateByAddingComponents:dateComponents toDate:[self.firstDate firstDateOfMonth] options:0];
+//}
+//
+//- (NSDate *)dateAtIndexPath:(NSIndexPath *)indexPath {
+//    NSDate *firstDay = [self dateForFirstDayInSection:indexPath.section];
+//    NSInteger weekDay = [firstDay weekday];
+//    NSDate *dateToReturn = nil;
+//    
+//    if (indexPath.row < (weekDay-1)) {
+//        dateToReturn = nil;
+//    } else {
+//        NSCalendar *calendar = [NSDate gregorianCalendar];
+//
+//        NSDateComponents *components = [calendar components:NSCalendarUnitMonth | NSCalendarUnitDay fromDate:firstDay];
+//        [components setDay:indexPath.row - (weekDay - 1)];
+//        [components setMonth:indexPath.section];
+//        dateToReturn = [calendar dateByAddingComponents:components toDate:[self.firstDate firstDateOfMonth] options:0];
+//    }
+//    return dateToReturn;
+//}
 
 
 
@@ -70,8 +75,23 @@ static NSString *headerIdentifier = @"header";
     if (self) {
         [self addSubview:self.collectionView];
         [self addSubview:self.headerView];
+        self.selectedType = ZBJCalendarSelectedTypeSingle;
     }
     return self;
+}
+
+
+- (void)setSelectedType:(ZBJCalendarSelectedType)selectedType {
+    _selectedType = selectedType;
+    if (_selectedType == ZBJCalendarSelectedTypeMulti) {
+        ZBJCalendarMultiDelegate *delegate = [ZBJCalendarMultiDelegate new];
+        delegate.firstDate = self.firstDate;
+        _collectionView.delegate = delegate;
+    } else {
+        ZBJCalendarSingleDelegate *delegate = [ZBJCalendarSingleDelegate new];
+        delegate.firstDate = self.firstDate;
+        _collectionView.delegate = delegate;
+    }
 }
 
 - (void)layoutSubviews {
@@ -83,7 +103,7 @@ static NSString *headerIdentifier = @"header";
 #pragma mark UICollectionViewDataSource
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    NSDate *firstDay = [self dateForFirstDayInSection:section];
+    NSDate *firstDay = [NSDate dateForFirstDayInSection:section firstDate:self.firstDate];
     NSInteger weekDay = [firstDay weekday] -1;
     NSInteger items =  weekDay + [NSDate numberOfDaysInMonth:firstDay];
     return items;
@@ -96,7 +116,7 @@ static NSString *headerIdentifier = @"header";
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     ZBJCalendarCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"identifier" forIndexPath:indexPath];
-    NSDate *date = [self dateAtIndexPath:indexPath];
+    NSDate *date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
     if (date) {
         NSCalendar *calendar = [NSDate gregorianCalendar];
         cell.day = [calendar component:NSCalendarUnitDay fromDate:date];
@@ -106,84 +126,16 @@ static NSString *headerIdentifier = @"header";
         cell.isToday = NO;
     }
     
-    cell.selected = [self.selectedIndexPath isEqual:indexPath];
+//    cell.selected = [self.selectedIndexPath isEqual:indexPath];
     
     return cell;
 }
 
-#pragma mark - UICollectionViewDelegate
-
-//- (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
-//    return NO;
-//}
-
-
-//- (void)collectionView:(UICollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
-//    ZBJCalendarCell *cell = (ZBJCalendarCell *)[collectionView cellForItemAtIndexPath:indexPath];
-//    cell.selected = NO;
-//}
-
-//- (void)collectionView:(UICollectionView *)collectionView didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
-//    ZBJCalendarCell *cell = (ZBJCalendarCell *)[collectionView cellForItemAtIndexPath:indexPath];
-//    cell.selected = YES;
-//}
-
-
-
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.selectedIndexPath isEqual:indexPath]) {
-        return NO;
-    }
-    return YES;
-}
-
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.selectedIndexPath isEqual:indexPath]) {
-        return YES;
-    }
-    return NO;
-}
-
-
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-//    ZBJCalendarCell *cell = (ZBJCalendarCell *)[collectionView cellForItemAtIndexPath:indexPath];
-//    cell.selected = YES;
-    self.selectedIndexPath = indexPath;
-}
-
-- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
-//    ZBJCalendarCell *cell = (ZBJCalendarCell *)[collectionView cellForItemAtIndexPath:indexPath];
-//    cell.selected = NO;
-}
 
 
 
 
 
-#pragma mark UICollectionViewDelegateFlowLayout
-
-- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
-    ZBJCalendarSectionHeader *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:headerIdentifier forIndexPath:indexPath];
-    
-    NSDate *firstDateOfMonth = [self dateForFirstDayInSection:indexPath.section];
-    
-    NSCalendar *calendar = [NSDate gregorianCalendar];
-    NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:firstDateOfMonth];
-    headerView.calendarLabel.text = [NSString stringWithFormat:@" %ld年%ld月", components.year, components.month];
-    return headerView;
-}
-
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
-    CGFloat w = collectionView.bounds.size.width;
-    return CGSizeMake(w, 60);
-}
-
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    CGFloat w = collectionView.bounds.size.width;
-    CGFloat cellWidth = (w - 6) / 7;
-    return CGSizeMake(cellWidth, cellWidth);
-}
 
 #pragma mark - getters
 
@@ -203,9 +155,8 @@ static NSString *headerIdentifier = @"header";
         layout.minimumInteritemSpacing = 1;
         _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame)) collectionViewLayout:layout];
         _collectionView.backgroundColor = [UIColor whiteColor];
-        _collectionView.delegate = self;
         _collectionView.dataSource = self;
-         [_collectionView registerClass:[ZBJCalendarCell class] forCellWithReuseIdentifier:@"identifier"];
+        [_collectionView registerClass:[ZBJCalendarCell class] forCellWithReuseIdentifier:@"identifier"];
         [_collectionView registerClass:[ZBJCalendarSectionHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:headerIdentifier];
     }
     return _collectionView;

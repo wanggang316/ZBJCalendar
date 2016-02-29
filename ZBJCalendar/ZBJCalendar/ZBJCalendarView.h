@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSInteger, ZBJCalendarSelectedType) {
+    ZBJCalendarSelectedTypeSingle,
+    ZBJCalendarSelectedTypeMulti,
+};
+
+
 @protocol ZBJCalendarDelegate;
 @interface ZBJCalendarView : UIView
 
@@ -17,6 +23,7 @@
 @property (nonatomic, strong) NSDate *lastDate;
 @property (nonatomic, strong) NSDate *selectedDate;
 
+@property (nonatomic, assign) ZBJCalendarSelectedType selectedType;
 
 @end
 
