@@ -66,24 +66,6 @@
     }
 }
 
-//- (void)setHighlighted:(BOOL)highlighted {
-//    if (self.isToday) {
-//        return;
-//    }
-//    if (highlighted) {
-//        self.dayLabel.backgroundColor = [UIColor orangeColor];
-//        self.dayLabel.textColor = [UIColor whiteColor];
-//        self.dayLabel.layer.cornerRadius = CGRectGetWidth(self.dayLabel.frame) / 2;
-//        self.dayLabel.clipsToBounds = YES;
-//    } else {
-//        self.dayLabel.backgroundColor = [UIColor grayColor];
-//        self.dayLabel.textColor = [UIColor whiteColor];
-//        self.dayLabel.layer.cornerRadius = CGRectGetWidth(self.dayLabel.frame) / 2;
-//        self.dayLabel.clipsToBounds = YES;
-//    }
-//}
-
-
 #pragma mark - getters
 - (UILabel *)dayLabel {
     if (!_dayLabel) {

@@ -21,52 +21,13 @@ static NSString * const headerIdentifier = @"header";
 
 @property (nonatomic, strong) ZBJCalendarHeaderView *headerView;
 @property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, strong) NSMutableArray *calendarData;
-
-@property (nonatomic, strong) NSCalendar *calendar;
-
-
+@property (nonatomic, strong) id<UICollectionViewDelegate> collectionDelegate;
 
 @end
 
 
 
 @implementation ZBJCalendarView
-
-//- (NSDate *)dateForFirstDayInSection:(NSInteger)section {
-//    
-//    NSCalendar *calendar = [NSDate gregorianCalendar];
-//    
-//    NSDateComponents *dateComponents = [NSDateComponents new];
-//    dateComponents.month = section;
-//    return [calendar dateByAddingComponents:dateComponents toDate:[self.firstDate firstDateOfMonth] options:0];
-//}
-//
-//- (NSDate *)dateAtIndexPath:(NSIndexPath *)indexPath {
-//    NSDate *firstDay = [self dateForFirstDayInSection:indexPath.section];
-//    NSInteger weekDay = [firstDay weekday];
-//    NSDate *dateToReturn = nil;
-//    
-//    if (indexPath.row < (weekDay-1)) {
-//        dateToReturn = nil;
-//    } else {
-//        NSCalendar *calendar = [NSDate gregorianCalendar];
-//
-//        NSDateComponents *components = [calendar components:NSCalendarUnitMonth | NSCalendarUnitDay fromDate:firstDay];
-//        [components setDay:indexPath.row - (weekDay - 1)];
-//        [components setMonth:indexPath.section];
-//        dateToReturn = [calendar dateByAddingComponents:components toDate:[self.firstDate firstDateOfMonth] options:0];
-//    }
-//    return dateToReturn;
-//}
-
-
-
-
-
-
-
-
 
 #pragma  mark - Override
 
@@ -75,7 +36,7 @@ static NSString * const headerIdentifier = @"header";
     if (self) {
         [self addSubview:self.collectionView];
         [self addSubview:self.headerView];
-        self.selectedType = ZBJCalendarSelectedTypeSingle;
+//        self.selectedType = ZBJCalendarSelectedTypeSingle;
     }
     return self;
 }
@@ -84,14 +45,15 @@ static NSString * const headerIdentifier = @"header";
 - (void)setSelectedType:(ZBJCalendarSelectedType)selectedType {
     _selectedType = selectedType;
     if (_selectedType == ZBJCalendarSelectedTypeMulti) {
-        ZBJCalendarMultiDelegate *delegate = [ZBJCalendarMultiDelegate new];
-        delegate.firstDate = self.firstDate;
-        _collectionView.delegate = delegate;
+        _collectionDelegate = [ZBJCalendarMultiDelegate new];
+        self.collectionView.allowsMultipleSelection = YES;
     } else {
-        ZBJCalendarSingleDelegate *delegate = [ZBJCalendarSingleDelegate new];
-        delegate.firstDate = self.firstDate;
-        _collectionView.delegate = delegate;
+        _collectionDelegate = [ZBJCalendarSingleDelegate new];
     }
+    [_collectionDelegate performSelector:@selector(setFirstDate:) withObject:self.firstDate];
+    self.collectionView.delegate = _collectionDelegate;
+
+    
 }
 
 - (void)layoutSubviews {
@@ -101,6 +63,18 @@ static NSString * const headerIdentifier = @"header";
 }
 
 #pragma mark UICollectionViewDataSource
+
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
+    ZBJCalendarSectionHeader *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:headerIdentifier forIndexPath:indexPath];
+    
+    NSDate *firstDateOfMonth = [NSDate dateForFirstDayInSection:indexPath.section firstDate:self.firstDate];
+    
+    NSCalendar *calendar = [NSDate gregorianCalendar];
+    NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:firstDateOfMonth];
+    headerView.calendarLabel.text = [NSString stringWithFormat:@" %ld年%ld月", components.year, components.month];
+    return headerView;
+}
+
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     NSDate *firstDay = [NSDate dateForFirstDayInSection:section firstDate:self.firstDate];
@@ -126,7 +100,16 @@ static NSString * const headerIdentifier = @"header";
         cell.isToday = NO;
     }
     
-//    cell.selected = [self.selectedIndexPath isEqual:indexPath];
+    if ([self.collectionDelegate respondsToSelector:@selector(selectedIndexPath)]) {
+        cell.selected = [[self.collectionDelegate performSelector:@selector(selectedIndexPath) withObject:nil]  isEqual:indexPath];
+    }
+    if ([self.collectionDelegate respondsToSelector:@selector(fromIndexPath)]) {
+        cell.selected = [[self.collectionDelegate performSelector:@selector(fromIndexPath) withObject:nil]  isEqual:indexPath];
+    }
+    if ([self.collectionDelegate respondsToSelector:@selector(toIndexPath)]) {
+        cell.selected = [[self.collectionDelegate performSelector:@selector(toIndexPath) withObject:nil]  isEqual:indexPath];
+    }
+    
     
     return cell;
 }

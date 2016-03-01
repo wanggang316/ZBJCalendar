@@ -15,25 +15,13 @@ static NSString * const headerIdentifier = @"header";
 
 @interface ZBJCalendarMultiDelegate()
 
-@property (nonatomic, strong) NSIndexPath *fromIndexPath;
-@property (nonatomic, strong) NSIndexPath *toIndexPath;
+
 
 @end
 
 @implementation ZBJCalendarMultiDelegate
 
 #pragma mark UICollectionViewDelegateFlowLayout
-
-- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
-    ZBJCalendarSectionHeader *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:headerIdentifier forIndexPath:indexPath];
-    
-    NSDate *firstDateOfMonth = [NSDate dateForFirstDayInSection:indexPath.section firstDate:self.firstDate];
-    
-    NSCalendar *calendar = [NSDate gregorianCalendar];
-    NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:firstDateOfMonth];
-    headerView.calendarLabel.text = [NSString stringWithFormat:@" %ld年%ld月", components.year, components.month];
-    return headerView;
-}
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
     CGFloat w = collectionView.bounds.size.width;
@@ -68,24 +56,36 @@ static NSString * const headerIdentifier = @"header";
 
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.fromIndexPath isEqual:indexPath]) {
-        return NO;
-    }
-    return YES;
-}
-
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.fromIndexPath isEqual:indexPath]) {
+    
+    if (!self.fromIndexPath || !self.toIndexPath) {
         return YES;
     }
     return NO;
+    
+//    if ([self.fromIndexPath isEqual:indexPath] ||
+//        [self.toIndexPath isEqual:indexPath]) {
+//        return NO;
+//    }
+//    return YES;
+}
+
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
+//    if (![self.fromIndexPath isEqual:indexPath]) {
+        return YES;
+//    }
+//    return NO;
 }
 
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     //    ZBJCalendarCell *cell = (ZBJCalendarCell *)[collectionView cellForItemAtIndexPath:indexPath];
     //    cell.selected = YES;
-    self.fromIndexPath = indexPath;
+    
+    if (!self.fromIndexPath) {
+        self.fromIndexPath = indexPath;
+    } else if(!self.toIndexPath) {
+        self.toIndexPath = indexPath;
+    }
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {

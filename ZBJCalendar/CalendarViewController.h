@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ZBJCalendarView.h"
 
 @interface CalendarViewController : UIViewController
+
+@property (nonatomic, assign) ZBJCalendarSelectedType selectedType;
+
 
 @end

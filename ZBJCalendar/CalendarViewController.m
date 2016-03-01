@@ -7,7 +7,7 @@
 //
 
 #import "CalendarViewController.h"
-#import "ZBJCalendarView.h"
+
 #import "UINavigationBar+ZBJAddition.h"
 
 @interface CalendarViewController() <ZBJCalendarDelegate>
@@ -49,6 +49,9 @@
     
     self.calendarView.firstDate = fromDate;
     self.calendarView.lastDate = toDate;
+    
+    
+    self.calendarView.selectedType = self.selectedType;
     
     [self.view addSubview:self.calendarView];
 }

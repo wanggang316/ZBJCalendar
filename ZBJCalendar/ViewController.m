@@ -50,6 +50,7 @@ static NSString * const ZBJCellIdentifier = @"cell";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     CalendarViewController *calendarViewController = [CalendarViewController new];
+    calendarViewController.selectedType = indexPath.row;
     calendarViewController.title = self.tableData[indexPath.row];
     [self.navigationController pushViewController:calendarViewController animated:YES];
 }
@@ -57,7 +58,7 @@ static NSString * const ZBJCellIdentifier = @"cell";
 #pragma mark - getter
 - (NSArray *)tableData {
     if (!_tableData) {
-        _tableData = @[@"General", @"Today", @"Selected"];
+        _tableData = @[@"General", @"MultiSelect"];
     }
     return _tableData;
 }

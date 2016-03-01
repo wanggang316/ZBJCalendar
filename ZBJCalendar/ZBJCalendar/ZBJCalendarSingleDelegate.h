@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ZBJCalendarSingleDelegate : NSObject <UICollectionViewDelegate>
+@interface ZBJCalendarSingleDelegate : NSObject <UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) NSDate *firstDate;
 
+@property (nonatomic, strong) NSIndexPath *selectedIndexPath;
 @end
