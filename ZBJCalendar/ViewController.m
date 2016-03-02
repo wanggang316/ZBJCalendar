@@ -51,6 +51,12 @@ static NSString * const ZBJCellIdentifier = @"cell";
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     CalendarViewController *calendarViewController = [CalendarViewController new];
     calendarViewController.selectedType = indexPath.row;
+    
+    if (indexPath.row == 2 || indexPath.row == 3) {
+        calendarViewController.continuous = YES;
+    } else {
+        calendarViewController.continuous = NO;
+    }
     calendarViewController.title = self.tableData[indexPath.row];
     [self.navigationController pushViewController:calendarViewController animated:YES];
 }
@@ -58,7 +64,7 @@ static NSString * const ZBJCellIdentifier = @"cell";
 #pragma mark - getter
 - (NSArray *)tableData {
     if (!_tableData) {
-        _tableData = @[@"General", @"MultiSelect"];
+        _tableData = @[@"SingalSelection", @"MultiSelection", @"Continuous&SingalSelection", @"Continuous&MultiSelection"];
     }
     return _tableData;
 }

@@ -51,10 +51,18 @@ const char * const JmoLocaleStoreKey = "jmo.locale";
 
 
 #pragma mark -
-+ (NSInteger)numberOfMonthsFormDate:(NSDate *)fromDate toDate:(NSDate *)toDate {
++ (NSInteger)numberOfMonthsFromDate:(NSDate *)fromDate toDate:(NSDate *)toDate {
     NSCalendar *calendar = [self gregorianCalendar];
     NSDateComponents *components = [calendar components:NSCalendarUnitMonth fromDate:fromDate toDate:toDate options:NSCalendarMatchStrictly];
     return components.month + 1;
+}
+
++ (NSInteger)numberOfDaysFromMonth:(NSDate *)fromMonth toMonth:(NSDate *)toMonth {
+    NSCalendar *calendar = [self gregorianCalendar];
+    NSDate *firstDate = [fromMonth firstDateOfMonth];
+    NSDate *lastDate = [toMonth lastDateOfMonth];
+    NSDateComponents *components = [calendar components:NSCalendarUnitDay fromDate:firstDate toDate:lastDate options:NSCalendarMatchStrictly];
+    return components.day + 1;
 }
 
 + (NSInteger)numberOfDaysInMonth:(NSDate *)date {

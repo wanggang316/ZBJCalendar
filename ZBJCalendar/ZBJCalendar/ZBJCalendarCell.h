@@ -10,7 +10,8 @@
 
 @interface ZBJCalendarCell : UICollectionViewCell
 
-@property (nonatomic, assign) NSInteger day;
+@property (nonatomic, strong) NSDate *day;
 @property (nonatomic, assign) BOOL isToday;
+@property (nonatomic, assign) BOOL firstDayShowMonth;
 
 @end

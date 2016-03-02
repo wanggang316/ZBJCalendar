@@ -12,7 +12,6 @@
 
 @implementation NSDate (IndexPath)
 
-
 + (NSDate *)dateForFirstDayInSection:(NSInteger)section firstDate:(NSDate *)firstDate {
     NSCalendar *calendar = [NSDate gregorianCalendar];
     

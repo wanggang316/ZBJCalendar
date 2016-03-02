@@ -13,7 +13,8 @@
 + (NSCalendar *)gregorianCalendar;
 + (NSLocale *)locale;
 
-+ (NSInteger)numberOfMonthsFormDate:(NSDate *)fromDate toDate:(NSDate *)toDate;
++ (NSInteger)numberOfMonthsFromDate:(NSDate *)fromDate toDate:(NSDate *)toDate;
++ (NSInteger)numberOfDaysFromMonth:(NSDate *)fromMonth toMonth:(NSDate *)toMonth;
 + (NSInteger)numberOfDaysInMonth:(NSDate *)date;
 
 - (NSDate *)firstDateOfMonth;

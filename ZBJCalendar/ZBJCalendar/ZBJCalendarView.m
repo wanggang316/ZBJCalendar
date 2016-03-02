@@ -7,20 +7,22 @@
 //
 
 #import "ZBJCalendarView.h"
-#import "ZBJCalendarCell.h"
 #import "ZBJCalendarSectionHeader.h"
-#import "NSDate+ZBJAddition.h"
-#import "NSDate+IndexPath.h"
+#import "ZBJCalendarCell.h"
 #import "ZBJCalendarHeaderView.h"
 #import "ZBJCalendarSingleDelegate.h"
 #import "ZBJCalendarMultiDelegate.h"
+#import "ZBJCalendarDataSource.h"
+#import "ZBJCalendarContinuousDataSource.h"
 
 static NSString * const headerIdentifier = @"header";
 
-@interface ZBJCalendarView() <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
+@interface ZBJCalendarView()
 
 @property (nonatomic, strong) ZBJCalendarHeaderView *headerView;
 @property (nonatomic, strong) UICollectionView *collectionView;
+
+@property (nonatomic, strong) id<UICollectionViewDataSource> collectionDataSource;
 @property (nonatomic, strong) id<UICollectionViewDelegate> collectionDelegate;
 
 @end
@@ -36,11 +38,24 @@ static NSString * const headerIdentifier = @"header";
     if (self) {
         [self addSubview:self.collectionView];
         [self addSubview:self.headerView];
-//        self.selectedType = ZBJCalendarSelectedTypeSingle;
     }
     return self;
 }
 
+- (void)setContinuous:(BOOL)continuous {
+    _continuous = continuous;
+    if (_continuous) {
+        _collectionDataSource = [ZBJCalendarContinuousDataSource new];
+    } else {
+        _collectionDataSource = [ZBJCalendarDataSource new];
+    }
+    
+    [_collectionDataSource performSelector:@selector(setFirstDate:) withObject:self.firstDate];
+    [_collectionDataSource performSelector:@selector(setLastDate:) withObject:self.lastDate];
+    [_collectionDataSource performSelector:@selector(setSelectedDate:) withObject:self.selectedDate];
+
+    self.collectionView.dataSource = _collectionDataSource;
+}
 
 - (void)setSelectedType:(ZBJCalendarSelectedType)selectedType {
     _selectedType = selectedType;
@@ -60,58 +75,6 @@ static NSString * const headerIdentifier = @"header";
     [super layoutSubviews];
     self.headerView.frame = CGRectMake(0, 64, CGRectGetWidth(self.frame), 20);
     self.collectionView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
-}
-
-#pragma mark UICollectionViewDataSource
-
-- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
-    ZBJCalendarSectionHeader *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:headerIdentifier forIndexPath:indexPath];
-    
-    NSDate *firstDateOfMonth = [NSDate dateForFirstDayInSection:indexPath.section firstDate:self.firstDate];
-    
-    NSCalendar *calendar = [NSDate gregorianCalendar];
-    NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:firstDateOfMonth];
-    headerView.calendarLabel.text = [NSString stringWithFormat:@" %ld年%ld月", components.year, components.month];
-    return headerView;
-}
-
-
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    NSDate *firstDay = [NSDate dateForFirstDayInSection:section firstDate:self.firstDate];
-    NSInteger weekDay = [firstDay weekday] -1;
-    NSInteger items =  weekDay + [NSDate numberOfDaysInMonth:firstDay];
-    return items;
-}
-
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    NSInteger months = [NSDate numberOfMonthsFormDate:self.firstDate toDate:self.lastDate];
-    return months;
-}
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    ZBJCalendarCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"identifier" forIndexPath:indexPath];
-    NSDate *date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
-    if (date) {
-        NSCalendar *calendar = [NSDate gregorianCalendar];
-        cell.day = [calendar component:NSCalendarUnitDay fromDate:date];
-        cell.isToday = [date isToday];
-    } else {
-        cell.day = 0;
-        cell.isToday = NO;
-    }
-    
-    if ([self.collectionDelegate respondsToSelector:@selector(selectedIndexPath)]) {
-        cell.selected = [[self.collectionDelegate performSelector:@selector(selectedIndexPath) withObject:nil]  isEqual:indexPath];
-    }
-    if ([self.collectionDelegate respondsToSelector:@selector(fromIndexPath)]) {
-        cell.selected = [[self.collectionDelegate performSelector:@selector(fromIndexPath) withObject:nil]  isEqual:indexPath];
-    }
-    if ([self.collectionDelegate respondsToSelector:@selector(toIndexPath)]) {
-        cell.selected = [[self.collectionDelegate performSelector:@selector(toIndexPath) withObject:nil]  isEqual:indexPath];
-    }
-    
-    
-    return cell;
 }
 
 

@@ -49,8 +49,7 @@
     
     self.calendarView.firstDate = fromDate;
     self.calendarView.lastDate = toDate;
-    
-    
+    self.calendarView.continuous = self.continuous;
     self.calendarView.selectedType = self.selectedType;
     
     [self.view addSubview:self.calendarView];
@@ -58,7 +57,6 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 

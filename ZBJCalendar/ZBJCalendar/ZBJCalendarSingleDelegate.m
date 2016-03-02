@@ -23,6 +23,7 @@ static NSString * const headerIdentifier = @"header";
 
 #pragma mark UICollectionViewDelegateFlowLayout
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
+    [collectionView.dataSource numberOfSectionsInCollectionView:collectionView];
     CGFloat w = collectionView.bounds.size.width;
     return CGSizeMake(w, 60);
 }

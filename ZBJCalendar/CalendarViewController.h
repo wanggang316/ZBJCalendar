@@ -13,5 +13,6 @@
 
 @property (nonatomic, assign) ZBJCalendarSelectedType selectedType;
 
+@property (nonatomic, assign, getter=isContinuous) BOOL continuous; // default is NO
 
 @end

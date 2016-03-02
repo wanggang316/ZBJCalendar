@@ -7,10 +7,12 @@
 //
 
 #import "ZBJCalendarCell.h"
+#import "NSDate+ZBJAddition.h"
 
 @interface ZBJCalendarCell ()
 
 @property (nonatomic, strong) UILabel *dayLabel;
+
 
 @end
 
@@ -27,12 +29,35 @@
 
 
 #pragma mark - setters
-- (void)setDay:(NSInteger)day {
+- (void)setDay:(NSDate *)day {
     _day = day;
     if (_day) {
-        _dayLabel.text = [NSString stringWithFormat:@"%ld", day];
+        self.firstDayShowMonth = _firstDayShowMonth;
+        self.isToday = _day.isToday;
     } else {
         _dayLabel.text = nil;
+    }
+}
+
+- (void)setFirstDayShowMonth:(BOOL)firstDayShowMonth {
+    _firstDayShowMonth = firstDayShowMonth;
+    
+    if (!self.day) {
+        return;
+    }
+    
+    NSCalendar *calendar = [NSDate gregorianCalendar];
+
+    if (_firstDayShowMonth) {
+        NSInteger day = [calendar component:NSCalendarUnitDay fromDate:self.day];
+        if (day == 1) {
+            NSInteger month = [calendar component:NSCalendarUnitMonth fromDate:self.day];
+            _dayLabel.text = [NSString stringWithFormat:@"%ld月\n%ld", month, day];
+        } else {
+            _dayLabel.text = [NSString stringWithFormat:@"%ld", day];
+        }
+    } else {
+        _dayLabel.text = [NSString stringWithFormat:@"%ld", [calendar component:NSCalendarUnitDay fromDate:self.day]];
     }
 }
 

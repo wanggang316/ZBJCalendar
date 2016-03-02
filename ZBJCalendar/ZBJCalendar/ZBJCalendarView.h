@@ -14,6 +14,8 @@ typedef NS_ENUM(NSInteger, ZBJCalendarSelectedType) {
 };
 
 
+
+
 @protocol ZBJCalendarDelegate;
 @interface ZBJCalendarView : UIView
 
@@ -24,6 +26,7 @@ typedef NS_ENUM(NSInteger, ZBJCalendarSelectedType) {
 @property (nonatomic, strong) NSDate *selectedDate;
 
 @property (nonatomic, assign) ZBJCalendarSelectedType selectedType;
+@property (nonatomic, assign, getter=isContinuous) BOOL continuous; // default is NO
 
 @end
 
