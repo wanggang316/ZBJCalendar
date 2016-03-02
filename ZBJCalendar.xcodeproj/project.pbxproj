@@ -60,6 +60,7 @@
 		321200461C8589F700FB171E /* ZBJCalendarDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZBJCalendarDataSource.m; sourceTree = "<group>"; };
 		321200481C858B9400FB171E /* ZBJCalendarContinuousDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBJCalendarContinuousDataSource.h; sourceTree = "<group>"; };
 		321200491C858B9400FB171E /* ZBJCalendarContinuousDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZBJCalendarContinuousDataSource.m; sourceTree = "<group>"; };
+		322B111D1C86BE2D008FD798 /* ZBJCalendar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZBJCalendar.h; sourceTree = "<group>"; };
 		323F79201C7D8B4100479C2D /* ZBJCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBJCalendarView.h; sourceTree = "<group>"; };
 		323F79211C7D8B4100479C2D /* ZBJCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZBJCalendarView.m; sourceTree = "<group>"; };
 		323F79231C7D8B9A00479C2D /* ZBJCalendarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBJCalendarCell.h; sourceTree = "<group>"; };
@@ -120,6 +121,7 @@
 		321903911C169AEC007EACCD /* ZBJCalendar */ = {
 			isa = PBXGroup;
 			children = (
+				322B111D1C86BE2D008FD798 /* ZBJCalendar.h */,
 				323F79201C7D8B4100479C2D /* ZBJCalendarView.h */,
 				323F79211C7D8B4100479C2D /* ZBJCalendarView.m */,
 				3212003C1C83F8F100FB171E /* ZBJCalendarSingleDelegate.h */,
