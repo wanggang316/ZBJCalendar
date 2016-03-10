@@ -28,8 +28,7 @@ static NSString * const headerIdentifier = @"header";
     return CGSizeMake(w, 60);
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     CGFloat w = collectionView.bounds.size.width;
     CGFloat cellWidth = (w - 6) / 7;
     return CGSizeMake(cellWidth, cellWidth);
@@ -47,6 +46,7 @@ static NSString * const headerIdentifier = @"header";
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    
     self.selectedIndexPath = indexPath;
     
     NSDate *date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
@@ -56,8 +56,7 @@ static NSString * const headerIdentifier = @"header";
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
-    //    ZBJCalendarCell *cell = (ZBJCalendarCell *)[collectionView cellForItemAtIndexPath:indexPath];
-    //    cell.selected = NO;
+
 }
 
 

@@ -50,7 +50,6 @@ static NSString * const headerIdentifier = @"header";
     if ([collectionView.delegate respondsToSelector:@selector(selectedIndexPath)]) {
         cell.selected = [[collectionView.delegate performSelector:@selector(selectedIndexPath) withObject:nil]  isEqual:indexPath];
     }
-    
     return cell;
 }
 

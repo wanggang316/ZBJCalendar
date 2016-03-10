@@ -55,20 +55,7 @@ static NSString * const headerIdentifier = @"header";
 
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    
     return YES;
-    
-//    if ((!self.fromIndexPath || !self.toIndexPath) ||
-//        (self.fromIndexPath && self.toIndexPath)) {
-//        return YES;
-//    }
-//    return NO;
-    
-//    if ([self.fromIndexPath isEqual:indexPath] ||
-//        [self.toIndexPath isEqual:indexPath]) {
-//        return NO;
-//    }
-//    return YES;
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath {

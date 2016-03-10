@@ -14,20 +14,14 @@ typedef NS_ENUM(NSInteger, ZBJCalendarSelectedType) {
 };
 
 
-
-
 @protocol ZBJCalendarDelegate;
+
 @interface ZBJCalendarView : UIView
 
 @property (nonatomic, weak) id<ZBJCalendarDelegate> delegate;
 
 @property (nonatomic, strong) NSDate *firstDate;
 @property (nonatomic, strong) NSDate *lastDate;
-
-@property (nonatomic, strong, readonly) NSDate *selectedDate;
-
-@property (nonatomic, assign) ZBJCalendarSelectedType selectedType;
-@property (nonatomic, assign, getter=isContinuous) BOOL continuous; // default is NO
 
 @property (nonatomic, assign) UIEdgeInsets contentInsets;   // the inner padding
 

@@ -7,24 +7,21 @@
 //
 
 #import "ZBJCalendarView.h"
+#import "ZBJCalendarHeaderView.h"
 #import "ZBJCalendarSectionHeader.h"
 #import "ZBJCalendarCell.h"
-#import "ZBJCalendarHeaderView.h"
-#import "ZBJCalendarSingleDelegate.h"
-#import "ZBJCalendarMultiDelegate.h"
-#import "ZBJCalendarDataSource.h"
-#import "ZBJCalendarContinuousDataSource.h"
+#import "NSDate+ZBJAddition.h"
+#import "NSDate+IndexPath.h"
 
 static NSString * const headerIdentifier = @"header";
 
-@interface ZBJCalendarView()
+@interface ZBJCalendarView () <UICollectionViewDataSource, UICollectionViewDelegate>
 
 @property (nonatomic, strong) ZBJCalendarHeaderView *headerView;
 @property (nonatomic, strong) UICollectionView *collectionView;
 
-@property (nonatomic, strong) id<UICollectionViewDataSource> collectionDataSource;
-@property (nonatomic, strong) id<UICollectionViewDelegate> collectionDelegate;
-
+@property (nonatomic, strong) NSDate *startDate;
+@property (nonatomic, strong) NSDate *endDate;
 @end
 
 
@@ -42,70 +39,111 @@ static NSString * const headerIdentifier = @"header";
     return self;
 }
 
-- (void)setContinuous:(BOOL)continuous {
-    _continuous = continuous;
-    if (_continuous) {
-        _collectionDataSource = [ZBJCalendarContinuousDataSource new];
-     
-        
-        
-    } else {
-        _collectionDataSource = [ZBJCalendarDataSource new];
-    }
-    
-    [_collectionDataSource performSelector:@selector(setFirstDate:) withObject:self.firstDate];
-    [_collectionDataSource performSelector:@selector(setLastDate:) withObject:self.lastDate];
-
-    
-
-
-    self.collectionView.dataSource = _collectionDataSource;
-}
-
-- (void)setSelectedType:(ZBJCalendarSelectedType)selectedType {
-    _selectedType = selectedType;
-    if (_selectedType == ZBJCalendarSelectedTypeMulti) {
-        ZBJCalendarMultiDelegate *d = [ZBJCalendarMultiDelegate new];
-//        [d addObserver:self
-//                              forKeyPath:@"firstDate"
-//                                 options:(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld)
-//                                 context:@"this is a context"];
-
-        _collectionDelegate = d;//[ZBJCalendarMultiDelegate new];
-        self.collectionView.allowsMultipleSelection = YES;
-    } else {
-        
-        ZBJCalendarSingleDelegate *d = [ZBJCalendarSingleDelegate new];
-        [d addObserver:self
-            forKeyPath:@"firstDate"
-               options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld)
-               context:@"this is a context"];
-        
-        _collectionDelegate = d;//[ZBJCalendarMultiDelegate new];
-        
-//        _collectionDelegate = [ZBJCalendarSingleDelegate new];
-    }
-    [_collectionDelegate performSelector:@selector(setFirstDate:) withObject:self.firstDate];
-    
-    self.collectionView.delegate = _collectionDelegate;
-}
-
 - (void)layoutSubviews {
     [super layoutSubviews];
     self.headerView.frame = CGRectMake(0, 64, CGRectGetWidth(self.frame), 20);
     self.collectionView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
 }
 
+#pragma mark UICollectionViewDataSource
 
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
-    if ([keyPath isEqualToString:@"firstDate"]) {
-        NSLog(@"change happen, old: %@ ,new: %@; context = %@",[change objectForKey:NSKeyValueChangeOldKey],[change objectForKey:NSKeyValueChangeNewKey],context);
-        self.firstDate = [change objectForKey:NSKeyValueChangeNewKey];
-    }
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
+    ZBJCalendarSectionHeader *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:headerIdentifier forIndexPath:indexPath];
+    
+    NSDate *firstDateOfMonth = [NSDate dateForFirstDayInSection:indexPath.section firstDate:self.firstDate];
+    
+    NSCalendar *calendar = [NSDate gregorianCalendar];
+    NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:firstDateOfMonth];
+    headerView.calendarLabel.text = [NSString stringWithFormat:@" %ld年%ld月", components.year, components.month];
+    return headerView;
 }
 
 
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    NSDate *firstDay = [NSDate dateForFirstDayInSection:section firstDate:self.firstDate];
+    NSInteger weekDay = [firstDay weekday] -1;
+    NSInteger items =  weekDay + [NSDate numberOfDaysInMonth:firstDay];
+    return items;
+}
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+    NSInteger months = [NSDate numberOfMonthsFromDate:self.firstDate toDate:self.lastDate];
+    return months;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    ZBJCalendarCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"identifier" forIndexPath:indexPath];
+    
+    NSDate *date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
+    cell.day = date;
+
+    cell.selected = [self.startDate isEqualToDate:date] || [self.endDate isEqualToDate:date];
+    
+    return cell;
+}
+
+
+
+#pragma mark UICollectionViewDelegateFlowLayout
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
+    CGFloat w = collectionView.bounds.size.width;
+    return CGSizeMake(w, 60);
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    CGFloat w = collectionView.bounds.size.width;
+    CGFloat cellWidth = (w - 6) / 7;
+    return CGSizeMake(cellWidth, cellWidth);
+}
+
+
+#pragma mark - UICollectionViewDelegate
+
+//- (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
+//    return NO;
+//}
+
+
+//- (void)collectionView:(UICollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
+//    ZBJCalendarCell *cell = (ZBJCalendarCell *)[collectionView cellForItemAtIndexPath:indexPath];
+//    cell.selected = NO;
+//}
+
+//- (void)collectionView:(UICollectionView *)collectionView didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
+//    ZBJCalendarCell *cell = (ZBJCalendarCell *)[collectionView cellForItemAtIndexPath:indexPath];
+//    cell.selected = YES;
+//}
+
+
+
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    // 结束日期大于起始日期
+    // 起始日期小于结束日期
+    
+    NSDate *date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
+    if (!self.startDate) {
+        self.startDate = date;
+        NSLog(@"=====> start date is : %@", date);
+    } else if(!self.endDate) {
+        self.endDate = date;
+        NSLog(@"=====> to date is : %@", date);
+    } else {
+        
+    }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
+}
 
 
 #pragma mark - getters
@@ -128,6 +166,8 @@ static NSString * const headerIdentifier = @"header";
         _collectionView.backgroundColor = [UIColor whiteColor];
         [_collectionView registerClass:[ZBJCalendarCell class] forCellWithReuseIdentifier:@"identifier"];
         [_collectionView registerClass:[ZBJCalendarSectionHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:headerIdentifier];
+        _collectionView.dataSource = self;
+        _collectionView.delegate = self;
     }
     return _collectionView;
 }
