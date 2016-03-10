@@ -110,41 +110,19 @@ static NSString * const headerIdentifier = @"header";
 }
 
 
-
-
-
 #pragma mark - UICollectionViewDelegate
 
-//- (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
-//    return NO;
-//}
-
-
-//- (void)collectionView:(UICollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
-//    ZBJCalendarCell *cell = (ZBJCalendarCell *)[collectionView cellForItemAtIndexPath:indexPath];
-//    cell.selected = NO;
-//}
-
-//- (void)collectionView:(UICollectionView *)collectionView didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
-//    ZBJCalendarCell *cell = (ZBJCalendarCell *)[collectionView cellForItemAtIndexPath:indexPath];
-//    cell.selected = YES;
-//}
-
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    
     
     if (self.selectionMode == ZBJSelectionModeRange) {
         NSDate *date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
         
-        
-        NSLog(@"%@, %@------>>>>> %@", [date dateByAddingTimeInterval:86400.0 - 1], [NSDate date], @([date compare:[NSDate date]] == NSOrderedAscending));
-
-        
         if (date) {
-            if (self.startDate && !self.endDate) { // 选择了起始日期，没有选择结束日期
-                if ([date compare:self.startDate] == NSOrderedAscending) { // 结束日期 < 起始日期
-                    return NO;
-                }
+            // 选择了起始日期，没有选择结束日期
+            // 结束日期 < 起始日期
+            if (self.startDate && !self.endDate &&
+                [date compare:self.startDate] == NSOrderedAscending) {
+                return NO;
             }
             
             // 日期在今天之前
@@ -167,9 +145,7 @@ static NSString * const headerIdentifier = @"header";
 
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    
-    // 结束日期大于起始日期
-    // 起始日期小于结束日期
+   
     if (self.selectionMode == ZBJSelectionModeRange) {
         NSDate *date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
         
@@ -190,7 +166,6 @@ static NSString * const headerIdentifier = @"header";
                 [collectionView reloadData];
             }
         }
-       
     }
 }
 

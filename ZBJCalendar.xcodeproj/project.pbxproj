@@ -10,6 +10,9 @@
 		3212003B1C806B8900FB171E /* UINavigationBar+ZBJAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 3212003A1C806B8900FB171E /* UINavigationBar+ZBJAddition.m */; };
 		321200441C83FE6F00FB171E /* NSDate+IndexPath.m in Sources */ = {isa = PBXBuildFile; fileRef = 321200431C83FE6F00FB171E /* NSDate+IndexPath.m */; };
 		32291B741C915D55002D13B1 /* ZBJCalendarShowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32291B731C915D55002D13B1 /* ZBJCalendarShowViewController.m */; };
+		32291B7B1C91A603002D13B1 /* ZBJCalendarAdvanceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32291B7A1C91A603002D13B1 /* ZBJCalendarAdvanceViewController.m */; };
+		32291B7E1C91A7A3002D13B1 /* ZBJOfferCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = 32291B7D1C91A7A3002D13B1 /* ZBJOfferCalendar.m */; };
+		32291B801C91AF0E002D13B1 /* calendar_dates.json in Resources */ = {isa = PBXBuildFile; fileRef = 32291B7F1C91AF0E002D13B1 /* calendar_dates.json */; };
 		323F79221C7D8B4100479C2D /* ZBJCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 323F79211C7D8B4100479C2D /* ZBJCalendarView.m */; };
 		323F79251C7D8B9A00479C2D /* ZBJCalendarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 323F79241C7D8B9A00479C2D /* ZBJCalendarCell.m */; };
 		323F79281C7D8C2700479C2D /* ZBJCalendarEntities.m in Sources */ = {isa = PBXBuildFile; fileRef = 323F79271C7D8C2700479C2D /* ZBJCalendarEntities.m */; };
@@ -51,6 +54,11 @@
 		321200431C83FE6F00FB171E /* NSDate+IndexPath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+IndexPath.m"; sourceTree = "<group>"; };
 		32291B721C915D55002D13B1 /* ZBJCalendarShowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBJCalendarShowViewController.h; sourceTree = "<group>"; };
 		32291B731C915D55002D13B1 /* ZBJCalendarShowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZBJCalendarShowViewController.m; sourceTree = "<group>"; };
+		32291B791C91A603002D13B1 /* ZBJCalendarAdvanceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBJCalendarAdvanceViewController.h; sourceTree = "<group>"; };
+		32291B7A1C91A603002D13B1 /* ZBJCalendarAdvanceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZBJCalendarAdvanceViewController.m; sourceTree = "<group>"; };
+		32291B7C1C91A7A3002D13B1 /* ZBJOfferCalendar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBJOfferCalendar.h; sourceTree = "<group>"; };
+		32291B7D1C91A7A3002D13B1 /* ZBJOfferCalendar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZBJOfferCalendar.m; sourceTree = "<group>"; };
+		32291B7F1C91AF0E002D13B1 /* calendar_dates.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = calendar_dates.json; sourceTree = "<group>"; };
 		322B111D1C86BE2D008FD798 /* ZBJCalendar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZBJCalendar.h; sourceTree = "<group>"; };
 		323F79201C7D8B4100479C2D /* ZBJCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBJCalendarView.h; sourceTree = "<group>"; };
 		323F79211C7D8B4100479C2D /* ZBJCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZBJCalendarView.m; sourceTree = "<group>"; };
@@ -154,6 +162,7 @@
 		32F7EBE81C16779F00ED2DA4 /* ZBJCalendar */ = {
 			isa = PBXGroup;
 			children = (
+				32291B7F1C91AF0E002D13B1 /* calendar_dates.json */,
 				321903911C169AEC007EACCD /* ZBJCalendar */,
 				32F7EBEC1C16779F00ED2DA4 /* AppDelegate.h */,
 				32F7EBED1C16779F00ED2DA4 /* AppDelegate.m */,
@@ -163,13 +172,17 @@
 				32291B731C915D55002D13B1 /* ZBJCalendarShowViewController.m */,
 				323F79631C804E6200479C2D /* ZBJCalendarRangeViewController.h */,
 				323F79641C804E6200479C2D /* ZBJCalendarRangeViewController.m */,
+				32291B791C91A603002D13B1 /* ZBJCalendarAdvanceViewController.h */,
+				32291B7A1C91A603002D13B1 /* ZBJCalendarAdvanceViewController.m */,
+				321200391C806B8900FB171E /* UINavigationBar+ZBJAddition.h */,
+				3212003A1C806B8900FB171E /* UINavigationBar+ZBJAddition.m */,
+				32291B7C1C91A7A3002D13B1 /* ZBJOfferCalendar.h */,
+				32291B7D1C91A7A3002D13B1 /* ZBJOfferCalendar.m */,
 				32F7EBF21C16779F00ED2DA4 /* Main.storyboard */,
 				32F7EBF51C16779F00ED2DA4 /* Assets.xcassets */,
 				32F7EBF71C16779F00ED2DA4 /* LaunchScreen.storyboard */,
 				32F7EBFA1C16779F00ED2DA4 /* Info.plist */,
 				32F7EBE91C16779F00ED2DA4 /* Supporting Files */,
-				321200391C806B8900FB171E /* UINavigationBar+ZBJAddition.h */,
-				3212003A1C806B8900FB171E /* UINavigationBar+ZBJAddition.m */,
 			);
 			path = ZBJCalendar;
 			sourceTree = "<group>";
@@ -304,6 +317,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				32F7EBF91C16779F00ED2DA4 /* LaunchScreen.storyboard in Resources */,
+				32291B801C91AF0E002D13B1 /* calendar_dates.json in Resources */,
 				32F7EBF61C16779F00ED2DA4 /* Assets.xcassets in Resources */,
 				32F7EBF41C16779F00ED2DA4 /* Main.storyboard in Resources */,
 			);
@@ -334,10 +348,12 @@
 				32F7EBEE1C16779F00ED2DA4 /* AppDelegate.m in Sources */,
 				32F7EBEB1C16779F00ED2DA4 /* main.m in Sources */,
 				323F79621C80183500479C2D /* NSDate+ZBJAddition.m in Sources */,
+				32291B7B1C91A603002D13B1 /* ZBJCalendarAdvanceViewController.m in Sources */,
 				321200441C83FE6F00FB171E /* NSDate+IndexPath.m in Sources */,
 				323F79221C7D8B4100479C2D /* ZBJCalendarView.m in Sources */,
 				323F79251C7D8B9A00479C2D /* ZBJCalendarCell.m in Sources */,
 				323F79281C7D8C2700479C2D /* ZBJCalendarEntities.m in Sources */,
+				32291B7E1C91A7A3002D13B1 /* ZBJOfferCalendar.m in Sources */,
 				DD787F091C7EA879008360A1 /* ZBJCalendarHeaderView.m in Sources */,
 				3212003B1C806B8900FB171E /* UINavigationBar+ZBJAddition.m in Sources */,
 				32291B741C915D55002D13B1 /* ZBJCalendarShowViewController.m in Sources */,

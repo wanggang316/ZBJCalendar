@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "ZBJCalendarRangeViewController.h"
 #import "ZBJCalendarShowViewController.h"
+#import "ZBJCalendarAdvanceViewController.h"
 
 static NSString * const ZBJCellIdentifier = @"cell";
 
@@ -64,6 +65,12 @@ static NSString * const ZBJCellIdentifier = @"cell";
             [self.navigationController pushViewController:calendarViewController animated:YES];
             break;
         }
+        case 2: {
+            ZBJCalendarAdvanceViewController *calendarViewController = [ZBJCalendarAdvanceViewController new];
+            calendarViewController.title = self.tableData[indexPath.row];
+            [self.navigationController pushViewController:calendarViewController animated:YES];
+            break;
+        }
         default:
             break;
     }
@@ -75,7 +82,7 @@ static NSString * const ZBJCellIdentifier = @"cell";
 #pragma mark - getter
 - (NSArray *)tableData {
     if (!_tableData) {
-        _tableData = @[@"ShowOnly", @"RangeSelection"];
+        _tableData = @[@"ShowOnly", @"RangeSelection", @"Advance"];
     }
     return _tableData;
 }
