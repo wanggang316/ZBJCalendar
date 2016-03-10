@@ -58,28 +58,12 @@
 
 - (void)setIsStartDate:(BOOL)isStartDate {
     _isStartDate = isStartDate;
-    
-//    if (_isStartDate) {
-//        self.contentView.backgroundColor = [UIColor colorWithRed:9.0/255.0 green:9.0/255.0 blue:26.0/255.0 alpha:1.0];
-//        self.dayLabel.textColor = [UIColor whiteColor];
-//    } else {
-//        self.contentView.backgroundColor = [UIColor whiteColor];
-//        self.dayLabel.textColor = [UIColor darkTextColor];
-//    }
-    
     self.selected = _isStartDate;
 }
 
 - (void)setIsEndDate:(BOOL)isEndDate {
     _isEndDate = isEndDate;
     self.selected = _isEndDate;
-//    if (_isEndDate) {
-//        self.contentView.backgroundColor = [UIColor colorWithRed:9.0/255.0 green:9.0/255.0 blue:26.0/255.0 alpha:1.0];
-//        self.dayLabel.textColor = [UIColor whiteColor];
-//    } else {
-//        self.contentView.backgroundColor = [UIColor whiteColor];
-//        self.dayLabel.textColor = [UIColor darkTextColor];
-//    }
 }
 
 - (void)setIsSelectedDate:(BOOL)isSelectedDate {
@@ -95,10 +79,10 @@
 
 - (void)setIsDisabledDate:(BOOL)isDisabledDate {
     _isDisabledDate = isDisabledDate;
-    if (!_isDisabledDate) {
-        
+    if (_isDisabledDate) {
+        self.dayLabel.textColor = [UIColor colorWithRed:230.0/255.0 green:230.0/255.0 blue:233.0/255.0 alpha:1.0];
     } else {
-        
+        self.dayLabel.textColor = [UIColor darkTextColor];
     }
 }
 
