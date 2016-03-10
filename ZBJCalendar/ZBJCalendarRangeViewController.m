@@ -6,17 +6,17 @@
 //  Copyright © 2016 ZBJ. All rights reserved.
 //
 
-#import "CalendarViewController.h"
-
+#import "ZBJCalendarRangeViewController.h"
 #import "UINavigationBar+ZBJAddition.h"
+#import "ZBJCalendarView.h"
 
-@interface CalendarViewController() <ZBJCalendarDelegate>
+@interface ZBJCalendarRangeViewController () <ZBJCalendarDelegate>
 
 @property (nonatomic, strong) ZBJCalendarView *calendarView;
 
 @end
 
-@implementation CalendarViewController
+@implementation ZBJCalendarRangeViewController
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -49,8 +49,6 @@
     
     self.calendarView.firstDate = fromDate;
     self.calendarView.lastDate = toDate;
-//    self.calendarView.continuous = self.continuous;
-//    self.calendarView.selectedType = self.selectedType;
     
     [self.view addSubview:self.calendarView];
 }

@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-typedef NS_ENUM(NSInteger, ZBJCalendarSelectedType) {
-    ZBJCalendarSelectedTypeSingle,
-    ZBJCalendarSelectedTypeMulti,
+typedef CF_ENUM(NSInteger, ZBJSelectionMode) {
+    ZBJSelectionModeNone,
+    ZBJSelectionModeSingle,
+    ZBJSelectionModeRange,
 };
-
 
 @protocol ZBJCalendarDelegate;
 
@@ -23,6 +23,7 @@ typedef NS_ENUM(NSInteger, ZBJCalendarSelectedType) {
 @property (nonatomic, strong) NSDate *firstDate;
 @property (nonatomic, strong) NSDate *lastDate;
 
+@property (nonatomic, assign) ZBJSelectionMode selectionMode;  // default is `YES`, select `startDate` and `endDate`
 @property (nonatomic, assign) UIEdgeInsets contentInsets;   // the inner padding
 
 @end

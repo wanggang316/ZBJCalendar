@@ -22,6 +22,7 @@ static NSString * const headerIdentifier = @"header";
 
 @property (nonatomic, strong) NSDate *startDate;
 @property (nonatomic, strong) NSDate *endDate;
+
 @end
 
 
@@ -29,12 +30,13 @@ static NSString * const headerIdentifier = @"header";
 @implementation ZBJCalendarView
 
 #pragma  mark - Override
-
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         [self addSubview:self.collectionView];
         [self addSubview:self.headerView];
+        
+        self.selectionMode = ZBJSelectionModeRange;
     }
     return self;
 }
@@ -75,26 +77,42 @@ static NSString * const headerIdentifier = @"header";
     ZBJCalendarCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"identifier" forIndexPath:indexPath];
     
     NSDate *date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
+    
     cell.day = date;
+    
+    if ([self.startDate isEqualToDate:date]) {
+        cell.isStartDate = YES;
+    } else if ( [self.endDate isEqualToDate:date]) {
+        cell.isEndDate = YES;
+    } else {
+        cell.isStartDate = NO;
+        cell.isEndDate = NO;
+    }
+    
+    if (date) {
+        
+        if (self.startDate && self.endDate &&
+            ![self.startDate isEqualToDate:date] &&
+            ![self.endDate isEqualToDate:date]
+            ) {
+            
+            BOOL flag = [date compare:self.startDate] == NSOrderedDescending;
+            BOOL flag1 = ([date compare:self.endDate] == NSOrderedAscending);
+            NSLog(@"%@ 大于起始日期： %@, 小于结束日期：%@", date, @(flag), @(flag1));
+            cell.isSelectedDate = flag && flag1;
+        }
 
-    cell.selected = [self.startDate isEqualToDate:date] || [self.endDate isEqualToDate:date];
+    }
+    
+  
+   
+    
     
     return cell;
 }
 
 
 
-#pragma mark UICollectionViewDelegateFlowLayout
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
-    CGFloat w = collectionView.bounds.size.width;
-    return CGSizeMake(w, 60);
-}
-
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    CGFloat w = collectionView.bounds.size.width;
-    CGFloat cellWidth = (w - 6) / 7;
-    return CGSizeMake(cellWidth, cellWidth);
-}
 
 
 #pragma mark - UICollectionViewDelegate
@@ -114,9 +132,23 @@ static NSString * const headerIdentifier = @"header";
 //    cell.selected = YES;
 //}
 
-
-
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (self.selectionMode == ZBJSelectionModeRange) {
+        NSDate *date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
+        
+        if (date) {
+            if (self.startDate && !self.endDate) {
+                if ([date compare:self.startDate] == NSOrderedAscending) { // 结束日期 < 起始日期
+                    return NO;
+                }
+            }
+            return YES;
+        } else {
+            return NO;
+        }
+    }
+    
     return YES;
 }
 
@@ -129,20 +161,43 @@ static NSString * const headerIdentifier = @"header";
     
     // 结束日期大于起始日期
     // 起始日期小于结束日期
-    
-    NSDate *date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
-    if (!self.startDate) {
-        self.startDate = date;
-        NSLog(@"=====> start date is : %@", date);
-    } else if(!self.endDate) {
-        self.endDate = date;
-        NSLog(@"=====> to date is : %@", date);
-    } else {
+    if (self.selectionMode == ZBJSelectionModeRange) {
+        NSDate *date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
         
+        if (date) {
+            if (!self.startDate) {
+                self.startDate = date;
+                NSLog(@"=====> start date is : %@", date);
+            } else if(!self.endDate) {
+                self.endDate = date;
+                NSLog(@"=====> end date is : %@", date);
+                
+                [collectionView reloadData];
+                
+            } else {
+                self.startDate = date;
+                self.endDate = nil;
+                
+                [collectionView reloadData];
+            }
+        }
+       
     }
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
+}
+
+#pragma mark UICollectionViewDelegateFlowLayout
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
+    CGFloat w = collectionView.bounds.size.width;
+    return CGSizeMake(w, 60);
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    CGFloat w = collectionView.bounds.size.width;
+    CGFloat cellWidth = (w - 6) / 7;
+    return CGSizeMake(cellWidth, cellWidth);
 }
 
 
@@ -170,5 +225,25 @@ static NSString * const headerIdentifier = @"header";
         _collectionView.delegate = self;
     }
     return _collectionView;
+}
+
+
+#pragma mark - setters
+- (void)setSelectionMode:(ZBJSelectionMode)selectionMode {
+    _selectionMode = selectionMode;
+    switch (_selectionMode) {
+        case ZBJSelectionModeSingle: {
+            self.collectionView.allowsSelection = YES;
+            break;
+        }
+        case ZBJSelectionModeRange: {
+            self.collectionView.allowsMultipleSelection = YES;
+            break;
+        }
+        default: {
+            self.collectionView.allowsSelection = NO;
+            break;
+        }
+    }
 }
 @end

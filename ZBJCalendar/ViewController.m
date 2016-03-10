@@ -7,7 +7,8 @@
 //
 
 #import "ViewController.h"
-#import "CalendarViewController.h"
+#import "ZBJCalendarRangeViewController.h"
+#import "ZBJCalendarShowViewController.h"
 
 static NSString * const ZBJCellIdentifier = @"cell";
 
@@ -49,22 +50,32 @@ static NSString * const ZBJCellIdentifier = @"cell";
 #pragma mark - UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    CalendarViewController *calendarViewController = [CalendarViewController new];
-    calendarViewController.selectedType = indexPath.row;
     
-    if (indexPath.row == 2 || indexPath.row == 3) {
-        calendarViewController.continuous = YES;
-    } else {
-        calendarViewController.continuous = NO;
+    switch (indexPath.row) {
+        case 0: {
+            ZBJCalendarShowViewController *calendarViewController = [ZBJCalendarShowViewController new];
+            calendarViewController.title = self.tableData[indexPath.row];
+            [self.navigationController pushViewController:calendarViewController animated:YES];
+            break;
+        }
+        case 1: {
+            ZBJCalendarRangeViewController *calendarViewController = [ZBJCalendarRangeViewController new];
+            calendarViewController.title = self.tableData[indexPath.row];
+            [self.navigationController pushViewController:calendarViewController animated:YES];
+            break;
+        }
+        default:
+            break;
     }
-    calendarViewController.title = self.tableData[indexPath.row];
-    [self.navigationController pushViewController:calendarViewController animated:YES];
+    
+    
+ 
 }
 
 #pragma mark - getter
 - (NSArray *)tableData {
     if (!_tableData) {
-        _tableData = @[@"SingalSelection", @"MultiSelection", @"Continuous&SingalSelection", @"Continuous&MultiSelection"];
+        _tableData = @[@"ShowOnly", @"RangeSelection"];
     }
     return _tableData;
 }

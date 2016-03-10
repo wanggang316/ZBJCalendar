@@ -12,9 +12,11 @@
 
 @property (nonatomic, strong) NSDate *day;
 @property (nonatomic, assign) BOOL isToday;
-@property (nonatomic, assign) BOOL firstDayShowMonth;
 
-
+@property (nonatomic, assign) BOOL isStartDate;
+@property (nonatomic, assign) BOOL isEndDate;
+@property (nonatomic, assign) BOOL isSelectedDate;
+@property (nonatomic, assign) BOOL isDisabledDate;
 // selectable
 
 
