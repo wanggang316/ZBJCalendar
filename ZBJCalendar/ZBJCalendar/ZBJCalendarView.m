@@ -46,13 +46,18 @@ static NSString * const headerIdentifier = @"header";
     _continuous = continuous;
     if (_continuous) {
         _collectionDataSource = [ZBJCalendarContinuousDataSource new];
+     
+        
+        
     } else {
         _collectionDataSource = [ZBJCalendarDataSource new];
     }
     
     [_collectionDataSource performSelector:@selector(setFirstDate:) withObject:self.firstDate];
     [_collectionDataSource performSelector:@selector(setLastDate:) withObject:self.lastDate];
-    [_collectionDataSource performSelector:@selector(setSelectedDate:) withObject:self.selectedDate];
+
+    
+
 
     self.collectionView.dataSource = _collectionDataSource;
 }
@@ -60,15 +65,29 @@ static NSString * const headerIdentifier = @"header";
 - (void)setSelectedType:(ZBJCalendarSelectedType)selectedType {
     _selectedType = selectedType;
     if (_selectedType == ZBJCalendarSelectedTypeMulti) {
-        _collectionDelegate = [ZBJCalendarMultiDelegate new];
+        ZBJCalendarMultiDelegate *d = [ZBJCalendarMultiDelegate new];
+//        [d addObserver:self
+//                              forKeyPath:@"firstDate"
+//                                 options:(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld)
+//                                 context:@"this is a context"];
+
+        _collectionDelegate = d;//[ZBJCalendarMultiDelegate new];
         self.collectionView.allowsMultipleSelection = YES;
     } else {
-        _collectionDelegate = [ZBJCalendarSingleDelegate new];
+        
+        ZBJCalendarSingleDelegate *d = [ZBJCalendarSingleDelegate new];
+        [d addObserver:self
+            forKeyPath:@"firstDate"
+               options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld)
+               context:@"this is a context"];
+        
+        _collectionDelegate = d;//[ZBJCalendarMultiDelegate new];
+        
+//        _collectionDelegate = [ZBJCalendarSingleDelegate new];
     }
     [_collectionDelegate performSelector:@selector(setFirstDate:) withObject:self.firstDate];
-    self.collectionView.delegate = _collectionDelegate;
-
     
+    self.collectionView.delegate = _collectionDelegate;
 }
 
 - (void)layoutSubviews {
@@ -79,6 +98,12 @@ static NSString * const headerIdentifier = @"header";
 
 
 
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
+    if ([keyPath isEqualToString:@"firstDate"]) {
+        NSLog(@"change happen, old: %@ ,new: %@; context = %@",[change objectForKey:NSKeyValueChangeOldKey],[change objectForKey:NSKeyValueChangeNewKey],context);
+        self.firstDate = [change objectForKey:NSKeyValueChangeNewKey];
+    }
+}
 
 
 
@@ -101,7 +126,6 @@ static NSString * const headerIdentifier = @"header";
         layout.minimumInteritemSpacing = 1;
         _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame)) collectionViewLayout:layout];
         _collectionView.backgroundColor = [UIColor whiteColor];
-        _collectionView.dataSource = self;
         [_collectionView registerClass:[ZBJCalendarCell class] forCellWithReuseIdentifier:@"identifier"];
         [_collectionView registerClass:[ZBJCalendarSectionHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:headerIdentifier];
     }

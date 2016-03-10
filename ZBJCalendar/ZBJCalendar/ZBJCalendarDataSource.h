@@ -12,6 +12,6 @@
 
 @property (nonatomic, strong) NSDate *firstDate;
 @property (nonatomic, strong) NSDate *lastDate;
-@property (nonatomic, strong) NSDate *selectedDate;
+//@property (nonatomic, strong) NSDate *selectedDate;
 
 @end

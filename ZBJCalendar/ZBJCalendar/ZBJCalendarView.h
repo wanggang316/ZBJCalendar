@@ -23,10 +23,13 @@ typedef NS_ENUM(NSInteger, ZBJCalendarSelectedType) {
 
 @property (nonatomic, strong) NSDate *firstDate;
 @property (nonatomic, strong) NSDate *lastDate;
-@property (nonatomic, strong) NSDate *selectedDate;
+
+@property (nonatomic, strong, readonly) NSDate *selectedDate;
 
 @property (nonatomic, assign) ZBJCalendarSelectedType selectedType;
 @property (nonatomic, assign, getter=isContinuous) BOOL continuous; // default is NO
+
+@property (nonatomic, assign) UIEdgeInsets contentInsets;   // the inner padding
 
 @end
 

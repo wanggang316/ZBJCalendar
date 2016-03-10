@@ -15,7 +15,7 @@ static NSString * const headerIdentifier = @"header";
 
 @interface ZBJCalendarSingleDelegate()
 
-
+@property (nonatomic, strong) NSIndexPath *selectedIndexPath;
 
 @end
 
@@ -47,9 +47,12 @@ static NSString * const headerIdentifier = @"header";
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    //    ZBJCalendarCell *cell = (ZBJCalendarCell *)[collectionView cellForItemAtIndexPath:indexPath];
-    //    cell.selected = YES;
     self.selectedIndexPath = indexPath;
+    
+    NSDate *date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
+    self.selectedDate = date;
+    NSLog(@"----> selected date is : %@", date);
+    
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {

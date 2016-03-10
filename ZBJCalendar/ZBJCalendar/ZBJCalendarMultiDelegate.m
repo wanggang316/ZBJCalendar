@@ -16,7 +16,6 @@ static NSString * const headerIdentifier = @"header";
 @interface ZBJCalendarMultiDelegate()
 
 
-
 @end
 
 @implementation ZBJCalendarMultiDelegate
@@ -57,10 +56,13 @@ static NSString * const headerIdentifier = @"header";
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    if (!self.fromIndexPath || !self.toIndexPath) {
-        return YES;
-    }
-    return NO;
+    return YES;
+    
+//    if ((!self.fromIndexPath || !self.toIndexPath) ||
+//        (self.fromIndexPath && self.toIndexPath)) {
+//        return YES;
+//    }
+//    return NO;
     
 //    if ([self.fromIndexPath isEqual:indexPath] ||
 //        [self.toIndexPath isEqual:indexPath]) {
@@ -70,27 +72,29 @@ static NSString * const headerIdentifier = @"header";
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
-//    if (![self.fromIndexPath isEqual:indexPath]) {
-        return YES;
-//    }
-//    return NO;
+    return YES;
 }
 
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    //    ZBJCalendarCell *cell = (ZBJCalendarCell *)[collectionView cellForItemAtIndexPath:indexPath];
-    //    cell.selected = YES;
     
+    // 结束日期大于起始日期
+    // 起始日期小于结束日期
+    
+    NSDate *date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
     if (!self.fromIndexPath) {
         self.fromIndexPath = indexPath;
+        NSLog(@"=====> start date is : %@", date);
     } else if(!self.toIndexPath) {
         self.toIndexPath = indexPath;
+        NSLog(@"=====> to date is : %@", date);
+    } else if (self.fromIndexPath && self.toIndexPath) {
+        
     }
+    
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
-    //    ZBJCalendarCell *cell = (ZBJCalendarCell *)[collectionView cellForItemAtIndexPath:indexPath];
-    //    cell.selected = NO;
 }
 
 @end
