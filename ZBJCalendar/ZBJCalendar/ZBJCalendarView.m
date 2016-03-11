@@ -77,39 +77,42 @@ static NSString * const headerIdentifier = @"header";
     ZBJCalendarCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"identifier" forIndexPath:indexPath];
     
     NSDate *date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
-    
     cell.day = date;
-    
-    if ([self.startDate isEqualToDate:date]) {
-        cell.isStartDate = YES;
-    } else if ( [self.endDate isEqualToDate:date]) {
-        cell.isEndDate = YES;
-    } else {
-        cell.isStartDate = NO;
-        cell.isEndDate = NO;
-    }
     
     if (date) {
         
-        for (ZBJOfferDay *day in self.dates) {
-            if ([day.date isEqualToDate:date]) {
-                cell.isDisabledDate = !day.available.boolValue;
-                break;
-            }
-        }
-
         // 日期在今天以前
         if ([[date dateByAddingTimeInterval:86400.0 - 1] compare:[NSDate date]] == NSOrderedAscending) {
             cell.isDisabledDate = YES;
-            
-        } else if (self.startDate && self.endDate &&
-            ![self.startDate isEqualToDate:date] &&
-            ![self.endDate isEqualToDate:date]) { // 大于起始日期，并小于结束日期
-            
-            BOOL flag = [date compare:self.startDate] == NSOrderedDescending;
-            BOOL flag1 = ([date compare:self.endDate] == NSOrderedAscending);
-//            NSLog(@"%@ 大于起始日期： %@, 小于结束日期：%@", date, @(flag), @(flag1));
-            cell.isSelectedDate = flag && flag1;
+        } else {
+        
+            // set `isDisabledDate`, default is avaible
+            BOOL isUnavailable = NO;
+            for (ZBJOfferDay *day in self.dates) {
+                if ([day.date isEqualToDate:date]) {
+                    isUnavailable = !day.available.boolValue;
+                    break;
+                }
+            }
+            if (isUnavailable) {
+                cell.isUnavailableDate = YES;
+            } else {
+                // avaible dates configure
+                // set `isStartDate`, `isEndDate` and `isMidDate`, else is avaible.
+                if ([self.startDate isEqualToDate:date]) {
+                    cell.isStartDate = YES;
+                } else if ( [self.endDate isEqualToDate:date]) {
+                    cell.isEndDate = YES;
+                } else if (self.startDate && self.endDate &&
+                    ![self.startDate isEqualToDate:date] &&
+                    ![self.endDate isEqualToDate:date]) {
+                    
+                    // between `startDate` and `endDate` is midDate.
+                    cell.isMidDate = ([date compare:self.startDate] == NSOrderedDescending) && ([date compare:self.endDate] == NSOrderedAscending);
+                } else {
+                    cell.isUnavailableDate = NO;
+                }
+            }
         }
     }
     
@@ -136,6 +139,14 @@ static NSString * const headerIdentifier = @"header";
             // 先取到当天的最后一秒: xxxx-xx-xx 23:59:59
             if ([[date dateByAddingTimeInterval:86400.0 - 1] compare:[NSDate date] ] == NSOrderedAscending) {
                 return NO;
+            }
+            
+            // avaiable
+            for (ZBJOfferDay *day in self.dates) {
+                if ([day.date isEqualToDate:date]) {
+                    return [day.available boolValue];
+                    break;
+                }
             }
             
         } else {

@@ -13,11 +13,16 @@
 @property (nonatomic, strong) NSDate *day;
 @property (nonatomic, assign) BOOL isToday;
 
+// equals forbiden status
+@property (nonatomic, assign) BOOL isDisabledDate;
+
+// is selectable and is selected
 @property (nonatomic, assign) BOOL isStartDate;
 @property (nonatomic, assign) BOOL isEndDate;
-@property (nonatomic, assign) BOOL isSelectedDate;
-@property (nonatomic, assign) BOOL isDisabledDate;
-// selectable
+@property (nonatomic, assign) BOOL isMidDate;  // between selected `startDate` and selected `endDate`
 
+// is selectable but not available
+@property (nonatomic, assign) BOOL isUnavailableDate;
 
+// other status is normal
 @end

@@ -56,6 +56,16 @@
 //    }
 }
 
+
+- (void)setIsDisabledDate:(BOOL)isDisabledDate {
+    _isDisabledDate = isDisabledDate;
+    if (_isDisabledDate) {
+        self.dayLabel.textColor = [UIColor colorWithRed:230.0/255.0 green:230.0/255.0 blue:233.0/255.0 alpha:1.0];
+    } else {
+        self.dayLabel.textColor = [UIColor darkTextColor];
+    }
+}
+
 - (void)setIsStartDate:(BOOL)isStartDate {
     _isStartDate = isStartDate;
     self.selected = _isStartDate;
@@ -66,9 +76,9 @@
     self.selected = _isEndDate;
 }
 
-- (void)setIsSelectedDate:(BOOL)isSelectedDate {
-    _isSelectedDate = isSelectedDate;
-    if (_isSelectedDate) {
+- (void)setIsMidDate:(BOOL)isMidDate {
+    _isMidDate = isMidDate;
+    if (_isMidDate) {
         self.contentView.backgroundColor = [UIColor colorWithRed:58.0/255.0 green:58.0/255.0 blue:72.0/255.0 alpha:1.0];
         self.dayLabel.textColor = [UIColor whiteColor];
     } else {
@@ -77,11 +87,14 @@
     }
 }
 
-- (void)setIsDisabledDate:(BOOL)isDisabledDate {
-    _isDisabledDate = isDisabledDate;
-    if (_isDisabledDate) {
-        self.dayLabel.textColor = [UIColor colorWithRed:230.0/255.0 green:230.0/255.0 blue:233.0/255.0 alpha:1.0];
+
+- (void)setIsUnavailableDate:(BOOL)isUnavailableDate {
+    _isUnavailableDate = isUnavailableDate;
+    if (_isUnavailableDate) {
+        self.contentView.backgroundColor = [UIColor whiteColor];
+        self.dayLabel.textColor = [UIColor lightGrayColor];
     } else {
+        self.contentView.backgroundColor = [UIColor whiteColor];
         self.dayLabel.textColor = [UIColor darkTextColor];
     }
 }
