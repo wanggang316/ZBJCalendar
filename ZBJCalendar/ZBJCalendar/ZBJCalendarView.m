@@ -91,6 +91,13 @@ static NSString * const headerIdentifier = @"header";
     
     if (date) {
         
+        for (ZBJOfferDay *day in self.dates) {
+            if ([day.date isEqualToDate:date]) {
+                cell.isDisabledDate = !day.available.boolValue;
+                break;
+            }
+        }
+
         // 日期在今天以前
         if ([[date dateByAddingTimeInterval:86400.0 - 1] compare:[NSDate date]] == NSOrderedAscending) {
             cell.isDisabledDate = YES;

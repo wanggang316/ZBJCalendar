@@ -14,7 +14,7 @@
 @property (nonatomic, strong) NSDate *startDate;
 @property (nonatomic, strong) NSDate *endDate;
 
-@property (nonatomic, strong, readonly) NSArray *dates;
+@property (nonatomic, strong, readonly) NSSet *dates;
 
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary;
 
@@ -23,7 +23,7 @@
 @interface ZBJOfferDay : NSObject
 
 @property (nonatomic, strong) NSDate *date;
-@property (nonatomic, assign) BOOL available;
+@property (nonatomic, strong) NSNumber *available;
 @property (nonatomic, strong) NSNumber *price;
 
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary;

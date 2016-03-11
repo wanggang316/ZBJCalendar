@@ -10,7 +10,7 @@
 
 @interface ZBJOfferCalendar()
 
-@property (nonatomic, strong, readwrite) NSMutableArray *adates;
+@property (nonatomic, strong, readwrite) NSMutableSet *adates;
 
 @end
 
@@ -28,7 +28,7 @@
         self.startDate = [format dateFromString:[dictionary objectForKey:@"start_date"]];
         self.endDate = [format dateFromString:[dictionary objectForKey:@"end_date"]];
         
-        self.adates = [NSMutableArray new];
+        self.adates = [NSMutableSet new];
         NSArray *datesArr = [dictionary objectForKey:@"dates"];
         for (NSDictionary *dic in datesArr) {
             [self.adates addObject:[[ZBJOfferDay alloc] initWithDictionary:dic]];

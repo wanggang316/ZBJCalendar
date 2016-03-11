@@ -48,6 +48,8 @@
    
     self.calendarView.firstDate = offerCal.startDate;
     self.calendarView.lastDate = offerCal.endDate;
+    self.calendarView.dates = offerCal.dates;
+    self.calendarView.minNights = 2;
     
     [self.view addSubview:self.calendarView];
 }
