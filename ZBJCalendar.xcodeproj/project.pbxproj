@@ -280,6 +280,7 @@
 				TargetAttributes = {
 					32F7EBE51C16779F00ED2DA4 = {
 						CreatedOnToolsVersion = 7.1.1;
+						DevelopmentTeam = GB7H6UHA26;
 					};
 					32F7EBFE1C16779F00ED2DA4 = {
 						CreatedOnToolsVersion = 7.1.1;
@@ -499,6 +500,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = ZBJCalendar/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhubaijia.ZBJCalendar;
@@ -510,6 +512,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				INFOPLIST_FILE = ZBJCalendar/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhubaijia.ZBJCalendar;
