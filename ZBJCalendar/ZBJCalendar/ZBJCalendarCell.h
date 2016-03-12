@@ -8,11 +8,30 @@
 
 #import <UIKit/UIKit.h>
 
+typedef CF_ENUM(NSInteger, ZBJCalendarCellState) {
+    ZBJCalendarCellStateEmpty,
+    ZBJCalendarCellStateDisabled,
+    ZBJCalendarCellStateUnavaible,
+    ZBJCalendarCellStateAvaible,
+    ZBJCalendarCellStateAvaibleDisabled,
+    ZBJCalendarCellStateSelectedStart,
+    ZBJCalendarCellStateSelectedMiddle,
+    ZBJCalendarCellStateSelectedEnd,
+    ZBJCalendarCellStateSelectedTempEnd,
+};
+
+
 @interface ZBJCalendarCell : UICollectionViewCell
 
 @property (nonatomic, strong) NSDate *day;
+@property (nonatomic, strong) NSNumber *price;
 @property (nonatomic, assign) BOOL isToday;
 
+
+@property (nonatomic, assign) ZBJCalendarCellState cellState;
+
+
+/*
 // equals forbiden status
 @property (nonatomic, assign) BOOL isDisabledDate;
 
@@ -25,4 +44,6 @@
 @property (nonatomic, assign) BOOL isUnavailableDate;
 
 // other status is normal
+ 
+*/
 @end

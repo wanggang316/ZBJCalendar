@@ -32,7 +32,10 @@ static NSString * const headerIdentifier = @"header";
 
 @property (nonatomic, strong) NSDate *startDate;
 @property (nonatomic, strong) NSDate *endDate;
-@property (nonatomic, strong) NSMutableSet *tempAvaibleDays;
+//@property (nonatomic, strong) NSMutableSet *tempAvaibleDates;
+@property (nonatomic, strong) NSMutableSet *tempUnavaibleDates;
+@property (nonatomic, strong) NSDate *nearestUnavaibleDate;
+
 @end
 
 
@@ -48,7 +51,8 @@ static NSString * const headerIdentifier = @"header";
         
         self.selectionMode = ZBJSelectionModeRange;
         
-        self.tempAvaibleDays = [[NSMutableSet alloc] init];
+//        self.tempAvaibleDates = [[NSMutableSet alloc] init];
+        self.tempUnavaibleDates = [[NSMutableSet alloc] init];
     }
     return self;
 }
@@ -91,47 +95,108 @@ static NSString * const headerIdentifier = @"header";
     NSDate *date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
     cell.day = date;
     
+    NSNumber *price = nil;
+    ZBJCalendarCellState cellState = -1;
+    
     if (date) {
-        
-        // 日期在`firstDate`之前 或 在`lastDate`之后
-        if ([[date dateByAddingTimeInterval:86400.0 - 1] compare:(self.firstDate)] == NSOrderedAscending ||
-            [date compare:self.lastDate] == NSOrderedDescending) {
-            cell.isDisabledDate = YES;
+        // 如果小于起始日期或大于结束日期，那么disabled
+        if ([[date dateByAddingTimeInterval:86400.0 - 1] compare:self.firstDate] == NSOrderedAscending ||
+            [date compare:self.lastDate] != NSOrderedAscending) { //不大于最后一天
+            
+            cellState = ZBJCalendarCellStateDisabled;
         } else {
-        
-            // set `isUnanvilableDate`, default is avaible
-            BOOL isUnavailable = NO;
+            
             ZBJOfferDay *day = [self offerDateWithDate:date];
-            if (day) {
-                isUnavailable = !day.available.boolValue;
-            }
+            price = day.price;
             
-            // 如果不可租，但是在暂时可租的组里
-            if (isUnavailable && [self.tempAvaibleDays containsObject:date]) {
-                isUnavailable = NO;
-            }
+            BOOL isAvaible = day.available.boolValue;
             
-            if (isUnavailable) {
-                cell.isUnavailableDate = YES;
-            } else {
-                // avaible dates configure
-                // set `isStartDate`, `isEndDate` and `isMidDate`, else is avaible.
-                if ([self.startDate isEqualToDate:date]) {
-                    cell.isStartDate = YES;
-                } else if ( [self.endDate isEqualToDate:date]) {
-                    cell.isEndDate = YES;
-                } else if (self.startDate && self.endDate &&
-                    ![self.startDate isEqualToDate:date] &&
-                    ![self.endDate isEqualToDate:date]) {
+            switch (self.selectedState) {
+                case ZBJCalendarStateSelectedStart: {
                     
-                    // between `startDate` and `endDate` is midDate.
-                    cell.isMidDate = ([date compare:self.startDate] == NSOrderedDescending) && ([date compare:self.endDate] == NSOrderedAscending);
-                } else {
-                    cell.isUnavailableDate = NO;
+                    if ([[date dateByAddingTimeInterval:86400.0 - 1] compare:self.startDate] == NSOrderedAscending &&
+                        [date compare:self.firstDate] == NSOrderedDescending) {
+                        
+                        if (isAvaible) {
+                            cellState = ZBJCalendarCellStateAvaibleDisabled;
+                        } else {
+                            cellState = ZBJCalendarCellStateUnavaible;
+                        }
+                    } else if ([self.startDate isEqualToDate:date]) {
+                        cellState = ZBJCalendarCellStateSelectedStart;
+                    } else if ([self.tempUnavaibleDates containsObject:date]) {
+                        cellState = ZBJCalendarCellStateAvaibleDisabled;
+                    } else if (self.nearestUnavaibleDate && [self.nearestUnavaibleDate isEqualToDate:date]) {
+                        cellState = ZBJCalendarCellStateSelectedTempEnd;
+                    } else if (self.nearestUnavaibleDate &&
+                               [date compare:self.nearestUnavaibleDate] == NSOrderedDescending &&
+                               [[date dateByAddingTimeInterval:86400.0 - 1] compare:self.lastDate] == NSOrderedAscending
+                               ) {
+                        if (isAvaible) {
+                            cellState = ZBJCalendarCellStateAvaibleDisabled;
+                        } else {
+                            cellState = ZBJCalendarCellStateUnavaible;
+                        }
+                    } else {
+                        
+                        if (isAvaible) {
+                            cellState = ZBJCalendarCellStateAvaible;
+                        } else {
+                            cellState = ZBJCalendarCellStateUnavaible;
+                        }
+                    }
+
+                    break;
                 }
+                case ZBJCalendarStateSelectedRange: {
+                    
+//                    if ([[date dateByAddingTimeInterval:86400.0 - 1] compare:self.startDate] == NSOrderedAscending &&
+//                        [date compare:self.firstDate] == NSOrderedDescending) {
+//                        
+//                        if (isAvaible) {
+//                            cellState = ZBJCalendarCellStateAvaible;
+//                        } else {
+//                            cellState = ZBJCalendarCellStateUnavaible;
+//                        }
+//                    } else
+                    if ([self.startDate isEqualToDate:date]) {
+                        cellState = ZBJCalendarCellStateSelectedStart;
+                    } else if ([self.endDate isEqualToDate:date]) {
+                        cellState = ZBJCalendarCellStateSelectedEnd;
+                    } else if (self.startDate && self.endDate &&
+                               [[date dateByAddingTimeInterval:86400.0 - 1] compare:self.endDate] == NSOrderedAscending &&
+                               [date compare:self.startDate] == NSOrderedDescending) {
+                        
+                        cellState = ZBJCalendarCellStateSelectedMiddle;
+                    } else {
+                        if (isAvaible) {
+                            cellState = ZBJCalendarCellStateAvaible;
+                        } else {
+                            cellState = ZBJCalendarCellStateUnavaible;
+                        }
+                    }
+                    break;
+                }
+                default: {
+                    
+                    if (isAvaible) {
+                        cellState = ZBJCalendarCellStateAvaible;
+                    } else {
+                        cellState = ZBJCalendarCellStateUnavaible;
+                    }
+                    break;
+                }
+                    
+                    
             }
         }
+    } else {
+        cellState = ZBJCalendarCellStateEmpty;
     }
+    
+    
+    cell.price = price;
+    cell.cellState = cellState;
     
     return cell;
 }
@@ -160,8 +225,22 @@ static NSString * const headerIdentifier = @"header";
                     }
                     
                     // 暂时可选集合中如果包涵此日期，那么可选
-                    if ([self.tempAvaibleDays containsObject:date]) {
+//                    if ([self.tempAvaibleDates containsObject:date]) {
+//                        return YES;
+//                    }
+                    // 如果最近的不可选日期等于此日期，那么可选
+                    if ([self.nearestUnavaibleDate isEqualToDate:date]) {
                         return YES;
+                    }
+                    
+                    // 暂时不可选集合包涵次日期，那么不可选
+                    if ([self.tempUnavaibleDates containsObject:date]) {
+                        return NO;
+                    }
+                    
+                    if (self.nearestUnavaibleDate &&
+                        [date compare:self.nearestUnavaibleDate] == NSOrderedDescending) {
+                        return NO;
                     }
                     
                     // 如果不满足上面的条件，那么根据data中的avaible来判断是否可选
@@ -172,7 +251,13 @@ static NSString * const headerIdentifier = @"header";
                     break;
                 }
                 case ZBJCalendarStateSelectedRange: {
-                    
+//                    // 暂时可选集合中如果包涵此日期，那么可选
+//                    if ([self.tempAvaibleDates containsObject:date]) {
+//                        return NO;
+//                    }
+                    if ([self.nearestUnavaibleDate isEqualToDate:date]) {
+                        return NO;
+                    }
                     break;
                 }
                 default:
@@ -201,6 +286,12 @@ static NSString * const headerIdentifier = @"header";
                 self.startDate = date;
                 self.selectedState = ZBJCalendarStateSelectedStart;
             } else if (!self.endDate) {
+                
+                if ([self.startDate isEqualToDate:date]) {
+                    self.selectedState = ZBJCalendarStateSelectedNone;
+                    return;
+                }
+                
                 self.endDate = date;
                 self.selectedState = ZBJCalendarStateSelectedRange;
             } else {
@@ -233,6 +324,7 @@ static NSString * const headerIdentifier = @"header";
     self.startDate = nil;
     self.endDate = nil;
     [self.collectionView reloadData];
+    self.collectionView.allowsSelection = YES;
 }
 
 - (ZBJOfferDay *)offerDateWithDate:(NSDate *)date {
@@ -240,6 +332,20 @@ static NSString * const headerIdentifier = @"header";
         if ([day.date isEqualToDate:date]) {
             return day;
             break;
+        }
+    }
+    return nil;
+}
+
+// 计算开始日期之后最近的不可选日期
+- (NSDate *)findTheNearestUnavaibleDateByStartDate:(NSDate *)date {
+    NSDate *nextDate = [date dateByAddingTimeInterval:86400.0];
+    ZBJOfferDay *theDay = [self offerDateWithDate:nextDate];
+    if (theDay) {
+        if (![theDay.available boolValue]) {
+            return nextDate;
+        } else {
+            return [self findTheNearestUnavaibleDateByStartDate:nextDate];
         }
     }
     return nil;
@@ -296,15 +402,18 @@ static NSString * const headerIdentifier = @"header";
     _selectedState = selectedState;
     switch (_selectedState) {
         case ZBJCalendarStateSelectedNone: {
+            [self reset];
             break;
         }
         case ZBJCalendarStateSelectedStart: {
             
             self.endDate = nil;
-            [self.tempAvaibleDays removeAllObjects];
+//            [self.tempAvaibleDates removeAllObjects];
+            [self.tempUnavaibleDates removeAllObjects];
+            self.nearestUnavaibleDate = nil;
             
             [self.collectionView reloadData];
-
+            
             // calculate avaible `endDate` based `startDate`.
             // - the days in `minNights` from `startDate` has days unavaible.
             for (int i = 1; i < self.minNights; i++) {
@@ -312,22 +421,38 @@ static NSString * const headerIdentifier = @"header";
                 // find the data about `theDate` and deal.
                 ZBJOfferDay *day = [self offerDateWithDate:theDate];
                 if (!day.available.boolValue) {
+                    self.collectionView.allowsSelection = NO;
                     [self performSelector:@selector(reset) withObject:nil afterDelay:0.8];
                     return;
                 }
             }
             
-            // - the result day of `startDate` plus `minNights` is unavaible.
-            NSDate *theDate = [self.startDate dateByAddingTimeInterval:(self.minNights * 24 * 60 * 60)];
-            ZBJOfferDay *day = [self offerDateWithDate:theDate];
-            if (!day.available.boolValue) {
-                // 这里只需要刷新一个cell ？
-                [self.tempAvaibleDays addObject:theDate];
-                [self.collectionView reloadData];
+            // - if the result day of `startDate` plus `minNights` is unavaible, set is avaible.
+//            NSDate *theDate = [self.startDate dateByAddingTimeInterval:(self.minNights * 24 * 60 * 60)];
+//            ZBJOfferDay *day = [self offerDateWithDate:theDate];
+//            if (!day.available.boolValue) {
+//                // 这里只需要刷新一个cell ？
+//                [self.tempAvaibleDates addObject:theDate];
+//            }
+        
+            // - set the day between and `startDate` and `minNights` unavaible.
+            for (int i = 1; i < self.minNights; i++) {
+                NSDate *theDate = [self.startDate dateByAddingTimeInterval:(i * 24 * 60 * 60)];
+                [self.tempUnavaibleDates addObject:theDate];
             }
+            
+            
+            // - 计算起始日期之后最近的不可选日期
+            self.nearestUnavaibleDate = [self findTheNearestUnavaibleDateByStartDate:self.startDate];
+            
+            [self.collectionView reloadData];
+            
             break;
         }
         case ZBJCalendarStateSelectedRange: {
+            
+         
+            
             [self.collectionView reloadData];
             break;
         }
