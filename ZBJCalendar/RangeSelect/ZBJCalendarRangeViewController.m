@@ -11,6 +11,7 @@
 #import "ZBJCalendarView.h"
 #import "ZBJCalenderRangeSelector.h"
 #import "ZBJCalendarRangeCell.h"
+#import "ZBJCalendarSectionHeader.h"
 
 @interface ZBJCalendarRangeViewController ()
 
@@ -57,7 +58,6 @@
     self.calendarView.firstDate = fromDate;
     self.calendarView.lastDate = toDate;
 
-    [self.calendarView registerCellClass:[ZBJCalendarRangeCell class]];
     
     [self.view addSubview:self.calendarView];
 }
@@ -72,6 +72,8 @@
     if (!_calendarView) {
         _calendarView = [[ZBJCalendarView alloc] initWithFrame:self.view.bounds];
         _calendarView.backgroundColor = [UIColor lightGrayColor];
+        [_calendarView registerCellClass:[ZBJCalendarRangeCell class]];
+        [_calendarView registerSectionHeader:[ZBJCalendarSectionHeader class]];
     }
     return _calendarView;
 }

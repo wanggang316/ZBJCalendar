@@ -8,6 +8,7 @@
 
 #import "ZBJCalenderRangeSelector.h"
 #import "ZBJCalendarRangeCell.h"
+#import "ZBJCalendarSectionHeader.h"
 
 typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
     ZBJCalendarStateSelectedNone,
@@ -155,6 +156,12 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
         default:
             break;
     }
+}
+
+
+- (void)calendarView:(ZBJCalendarView *)calendarView configureSectionHeaderView:(ZBJCalendarSectionHeader *)headerView forYear:(NSInteger)year month:(NSInteger)month {
+    headerView.year = year;
+    headerView.month = month;
 }
 
 @end

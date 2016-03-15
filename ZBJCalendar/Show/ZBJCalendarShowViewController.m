@@ -11,6 +11,7 @@
 #import "ZBJCalendarView.h"
 #import "ZBJCalendarShowDelegate.h"
 #import "ZBJCalendarShowCell.h"
+#import "ZBJCalendarSectionHeader.h"
 
 @interface ZBJCalendarShowViewController()
 
@@ -69,6 +70,7 @@
         _calendarView = [[ZBJCalendarView alloc] initWithFrame:self.view.bounds];
         _calendarView.backgroundColor = [UIColor lightGrayColor];
         [_calendarView registerCellClass:[ZBJCalendarShowCell class]];
+        [_calendarView registerSectionHeader:[ZBJCalendarSectionHeader class]];
         _calendarView.selectionMode = ZBJSelectionModeNone;
     }
     return _calendarView;

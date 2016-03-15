@@ -30,6 +30,7 @@ typedef CF_ENUM(NSInteger, ZBJSelectionMode) {
 @property (nonatomic, assign) UIEdgeInsets contentInsets;   // the inner padding
 
 - (void)registerCellClass:(id)clazz;
+- (void)registerSectionHeader:(id)clazz;
 
 @end
 
@@ -40,4 +41,5 @@ typedef CF_ENUM(NSInteger, ZBJSelectionMode) {
 - (void)calendarView:(ZBJCalendarView *)calendarView configureCell:(id)cell forDate:(NSDate *)date;
 - (void)calendarView:(ZBJCalendarView *)calendarView didSelectDate:(NSDate *)date;
 
+- (void)calendarView:(ZBJCalendarView *)calendarView configureSectionHeaderView:(id)headerView forYear:(NSInteger)year month:(NSInteger)month;
 @end

@@ -11,6 +11,7 @@
 #import "ZBJCalendarView.h"
 #import "ZBJOfferCalendar.h"
 #import "ZBJCalendarCell.h"
+#import "ZBJCalendarSectionHeader.h"
 
 typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
     ZBJCalendarStateSelectedNone,
@@ -295,6 +296,13 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
     }
 }
 
+
+
+- (void)calendarView:(ZBJCalendarView *)calendarView configureSectionHeaderView:(ZBJCalendarSectionHeader *)headerView forYear:(NSInteger)year month:(NSInteger)month {
+    headerView.year = year;
+    headerView.month = month;
+}
+
 #pragma mark -
 - (ZBJCalendarView *)calendarView {
     if (!_calendarView) {
@@ -302,6 +310,8 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
         _calendarView.backgroundColor = [UIColor lightGrayColor];
         _calendarView.delegate = self;
         [_calendarView registerCellClass:[ZBJCalendarCell class]];
+        [_calendarView registerSectionHeader:[ZBJCalendarSectionHeader class]];
+        
     }
     return _calendarView;
 }

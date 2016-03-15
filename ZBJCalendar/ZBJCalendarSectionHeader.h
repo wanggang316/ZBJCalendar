@@ -10,6 +10,7 @@
 
 @interface ZBJCalendarSectionHeader : UICollectionReusableView
 
-@property (nonatomic, strong) UILabel *calendarLabel;
+@property (nonatomic, assign) NSInteger year;
+@property (nonatomic, assign) NSInteger month;
 
 @end

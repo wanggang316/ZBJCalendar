@@ -8,10 +8,8 @@
 
 #import "ZBJCalendarView.h"
 #import "ZBJCalendarHeaderView.h"
-#import "ZBJCalendarSectionHeader.h"
 #import "NSDate+ZBJAddition.h"
 #import "NSDate+IndexPath.h"
-
 
 typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
     ZBJCalendarStateSelectedNone,
@@ -19,16 +17,11 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
     ZBJCalendarStateSelectedRange,
 };
 
-
 static NSString * const headerIdentifier = @"header";
 
 @interface ZBJCalendarView () <UICollectionViewDataSource, UICollectionViewDelegate>
-
 @property (nonatomic, strong) ZBJCalendarHeaderView *headerView;
-
 @end
-
-
 
 @implementation ZBJCalendarView
 
@@ -56,16 +49,23 @@ static NSString * const headerIdentifier = @"header";
     [self.collectionView registerClass:clazz forCellWithReuseIdentifier:@"identifier"];
 }
 
+- (void)registerSectionHeader:(id)clazz {
+    [self.collectionView registerClass:clazz forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:headerIdentifier];
+}
+
 #pragma mark UICollectionViewDataSource
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
-    ZBJCalendarSectionHeader *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:headerIdentifier forIndexPath:indexPath];
+    id headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:headerIdentifier forIndexPath:indexPath];
     
     NSDate *firstDateOfMonth = [NSDate dateForFirstDayInSection:indexPath.section firstDate:self.firstDate];
     
     NSCalendar *calendar = [NSDate gregorianCalendar];
     NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:firstDateOfMonth];
-    headerView.calendarLabel.text = [NSString stringWithFormat:@" %ld年%ld月", components.year, components.month];
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(calendarView:configureSectionHeaderView:forYear:month:)]) {
+        [self.delegate calendarView:self configureSectionHeaderView:headerView forYear:components.year month:components.month];
+    }
     return headerView;
 }
 
@@ -155,7 +155,6 @@ static NSString * const headerIdentifier = @"header";
         layout.minimumInteritemSpacing = 1;
         _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame)) collectionViewLayout:layout];
         _collectionView.backgroundColor = [UIColor whiteColor];
-        [_collectionView registerClass:[ZBJCalendarSectionHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:headerIdentifier];
         _collectionView.dataSource = self;
         _collectionView.delegate = self;
     }

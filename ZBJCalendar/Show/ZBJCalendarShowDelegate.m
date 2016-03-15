@@ -8,6 +8,7 @@
 
 #import "ZBJCalendarShowDelegate.h"
 #import "ZBJCalendarShowCell.h"
+#import "ZBJCalendarSectionHeader.h"
 
 @implementation ZBJCalendarShowDelegate
 
@@ -59,6 +60,11 @@
 }
 - (void)calendarView:(ZBJCalendarView *)calendarView didSelectDate:(NSDate *)date {
     
+}
+
+- (void)calendarView:(ZBJCalendarView *)calendarView configureSectionHeaderView:(ZBJCalendarSectionHeader *)headerView forYear:(NSInteger)year month:(NSInteger)month {
+    headerView.year = year;
+    headerView.month = month;
 }
 
 
