@@ -22,7 +22,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.backgroundColor = [UIColor colorWithRed:249.0f/255.0f green:249.0f/255.0f blue:249.0f/255.0f alpha:1.0];
+        self.backgroundColor = [UIColor whiteColor];
         NSCalendar *calendar = [NSDate gregorianCalendar];
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         dateFormatter.calendar = calendar;
@@ -42,7 +42,7 @@
             CGFloat w = CGRectGetWidth(self.frame)/7;
             UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(w * i, 0, w, CGRectGetHeight(self.frame))];
             label.textColor = [UIColor darkTextColor];
-            label.font = [UIFont systemFontOfSize:11];
+            label.font = [UIFont systemFontOfSize:15];
             label.text = [adjustedSymbols[i] uppercaseString];
             label.textAlignment = NSTextAlignmentCenter;
             [self addSubview:label];
@@ -50,7 +50,7 @@
         
         CALayer *layer = [CALayer layer];
         layer.frame = CGRectMake(0, CGRectGetHeight(self.frame) - 0.5, CGRectGetWidth(self.frame), 0.5);
-        layer.backgroundColor = [UIColor colorWithRed:178.0f/255.0f green:178.0f/255.0f blue:178.0f/255.0f alpha:1.0].CGColor;
+        layer.backgroundColor = [UIColor colorWithRed:230.0/255.0 green:230.0/255.0 blue:233.0/255.0 alpha:1.0].CGColor;
         [self.layer addSublayer:layer];
     }
     return self;

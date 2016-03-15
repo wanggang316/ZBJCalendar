@@ -67,7 +67,7 @@
 #pragma mark -
 - (ZBJCalendarView *)calendarView {
     if (!_calendarView) {
-        _calendarView = [[ZBJCalendarView alloc] initWithFrame:self.view.bounds];
+        _calendarView = [[ZBJCalendarView alloc] initWithFrame:CGRectMake(0, 64, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 64)];
         _calendarView.backgroundColor = [UIColor lightGrayColor];
         [_calendarView registerCellClass:[ZBJCalendarShowCell class]];
         [_calendarView registerSectionHeader:[ZBJCalendarSectionHeader class]];

@@ -29,8 +29,8 @@ static NSString * const headerIdentifier = @"header";
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        [self addSubview:self.collectionView];
         [self addSubview:self.headerView];
+        [self addSubview:self.collectionView];
         
         self.selectionMode = ZBJSelectionModeRange;
     }
@@ -39,8 +39,8 @@ static NSString * const headerIdentifier = @"header";
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.headerView.frame = CGRectMake(0, 64, CGRectGetWidth(self.frame), 20);
-    self.collectionView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
+    self.headerView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), 45);
+    self.collectionView.frame = CGRectMake(0, CGRectGetMaxY(self.headerView.frame), CGRectGetWidth(self.frame), CGRectGetHeight(self.frame) - CGRectGetMaxY(self.headerView.frame));
 }
 
 
@@ -141,7 +141,7 @@ static NSString * const headerIdentifier = @"header";
 
 - (ZBJCalendarHeaderView *)headerView {
     if (!_headerView) {
-        _headerView = [[ZBJCalendarHeaderView alloc] initWithFrame:CGRectMake(0, 64, CGRectGetWidth(self.frame), 20)];
+        _headerView = [[ZBJCalendarHeaderView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), 45)];
     }
     return _headerView;
 }
@@ -153,7 +153,7 @@ static NSString * const headerIdentifier = @"header";
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
         layout.minimumLineSpacing = 1;
         layout.minimumInteritemSpacing = 1;
-        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame)) collectionViewLayout:layout];
+        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.headerView.frame), CGRectGetWidth(self.frame), CGRectGetHeight(self.frame) - CGRectGetMaxY(self.headerView.frame)) collectionViewLayout:layout];
         _collectionView.backgroundColor = [UIColor whiteColor];
         _collectionView.dataSource = self;
         _collectionView.delegate = self;

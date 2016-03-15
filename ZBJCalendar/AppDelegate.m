@@ -18,42 +18,9 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-//    NSCalendar *calendar = [NSCalendar currentCalendar];
-//    NSInteger hour = [calendar component:NSCalendarUnitHour fromDate:[NSDate date]];
-//    NSLog(@"---hour : %@", @(hour));
-//    
-//    NSDate *valentines = [calendar dateWithEra:1 year:2015 month:2 day:14 hour:9 minute:0 second:0 nanosecond:0];
-//    NSDateComponents *components = [[NSDateComponents alloc] init];
-//    components.day = 31;
-//    
-//    NSDate *date = [calendar nextDateAfterDate:valentines matchingComponents:components options:NSCalendarMatchStrictly];
-//    // Mar 31, 2015, 12:00 AM
-//
-//    date = [calendar nextDateAfterDate:valentines matchingComponents:components options:NSCalendarMatchNextTime];
-//
-//    
-//    
-//    NSDateComponents *leapYearComponents = [[NSDateComponents alloc] init];
-////    leapYearComponents.month = 2;
-////    leapYearComponents.day = 29;
-//    leapYearComponents.hour = 1;
-//    
-//    NSDate *d = [calendar dateWithEra:1 year:2016 month:2 day:1 hour:0 minute:0 second:0 nanosecond:0];
-////    NSDate *nd = [calendar dateWithEra:1 year:2016 month:3 day:1 hour:0 minute:0 second:0 nanosecond:0];
-//
-//    
-//    __block int dateCount = 0;
-//    [calendar enumerateDatesStartingAfterDate:d
-//                           matchingComponents:leapYearComponents
-//                                      options:NSCalendarMatchStrictly | NSCalendarMatchNextTime
-//                                   usingBlock:^(NSDate *date, BOOL exactMatch, BOOL *stop) {
-//                                       NSLog(@"%@", date);
-////                                       if (++dateCount == 50) {
-////                                           *stop = YES;
-////                                       }
-//                                   }];
-    
-    
+    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:9.0/255.0 green:9.0/255.0 blue:26.0/255.0 alpha:0.8]];
+    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
     return YES;
 }
 

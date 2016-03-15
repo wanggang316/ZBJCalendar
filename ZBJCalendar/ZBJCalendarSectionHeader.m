@@ -28,8 +28,7 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    [self.monthLabel sizeToFit];
-    self.monthLabel.frame = CGRectMake(28, 20, CGRectGetWidth(self.monthLabel.frame), 20);
+    self.monthLabel.frame = CGRectMake(12, 20, CGRectGetWidth(self.monthLabel.frame), 20);
     self.yearLabel.frame = CGRectMake(CGRectGetMaxX(self.monthLabel.frame) + 5, CGRectGetMaxY(self.monthLabel.frame) - 2 - 9, 100, 9);
 }
 
@@ -40,6 +39,7 @@
 
 - (void)setMonth:(NSInteger)month {
     self.monthLabel.text = [NSString stringWithFormat:@"%ld月", month];
+    [self.monthLabel sizeToFit];
 }
 
 
