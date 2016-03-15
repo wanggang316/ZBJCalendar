@@ -29,8 +29,12 @@ typedef CF_ENUM(NSInteger, ZBJSelectionMode) {
 @property (nonatomic, assign) ZBJSelectionMode selectionMode;  // default is `YES`, select `startDate` and `endDate`
 @property (nonatomic, assign) UIEdgeInsets contentInsets;   // the inner padding
 
-- (void)registerCellClass:(id)clazz;
-- (void)registerSectionHeader:(id)clazz;
+@property (nonatomic, assign) CGFloat sectionHeaderHeight;
+@property (nonatomic, assign) CGFloat sectionFooterHeight;
+
+- (void)registerCellClass:(id)clazz withReuseIdentifier:(NSString *)identifier;
+- (void)registerSectionHeader:(id)clazz withReuseIdentifier:(NSString *)identifier;
+- (void)registerSectionFooter:(id)clazz withReuseIdentifier:(NSString *)identifier;
 
 @end
 
@@ -42,4 +46,5 @@ typedef CF_ENUM(NSInteger, ZBJSelectionMode) {
 - (void)calendarView:(ZBJCalendarView *)calendarView didSelectDate:(NSDate *)date;
 
 - (void)calendarView:(ZBJCalendarView *)calendarView configureSectionHeaderView:(id)headerView forYear:(NSInteger)year month:(NSInteger)month;
+- (void)calendarView:(ZBJCalendarView *)calendarView configureSectionFooterView:(id)headerView forYear:(NSInteger)year month:(NSInteger)month;
 @end

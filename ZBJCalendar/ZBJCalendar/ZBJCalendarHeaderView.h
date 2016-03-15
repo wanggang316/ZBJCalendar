@@ -10,6 +10,6 @@
 
 @interface ZBJCalendarHeaderView : UIView
 
-
+@property (nonatomic, assign) UIEdgeInsets contentInsets;   // the inner padding
 
 @end

@@ -33,9 +33,9 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.dateLabel.frame = CGRectMake(5, 10, CGRectGetWidth(self.bounds) - 10, 20);
-    self.priceLabel.frame = CGRectMake(0, CGRectGetMaxY(self.dateLabel.frame), CGRectGetWidth(self.frame), 9);
-    self.backgroundImageView.frame = self.bounds;
+    self.dateLabel.frame = CGRectMake(0, self.contentView.center.y - CGRectGetHeight(self.dateLabel.frame) - 1, CGRectGetWidth(self.bounds), 15);
+    self.priceLabel.frame = CGRectMake(0, self.contentView.center.y + 5, CGRectGetWidth(self.frame), 9);
+    self.backgroundImageView.frame = self.contentView.bounds;
 }
 
 
@@ -122,7 +122,7 @@
 - (UIImageView *)backgroundImageView {
     if (!_backgroundImageView) {
         _backgroundImageView = [[UIImageView alloc] initWithFrame:self.contentView.bounds];
-        _backgroundImageView.image = [UIImage imageNamed:@"unavaible"];
+        _backgroundImageView.image = [UIImage imageNamed:@"unav"];
         _backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
     }
     return _backgroundImageView;

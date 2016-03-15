@@ -7,7 +7,6 @@
 //
 
 #import "ZBJCalendarAdvanceViewController.h"
-#import "UINavigationBar+ZBJAddition.h"
 #import "ZBJCalendarView.h"
 #import "ZBJOfferCalendar.h"
 #import "ZBJCalendarCell.h"
@@ -36,16 +35,6 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
 @end
 
 @implementation ZBJCalendarAdvanceViewController
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.navigationController.navigationBar hidenHairLine:YES];
-}
-
--(void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    [self.navigationController.navigationBar hidenHairLine:NO];
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -309,9 +298,8 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
         _calendarView = [[ZBJCalendarView alloc] initWithFrame:CGRectMake(0, 64, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 64)];
         _calendarView.backgroundColor = [UIColor lightGrayColor];
         _calendarView.delegate = self;
-        [_calendarView registerCellClass:[ZBJCalendarCell class]];
-        [_calendarView registerSectionHeader:[ZBJCalendarSectionHeader class]];
-        
+        [_calendarView registerCellClass:[ZBJCalendarCell class] withReuseIdentifier:@"cell"];
+        [_calendarView registerSectionHeader:[ZBJCalendarSectionHeader class] withReuseIdentifier:@"sectionHeader"];
     }
     return _calendarView;
 }

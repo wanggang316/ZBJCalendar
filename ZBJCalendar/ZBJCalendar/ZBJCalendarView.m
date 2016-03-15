@@ -17,10 +17,13 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
     ZBJCalendarStateSelectedRange,
 };
 
-static NSString * const headerIdentifier = @"header";
-
 @interface ZBJCalendarView () <UICollectionViewDataSource, UICollectionViewDelegate>
 @property (nonatomic, strong) ZBJCalendarHeaderView *headerView;
+
+@property (nonatomic, strong) NSString *cellIdentifier;
+@property (nonatomic, strong) NSString *sectionHeaderIdentifier;
+@property (nonatomic, strong) NSString *sectionFooterIdentifier;
+
 @end
 
 @implementation ZBJCalendarView
@@ -29,6 +32,8 @@ static NSString * const headerIdentifier = @"header";
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
+        
+        self.backgroundColor = [UIColor whiteColor];
         [self addSubview:self.headerView];
         [self addSubview:self.collectionView];
         
@@ -40,33 +45,62 @@ static NSString * const headerIdentifier = @"header";
 - (void)layoutSubviews {
     [super layoutSubviews];
     self.headerView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), 45);
-    self.collectionView.frame = CGRectMake(0, CGRectGetMaxY(self.headerView.frame), CGRectGetWidth(self.frame), CGRectGetHeight(self.frame) - CGRectGetMaxY(self.headerView.frame));
+    self.collectionView.frame = CGRectMake(0,
+                                           CGRectGetMaxY(self.headerView.frame),
+                                           CGRectGetWidth(self.frame),
+                                           CGRectGetHeight(self.frame) - CGRectGetMaxY(self.headerView.frame));
+    self.collectionView.contentInset = self.contentInsets;
 }
 
 
 #pragma mark - public method
-- (void)registerCellClass:(id)clazz {
-    [self.collectionView registerClass:clazz forCellWithReuseIdentifier:@"identifier"];
+- (void)registerCellClass:(id)clazz withReuseIdentifier:(NSString *)identifier {
+    self.cellIdentifier = identifier;
+    [self.collectionView registerClass:clazz forCellWithReuseIdentifier:identifier];
 }
 
-- (void)registerSectionHeader:(id)clazz {
-    [self.collectionView registerClass:clazz forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:headerIdentifier];
+- (void)registerSectionHeader:(id)clazz withReuseIdentifier:(NSString *)identifier{
+    self.sectionHeaderIdentifier = identifier;
+    [self.collectionView registerClass:clazz forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:identifier];
+}
+
+- (void)registerSectionFooter:(id)clazz withReuseIdentifier:(NSString *)identifier{
+    self.sectionFooterIdentifier = identifier;
+    [self.collectionView registerClass:clazz forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:identifier];
+}
+
+- (void)setContentInsets:(UIEdgeInsets)contentInsets {
+    _contentInsets = contentInsets;
+    self.headerView.contentInsets = _contentInsets;
+    self.collectionView.contentInset = _contentInsets;
+
 }
 
 #pragma mark UICollectionViewDataSource
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
-    id headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:headerIdentifier forIndexPath:indexPath];
     
     NSDate *firstDateOfMonth = [NSDate dateForFirstDayInSection:indexPath.section firstDate:self.firstDate];
     
     NSCalendar *calendar = [NSDate gregorianCalendar];
     NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:firstDateOfMonth];
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(calendarView:configureSectionHeaderView:forYear:month:)]) {
-        [self.delegate calendarView:self configureSectionHeaderView:headerView forYear:components.year month:components.month];
+    if (self.sectionHeaderIdentifier && [kind isEqualToString:UICollectionElementKindSectionHeader]) {
+        id headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:self.sectionHeaderIdentifier forIndexPath:indexPath];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(calendarView:configureSectionHeaderView:forYear:month:)]) {
+            [self.delegate calendarView:self configureSectionHeaderView:headerView forYear:components.year month:components.month];
+        }
+        return headerView;
+    } else if (self.sectionFooterIdentifier && [kind isEqualToString:UICollectionElementKindSectionFooter]) {
+        id footerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:self.sectionFooterIdentifier forIndexPath:indexPath];
+
+        if (self.delegate && [self.delegate respondsToSelector:@selector(calendarView:configureSectionFooterView:forYear:month:)]) {
+            [self.delegate calendarView:self configureSectionFooterView:footerView forYear:components.year month:components.month];
+        }
+        return footerView;
     }
-    return headerView;
+   
+    return NULL;
 }
 
 
@@ -84,7 +118,7 @@ static NSString * const headerIdentifier = @"header";
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    id cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"identifier" forIndexPath:indexPath];
+    id cell = [collectionView dequeueReusableCellWithReuseIdentifier:self.cellIdentifier forIndexPath:indexPath];
     
     NSDate *date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
     
@@ -126,13 +160,29 @@ static NSString * const headerIdentifier = @"header";
 
 #pragma mark UICollectionViewDelegateFlowLayout
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
-    CGFloat w = collectionView.bounds.size.width;
-    return CGSizeMake(w, 60);
+    if (self.sectionHeaderIdentifier) {
+        if (self.sectionHeaderHeight > 0) {
+            return CGSizeMake(CGRectGetWidth(collectionView.frame), self.sectionHeaderHeight);
+        } else {
+            return CGSizeMake(CGRectGetWidth(collectionView.frame), 52);
+        }
+    }
+    return CGSizeZero;
+}
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section {
+    if (self.sectionFooterIdentifier) {
+        if (self.sectionFooterIdentifier > 0) {
+            return CGSizeMake(CGRectGetWidth(collectionView.frame), self.sectionFooterHeight);
+        } else {
+            return CGSizeMake(CGRectGetWidth(collectionView.frame), 13);
+        }
+    }
+    return CGSizeZero;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     CGFloat w = collectionView.bounds.size.width;
-    CGFloat cellWidth = (w - 6) / 7;
+    CGFloat cellWidth = (w - self.contentInsets.left - self.contentInsets.right) / 7;
     return CGSizeMake(cellWidth, cellWidth);
 }
 
@@ -151,8 +201,8 @@ static NSString * const headerIdentifier = @"header";
 - (UICollectionView *)collectionView {
     if (!_collectionView) {
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-        layout.minimumLineSpacing = 1;
-        layout.minimumInteritemSpacing = 1;
+        layout.minimumLineSpacing = 0;
+        layout.minimumInteritemSpacing = 0;
         _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.headerView.frame), CGRectGetWidth(self.frame), CGRectGetHeight(self.frame) - CGRectGetMaxY(self.headerView.frame)) collectionViewLayout:layout];
         _collectionView.backgroundColor = [UIColor whiteColor];
         _collectionView.dataSource = self;

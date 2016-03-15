@@ -10,6 +10,8 @@
 #import "ZBJCalendarRangeViewController.h"
 #import "ZBJCalendarShowViewController.h"
 #import "ZBJCalendarAdvanceViewController.h"
+#import "ZBJOfferCalendarView.h"
+#import "ZBJOfferCalendar.h"
 
 static NSString * const ZBJCellIdentifier = @"cell";
 
@@ -54,9 +56,27 @@ static NSString * const ZBJCellIdentifier = @"cell";
     
     switch (indexPath.row) {
         case 0: {
-            ZBJCalendarShowViewController *calendarViewController = [ZBJCalendarShowViewController new];
-            calendarViewController.title = self.tableData[indexPath.row];
-            [self.navigationController pushViewController:calendarViewController animated:YES];
+            
+            NSString *path = [[NSBundle mainBundle] pathForResource:@"calendar_dates" ofType:@"json"];
+            NSData *data = [NSData dataWithContentsOfFile:path];
+            
+            NSError *error;
+            ZBJOfferCalendar *offerCal;
+            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+            if (!error) {
+                offerCal = [[ZBJOfferCalendar alloc] initWithDictionary:dic];
+            }
+            
+            
+            ZBJOfferCalendarView *calendarView = [[ZBJOfferCalendarView alloc] initWithFrame:[UIApplication sharedApplication].keyWindow.frame offerCal:offerCal];
+            calendarView.alpha = 0.0;
+            
+            [[UIApplication sharedApplication].keyWindow addSubview:calendarView];
+            [UIView animateWithDuration:0.3f animations:^{
+                calendarView.alpha = 1.0;
+            } completion:^(BOOL finished) {
+                
+            }];
             break;
         }
         case 1: {

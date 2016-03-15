@@ -41,6 +41,7 @@
         for (int i = 0 ; i < adjustedSymbols.count; i++) {
             CGFloat w = CGRectGetWidth(self.frame)/7;
             UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(w * i, 0, w, CGRectGetHeight(self.frame))];
+            label.tag = 10901 + i;
             label.textColor = [UIColor darkTextColor];
             label.font = [UIFont systemFontOfSize:15];
             label.text = [adjustedSymbols[i] uppercaseString];
@@ -56,5 +57,13 @@
     return self;
 }
 
+- (void)setContentInsets:(UIEdgeInsets)contentInsets {
+    _contentInsets = contentInsets;
+    for (int i = 0; i < 7; i++) {
+        UILabel *label = [self viewWithTag:10901 + i];
+        CGFloat width = (self.frame.size.width - _contentInsets.left - _contentInsets.right) / 7;
+        label.frame = CGRectMake(_contentInsets.left + i * width, 0, width, CGRectGetHeight(self.frame));
+    }
+}
 
 @end

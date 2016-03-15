@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ZBJCalendarView.h"
 
 @interface ZBJCalendarShowViewController : UIViewController
+
+@property (nonatomic, strong) ZBJOfferCalendar *offerCal;
 
 @end
