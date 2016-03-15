@@ -21,21 +21,23 @@ typedef CF_ENUM(NSInteger, ZBJSelectionMode) {
 
 @property (nonatomic, weak) id<ZBJCalendarDelegate> delegate;
 
+@property (nonatomic, strong) UICollectionView *collectionView;
+
 @property (nonatomic, strong) NSDate *firstDate;
 @property (nonatomic, strong) NSDate *lastDate;
-
-@property (nonatomic, strong) NSSet *dates;
 
 @property (nonatomic, assign) ZBJSelectionMode selectionMode;  // default is `YES`, select `startDate` and `endDate`
 @property (nonatomic, assign) UIEdgeInsets contentInsets;   // the inner padding
 
-@property (nonatomic, assign) NSInteger minNights; // 最小入住天数
-@end
+- (void)registerCellClass:(id)clazz;
 
+@end
 
 
 @protocol ZBJCalendarDelegate <NSObject>
 
-
+- (BOOL)calendarView:(ZBJCalendarView *)calendarView shouldSelectDate:(NSDate *)date;
+- (void)calendarView:(ZBJCalendarView *)calendarView configureCell:(id)cell forDate:(NSDate *)date;
+- (void)calendarView:(ZBJCalendarView *)calendarView didSelectDate:(NSDate *)date;
 
 @end

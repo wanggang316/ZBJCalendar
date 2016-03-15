@@ -9,10 +9,14 @@
 #import "ZBJCalendarRangeViewController.h"
 #import "UINavigationBar+ZBJAddition.h"
 #import "ZBJCalendarView.h"
+#import "ZBJCalenderRangeSelector.h"
+#import "ZBJCalendarRangeCell.h"
 
-@interface ZBJCalendarRangeViewController () <ZBJCalendarDelegate>
+@interface ZBJCalendarRangeViewController ()
 
 @property (nonatomic, strong) ZBJCalendarView *calendarView;
+
+@property (nonatomic, strong) ZBJCalenderRangeSelector *rangeSelector;
 
 @end
 
@@ -47,8 +51,13 @@
     components.day = 1;
     NSDate *toDate = [calendar dateFromComponents:components];
     
+    self.rangeSelector = [[ZBJCalenderRangeSelector alloc] init];
+    self.calendarView.delegate = self.rangeSelector;
+    
     self.calendarView.firstDate = fromDate;
     self.calendarView.lastDate = toDate;
+
+    [self.calendarView registerCellClass:[ZBJCalendarRangeCell class]];
     
     [self.view addSubview:self.calendarView];
 }

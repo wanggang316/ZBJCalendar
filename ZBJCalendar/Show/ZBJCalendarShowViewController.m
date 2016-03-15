@@ -9,11 +9,15 @@
 #import "ZBJCalendarShowViewController.h"
 #import "UINavigationBar+ZBJAddition.h"
 #import "ZBJCalendarView.h"
+#import "ZBJCalendarShowDelegate.h"
+#import "ZBJCalendarShowCell.h"
 
 @interface ZBJCalendarShowViewController()
 
 @property (nonatomic, strong) ZBJCalendarView *calendarView;
 
+@property (nonatomic, strong) ZBJOfferCalendar *offerCal;
+@property (nonatomic, strong) ZBJCalendarShowDelegate *delegate;
 @end
 
 @implementation ZBJCalendarShowViewController
@@ -33,24 +37,24 @@
     
     self.view.backgroundColor = [UIColor whiteColor];
     
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"calendar_dates" ofType:@"json"];
+    NSData *data = [NSData dataWithContentsOfFile:path];
     
-    NSCalendar *calendar = [NSCalendar currentCalendar];
-    [calendar setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT"]];
+    NSError *error;
+    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+    if (!error) {
+        self.offerCal = [[ZBJOfferCalendar alloc] initWithDictionary:dic];
+    }
     
-    NSDateComponents *components = [NSDateComponents new];
-    components.month = 2;
-    components.day = 26;
-    components.year = 2016;
-    NSDate *fromDate = [calendar dateFromComponents:components];
-    components.year = 2017;
-    components.month = 12;
-    components.day = 1;
-    NSDate *toDate = [calendar dateFromComponents:components];
     
-    self.calendarView.firstDate = fromDate;
-    self.calendarView.lastDate = toDate;
-    self.calendarView.selectionMode = ZBJSelectionModeNone;
+    self.calendarView.firstDate = self.offerCal.startDate;
+    self.calendarView.lastDate = self.offerCal.endDate;
+
     
+    self.delegate = [[ZBJCalendarShowDelegate alloc] init];
+    self.delegate.offerCal = self.offerCal;
+    self.calendarView.delegate = self.delegate;
+
     [self.view addSubview:self.calendarView];
 }
 
@@ -64,6 +68,8 @@
     if (!_calendarView) {
         _calendarView = [[ZBJCalendarView alloc] initWithFrame:self.view.bounds];
         _calendarView.backgroundColor = [UIColor lightGrayColor];
+        [_calendarView registerCellClass:[ZBJCalendarShowCell class]];
+        _calendarView.selectionMode = ZBJSelectionModeNone;
     }
     return _calendarView;
 }

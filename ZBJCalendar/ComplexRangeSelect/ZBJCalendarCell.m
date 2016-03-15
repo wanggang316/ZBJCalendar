@@ -26,7 +26,6 @@
     if (self) {
         [self.contentView addSubview:self.dayLabel];
         self.calendar = [NSDate gregorianCalendar];
-        
     }
     return self;
 }
@@ -57,7 +56,7 @@
 - (void)setPrice:(NSNumber *)price {
     _price = price;
     if (_price) {
-        self.priceLabel.text = price.stringValue;
+        self.priceLabel.text = [NSString stringWithFormat:@"¥%@", _price];;
     } else {
         self.priceLabel.text = nil;
         [self.priceLabel removeFromSuperview];
@@ -73,9 +72,7 @@
     _cellState = cellState;
     switch (_cellState) {
         case ZBJCalendarCellStateDisabled: {
-            
             // layout
-//            self.dayLabel.frame = CGRectMake(5, 5, CGRectGetWidth(self.bounds) - 10, 20);
             [self.priceLabel removeFromSuperview];
             self.backgroundView = nil;
             
@@ -85,9 +82,7 @@
             break;
         }
         case ZBJCalendarCellStateUnavaible: {
-            
             // layout
-//            self.dayLabel.frame = CGRectMake(5, 5, CGRectGetWidth(self.bounds) - 10, 20);
             if (![self.priceLabel superview]) {
                 [self.contentView addSubview:self.priceLabel];
             }
@@ -103,7 +98,6 @@
         }
         case ZBJCalendarCellStateAvaible: {
             // layout
-//            self.dayLabel.frame = CGRectMake(5, 5, CGRectGetWidth(self.bounds) - 10, 20);
             if (![self.priceLabel superview]) {
                 [self.contentView addSubview:self.priceLabel];
             }
@@ -117,7 +111,6 @@
         }
         case ZBJCalendarCellStateAvaibleDisabled: {
             // layout
-//            self.dayLabel.frame = CGRectMake(5, 5, CGRectGetWidth(self.bounds) - 10, 20);
             if (![self.priceLabel superview]) {
                 [self.contentView addSubview:self.priceLabel];
             }
@@ -133,7 +126,6 @@
 
         case ZBJCalendarCellStateSelectedStart: {
             // layout
-//            self.dayLabel.frame = CGRectMake(5, 5, CGRectGetWidth(self.bounds) - 10, 20);
             if (![self.priceLabel superview]) {
                 [self.contentView addSubview:self.priceLabel];
             }
@@ -145,13 +137,10 @@
             self.priceLabel.textColor = [UIColor whiteColor];
             
             self.priceLabel.text = @"入住";
-            
-//            self.selected = YES;
             break;
         }
         case ZBJCalendarCellStateSelectedMiddle: {
             // layout
-//            self.dayLabel.frame = CGRectMake(5, 5, CGRectGetWidth(self.bounds) - 10, 20);
             if (![self.priceLabel superview]) {
                 [self.contentView addSubview:self.priceLabel];
             }
@@ -165,7 +154,6 @@
         }
         case ZBJCalendarCellStateSelectedEnd: {
             // layout
-//            self.dayLabel.frame = CGRectMake(5, 5, CGRectGetWidth(self.bounds) - 10, 20);
             if (![self.priceLabel superview]) {
                 [self.contentView addSubview:self.priceLabel];
             }
@@ -177,13 +165,10 @@
             self.priceLabel.textColor = [UIColor whiteColor];
             
             self.priceLabel.text = @"退房";
-            
-//            self.selected = YES;
             break;
         }
         case ZBJCalendarCellStateSelectedTempEnd: {
             // layout
-//            self.dayLabel.frame = CGRectMake(5, 5, CGRectGetWidth(self.bounds) - 10, 20);
             if (![self.priceLabel superview]) {
                 [self.contentView addSubview:self.priceLabel];
             }
@@ -195,8 +180,6 @@
             self.priceLabel.textColor = [UIColor colorWithRed:157.0/255.0 green:157.0/255.0 blue:163.0/255.0 alpha:1.0];
             
             self.priceLabel.text = @"仅退房";
-            
-//            self.selected = YES;
             break;
         }
         case ZBJCalendarCellStateEmpty: {
@@ -219,67 +202,9 @@
 
 }
 
-
-
-
-/*
-- (void)setIsDisabledDate:(BOOL)isDisabledDate {
-    _isDisabledDate = isDisabledDate;
-    if (_isDisabledDate) {
-        self.dayLabel.textColor = [UIColor colorWithRed:230.0/255.0 green:230.0/255.0 blue:233.0/255.0 alpha:1.0];
-    } else {
-        self.dayLabel.textColor = [UIColor darkTextColor];
-    }
-}
-
-- (void)setIsStartDate:(BOOL)isStartDate {
-    _isStartDate = isStartDate;
-    self.selected = _isStartDate;
-}
-
-- (void)setIsEndDate:(BOOL)isEndDate {
-    _isEndDate = isEndDate;
-    self.selected = _isEndDate;
-}
-
-- (void)setIsMidDate:(BOOL)isMidDate {
-    _isMidDate = isMidDate;
-    if (_isMidDate) {
-        self.contentView.backgroundColor = [UIColor colorWithRed:58.0/255.0 green:58.0/255.0 blue:72.0/255.0 alpha:1.0];
-        self.dayLabel.textColor = [UIColor whiteColor];
-    } else {
-        self.contentView.backgroundColor = [UIColor whiteColor];
-        self.dayLabel.textColor = [UIColor darkTextColor];
-    }
-}
-
-
-- (void)setIsUnavailableDate:(BOOL)isUnavailableDate {
-    _isUnavailableDate = isUnavailableDate;
-    if (_isUnavailableDate) {
-        self.contentView.backgroundColor = [UIColor whiteColor];
-        self.dayLabel.textColor = [UIColor lightGrayColor];
-    } else {
-        self.contentView.backgroundColor = [UIColor whiteColor];
-        self.dayLabel.textColor = [UIColor darkTextColor];
-    }
-}
-*/
-
-- (void)setSelected:(BOOL)selected {
-    if (selected) {
-//        self.contentView.backgroundColor = [UIColor colorWithRed:9.0/255.0 green:9.0/255.0 blue:26.0/255.0 alpha:1.0];
-//        self.dayLabel.textColor = [UIColor whiteColor];
-    } else {
-//        self.contentView.backgroundColor = [UIColor whiteColor];
-//        self.dayLabel.textColor = [UIColor darkTextColor];
-    }
-}
-
 #pragma mark - getters
 - (UILabel *)dayLabel {
     if (!_dayLabel) {
-//        CGRect r = CGRectMake(5, 5, CGRectGetWidth(self.bounds) - 10, CGRectGetHeight(self.bounds) - 10);
         _dayLabel = [[UILabel alloc] init];
         _dayLabel.textAlignment = NSTextAlignmentCenter;
         _dayLabel.font = [UIFont systemFontOfSize:15];
