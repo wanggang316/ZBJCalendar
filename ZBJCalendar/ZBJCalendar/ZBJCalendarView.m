@@ -45,11 +45,39 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
 - (void)layoutSubviews {
     [super layoutSubviews];
     self.headerView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), 45);
+    
+    
+    
     self.collectionView.frame = CGRectMake(0,
                                            CGRectGetMaxY(self.headerView.frame),
                                            CGRectGetWidth(self.frame),
                                            CGRectGetHeight(self.frame) - CGRectGetMaxY(self.headerView.frame));
+    
+    
+    NSInteger collectionContentWidth = CGRectGetWidth(self.collectionView.frame) - self.contentInsets.left - self.contentInsets.right;
+    NSInteger residue = collectionContentWidth % 7;
+
+    CGFloat cellWidth = collectionContentWidth / 7.0;
+    if (residue != 0) {
+        
+        CGFloat newPadding;
+        if (residue > 7.0 / 2) {
+            newPadding = self.contentInsets.left - (7 - residue) / 2.0;
+            cellWidth = (collectionContentWidth + 7 - residue) / 7.0;
+        } else {
+            newPadding = self.contentInsets.left + (residue / 2.0);
+            cellWidth = (collectionContentWidth - residue) / 7.0;
+        }
+        
+        UIEdgeInsets inset = UIEdgeInsetsMake(self.contentInsets.top, newPadding, self.contentInsets.bottom, newPadding);
+        self.contentInsets = inset;
+    }
     self.collectionView.contentInset = self.contentInsets;
+    
+    UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
+    layout.itemSize = CGSizeMake(cellWidth, cellWidth);
+    self.collectionView.collectionViewLayout = layout;
+    
 }
 
 
@@ -180,11 +208,15 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
     return CGSizeZero;
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    CGFloat w = collectionView.bounds.size.width;
-    CGFloat cellWidth = (w - self.contentInsets.left - self.contentInsets.right) / 7;
-    return CGSizeMake(cellWidth, cellWidth);
-}
+//- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+//{
+//    return UIEdgeInsetsMake(0, 0, 0, 0);
+//}
+//
+//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+//    
+//    return CGSizeMake(cellWidth, cellWidth);
+//}
 
 
 #pragma mark - getters
@@ -203,6 +235,9 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
         layout.minimumLineSpacing = 0;
         layout.minimumInteritemSpacing = 0;
+        
+        
+        
         _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.headerView.frame), CGRectGetWidth(self.frame), CGRectGetHeight(self.frame) - CGRectGetMaxY(self.headerView.frame)) collectionViewLayout:layout];
         _collectionView.backgroundColor = [UIColor whiteColor];
         _collectionView.dataSource = self;

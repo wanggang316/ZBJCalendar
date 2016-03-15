@@ -45,6 +45,7 @@ typedef CF_ENUM(NSInteger, ZBJSelectionMode) {
 - (void)calendarView:(ZBJCalendarView *)calendarView configureCell:(id)cell forDate:(NSDate *)date;
 - (void)calendarView:(ZBJCalendarView *)calendarView didSelectDate:(NSDate *)date;
 
+@optional
 - (void)calendarView:(ZBJCalendarView *)calendarView configureSectionHeaderView:(id)headerView forYear:(NSInteger)year month:(NSInteger)month;
 - (void)calendarView:(ZBJCalendarView *)calendarView configureSectionFooterView:(id)headerView forYear:(NSInteger)year month:(NSInteger)month;
 @end

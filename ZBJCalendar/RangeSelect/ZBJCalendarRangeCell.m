@@ -84,6 +84,7 @@
             
             self.contentView.backgroundColor =  [UIColor colorWithRed:9.0/255.0 green:9.0/255.0 blue:26.0/255.0 alpha:1.0];
             self.dateLabel.textColor = [UIColor whiteColor];
+            self.stateLabel.textColor = [UIColor whiteColor];
             self.stateLabel.text = @"入住";
             break;
         }

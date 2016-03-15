@@ -11,12 +11,16 @@
 #import "ZBJCalenderRangeSelector.h"
 #import "ZBJCalendarRangeCell.h"
 #import "ZBJCalendarSectionHeader.h"
+#import "ZBJCalendarSectionFooter.h"
 
 @interface ZBJCalendarRangeViewController ()
 
 @property (nonatomic, strong) ZBJCalendarView *calendarView;
 
 @property (nonatomic, strong) ZBJCalenderRangeSelector *rangeSelector;
+
+@property (nonatomic, strong) NSDate *startDate;
+@property (nonatomic, strong) NSDate *endDate;
 
 @end
 
@@ -27,6 +31,7 @@
     
     self.view.backgroundColor = [UIColor whiteColor];
    
+    self.title = @"选择入住日期";
     
     NSCalendar *calendar = [NSCalendar currentCalendar];
     [calendar setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT"]];
@@ -42,6 +47,16 @@
     NSDate *toDate = [calendar dateFromComponents:components];
     
     self.rangeSelector = [[ZBJCalenderRangeSelector alloc] init];
+    [self.rangeSelector addObserver:self
+                         forKeyPath:@"startDate"
+                            options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld)
+                            context:@""];
+    [self.rangeSelector addObserver:self
+                         forKeyPath:@"endDate"
+                            options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld)
+                            context:@""];
+    
+    
     self.calendarView.delegate = self.rangeSelector;
     
     self.calendarView.firstDate = fromDate;
@@ -55,6 +70,34 @@
     [super didReceiveMemoryWarning];
 }
 
+- (void)dealloc {
+    [self.rangeSelector removeObserver:self forKeyPath:@"startDate"];
+    [self.rangeSelector removeObserver:self forKeyPath:@"endDate"];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    
+    if ([keyPath isEqualToString:@"startDate"]) {
+        self.startDate = [change objectForKey:NSKeyValueChangeNewKey];
+        NSLog(@"start new: %@", self.startDate);
+    } else if ([keyPath isEqualToString:@"endDate"]) {
+        self.endDate =  [change objectForKey:NSKeyValueChangeNewKey];
+        NSLog(@"end new: %@", self.endDate);
+    }
+    if (([self.startDate isEqual:[NSNull null]] || self.startDate == NULL) &&
+        ([self.endDate isEqual:[NSNull null]] || self.endDate == NULL)) {
+        self.title = @"选择入住日期";
+    } else if (![self.startDate isEqual:[NSNull null]] && self.startDate != NULL &&
+               ([self.endDate isEqual:[NSNull null]] || self.endDate == NULL)) {
+        self.title = @"选择退房日期";
+    } else if (![self.startDate isEqual:[NSNull null]] && self.startDate != NULL &&
+               ![self.endDate isEqual:[NSNull null]] && self.endDate != NULL) {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(popViewController:startDate:endDate:)]) {
+            [self.delegate popViewController:self startDate:self.startDate endDate:self.endDate];
+        }
+    }
+   
+}
 
 #pragma mark -
 - (ZBJCalendarView *)calendarView {
@@ -63,6 +106,11 @@
         _calendarView.backgroundColor = [UIColor lightGrayColor];
         [_calendarView registerCellClass:[ZBJCalendarRangeCell class] withReuseIdentifier:@"cell"];
         [_calendarView registerSectionHeader:[ZBJCalendarSectionHeader class] withReuseIdentifier:@"sectionHeader"];
+        [_calendarView registerSectionFooter:[ZBJCalendarSectionFooter class] withReuseIdentifier:@"sectionFooter"];
+        _calendarView.contentInsets = UIEdgeInsetsMake(0, 14, 0, 14);
+        _calendarView.sectionHeaderHeight = 52;
+        _calendarView.sectionFooterHeight = 13;
+        
     }
     return _calendarView;
 }

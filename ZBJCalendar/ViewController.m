@@ -15,7 +15,7 @@
 
 static NSString * const ZBJCellIdentifier = @"cell";
 
-@interface ViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface ViewController () <UITableViewDataSource, UITableViewDelegate, ZBJCalendarRangeSelectorDelegate>
 
 @property (nonatomic, strong) NSArray *tableData;
 
@@ -82,6 +82,7 @@ static NSString * const ZBJCellIdentifier = @"cell";
         case 1: {
             ZBJCalendarRangeViewController *calendarViewController = [ZBJCalendarRangeViewController new];
             calendarViewController.title = self.tableData[indexPath.row];
+            calendarViewController.delegate = self;
             [self.navigationController pushViewController:calendarViewController animated:YES];
             break;
         }
@@ -94,9 +95,11 @@ static NSString * const ZBJCellIdentifier = @"cell";
         default:
             break;
     }
-    
-    
- 
+}
+
+- (void)popViewController:(ZBJCalendarRangeViewController *)viewController startDate:(NSDate *)startDate endDate:(NSDate *)endDate {
+    [viewController.navigationController popViewControllerAnimated:YES];
+    NSLog(@"----> startDate : %@, endDate: %@", startDate, endDate);
 }
 
 #pragma mark - getter

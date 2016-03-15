@@ -18,9 +18,6 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
 
 @interface ZBJCalenderRangeSelector()
 
-@property (nonatomic, strong) NSDate *startDate;
-@property (nonatomic, strong) NSDate *endDate;
-
 @property (nonatomic, assign) ZBJCalendarSelectedState selectedState;
 @end
 
@@ -64,8 +61,7 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
             switch (self.selectedState) {
                 case ZBJCalendarStateSelectedStart: {
                     
-                    if ([[date dateByAddingTimeInterval:86400.0 - 1] compare:self.startDate] == NSOrderedAscending &&
-                        [date compare:calendarView.firstDate] == NSOrderedDescending) {
+                    if ([[date dateByAddingTimeInterval:86400.0 - 1] compare:self.startDate] == NSOrderedAscending) {
                         
                         cellState = ZBJCalendarCellStateAvaibleDisabled;
                     }  else if ([self.startDate isEqualToDate:date]) {
