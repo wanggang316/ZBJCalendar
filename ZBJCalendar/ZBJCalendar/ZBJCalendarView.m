@@ -7,7 +7,7 @@
 //
 
 #import "ZBJCalendarView.h"
-#import "ZBJCalendarHeaderView.h"
+#import "ZBJCalendarWeekView.h"
 #import "NSDate+ZBJAddition.h"
 #import "NSDate+IndexPath.h"
 
@@ -18,7 +18,7 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
 };
 
 @interface ZBJCalendarView () <UICollectionViewDataSource, UICollectionViewDelegate>
-@property (nonatomic, strong) ZBJCalendarHeaderView *headerView;
+@property (nonatomic, strong) ZBJCalendarWeekView *weekView;
 
 @property (nonatomic, strong) NSString *cellIdentifier;
 @property (nonatomic, strong) NSString *sectionHeaderIdentifier;
@@ -34,7 +34,7 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
     if (self) {
         
         self.backgroundColor = [UIColor whiteColor];
-        [self addSubview:self.headerView];
+        [self addSubview:self.weekView];
         [self addSubview:self.collectionView];
         
         self.selectionMode = ZBJSelectionModeRange;
@@ -44,14 +44,12 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.headerView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), 45);
-    
-    
+    self.weekView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), 45);
     
     self.collectionView.frame = CGRectMake(0,
-                                           CGRectGetMaxY(self.headerView.frame),
+                                           CGRectGetMaxY(self.weekView.frame),
                                            CGRectGetWidth(self.frame),
-                                           CGRectGetHeight(self.frame) - CGRectGetMaxY(self.headerView.frame));
+                                           CGRectGetHeight(self.frame) - CGRectGetMaxY(self.weekView.frame));
     
     
     NSInteger collectionContentWidth = CGRectGetWidth(self.collectionView.frame) - self.contentInsets.left - self.contentInsets.right;
@@ -98,14 +96,14 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
 
 - (void)setContentInsets:(UIEdgeInsets)contentInsets {
     _contentInsets = contentInsets;
-    self.headerView.contentInsets = _contentInsets;
+    self.weekView.contentInsets = _contentInsets;
     self.collectionView.contentInset = _contentInsets;
 
 }
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor {
     self.collectionView.backgroundColor = backgroundColor;
-    self.headerView.backgroundColor = backgroundColor;
+    self.weekView.backgroundColor = backgroundColor;
 }
 
 #pragma mark UICollectionViewDataSource
@@ -212,24 +210,13 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
     return CGSizeZero;
 }
 
-//- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
-//{
-//    return UIEdgeInsetsMake(0, 0, 0, 0);
-//}
-//
-//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-//    
-//    return CGSizeMake(cellWidth, cellWidth);
-//}
-
-
 #pragma mark - getters
 
-- (ZBJCalendarHeaderView *)headerView {
-    if (!_headerView) {
-        _headerView = [[ZBJCalendarHeaderView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), 45)];
+- (ZBJCalendarWeekView *)weekView {
+    if (!_weekView) {
+        _weekView = [[ZBJCalendarWeekView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), 45)];
     }
-    return _headerView;
+    return _weekView;
 }
 
 
@@ -240,9 +227,7 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
         layout.minimumLineSpacing = 0;
         layout.minimumInteritemSpacing = 0;
         
-        
-        
-        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.headerView.frame), CGRectGetWidth(self.frame), CGRectGetHeight(self.frame) - CGRectGetMaxY(self.headerView.frame)) collectionViewLayout:layout];
+        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.weekView.frame), CGRectGetWidth(self.frame), CGRectGetHeight(self.frame) - CGRectGetMaxY(self.weekView.frame)) collectionViewLayout:layout];
         _collectionView.backgroundColor = [UIColor whiteColor];
         _collectionView.dataSource = self;
         _collectionView.delegate = self;

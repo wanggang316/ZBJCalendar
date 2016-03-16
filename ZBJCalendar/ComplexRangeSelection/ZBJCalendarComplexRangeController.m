@@ -6,14 +6,14 @@
 //  Copyright © 2016 ZBJ. All rights reserved.
 //
 
-#import "ZBJCalendarAdvanceViewController.h"
+#import "ZBJCalendarComplexRangeController.h"
 #import "ZBJCalendarView.h"
-#import "ZBJCalendarCell.h"
+#import "ZBJCalendarComplexCell.h"
 #import "ZBJCalendarSectionHeader.h"
 #import "ZBJCalendarSectionFooter.h"
 
 
-@interface ZBJCalendarAdvanceViewController () <ZBJCalendarDelegate>
+@interface ZBJCalendarComplexRangeController () <ZBJCalendarDelegate>
 
 @property (nonatomic, strong) ZBJCalendarView *calendarView;
 
@@ -23,7 +23,7 @@
 
 @end
 
-@implementation ZBJCalendarAdvanceViewController
+@implementation ZBJCalendarComplexRangeController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -156,7 +156,7 @@
 }
 
 
-- (void)calendarView:(ZBJCalendarView *)calendarView configureCell:(ZBJCalendarCell *)cell forDate:(NSDate *)date {
+- (void)calendarView:(ZBJCalendarView *)calendarView configureCell:(ZBJCalendarComplexCell *)cell forDate:(NSDate *)date {
     
     cell.day = date;
 
@@ -292,7 +292,7 @@
     if (!_calendarView) {
         _calendarView = [[ZBJCalendarView alloc] initWithFrame:CGRectMake(0, 64, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 64)];
         _calendarView.delegate = self;
-        [_calendarView registerCellClass:[ZBJCalendarCell class] withReuseIdentifier:@"cell"];
+        [_calendarView registerCellClass:[ZBJCalendarComplexCell class] withReuseIdentifier:@"cell"];
         [_calendarView registerSectionHeader:[ZBJCalendarSectionHeader class] withReuseIdentifier:@"sectionHeader"];
         [_calendarView registerSectionFooter:[ZBJCalendarSectionFooter class] withReuseIdentifier:@"sectionFooter"];
         _calendarView.contentInsets = UIEdgeInsetsMake(0, 14, 0, 14);

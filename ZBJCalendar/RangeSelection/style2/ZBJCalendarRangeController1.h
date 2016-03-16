@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ZBJRangeViewController : UIViewController
+@interface ZBJCalendarRangeController1 : UIViewController
 
 @property (nonatomic, strong) NSDate *startDate;
 @property (nonatomic, strong) NSDate *endDate;

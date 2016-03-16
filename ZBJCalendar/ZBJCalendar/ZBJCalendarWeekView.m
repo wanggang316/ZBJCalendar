@@ -6,16 +6,16 @@
 //  Copyright © 2016年 ZBJ. All rights reserved.
 //
 
-#import "ZBJCalendarHeaderView.h"
+#import "ZBJCalendarWeekView.h"
 #import "NSDate+ZBJAddition.h"
 
-@interface ZBJCalendarHeaderView ()
+@interface ZBJCalendarWeekView ()
 
 
 
 @end
 
-@implementation ZBJCalendarHeaderView
+@implementation ZBJCalendarWeekView
 
 - (instancetype)initWithFrame:(CGRect)frame
 {

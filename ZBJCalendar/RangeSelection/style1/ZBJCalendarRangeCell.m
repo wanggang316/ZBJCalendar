@@ -31,10 +31,10 @@
     [super layoutSubviews];
     
     if (![self.stateLabel superview] || !self.stateLabel.text) {
-        self.dateLabel.frame = CGRectMake(5, 5, CGRectGetWidth(self.bounds) - 10, CGRectGetWidth(self.bounds) - 10);
+        self.dateLabel.frame = CGRectMake(0, (CGRectGetHeight(self.bounds) - 15) / 2, CGRectGetWidth(self.bounds), 15);
     } else {
-        self.dateLabel.frame = CGRectMake(5, 10, CGRectGetWidth(self.bounds) - 10, 20);
-        self.stateLabel.frame = CGRectMake(0, CGRectGetMaxY(self.dateLabel.frame), CGRectGetWidth(self.frame), 9);
+        self.dateLabel.frame = CGRectMake(0, CGRectGetHeight(self.bounds) / 2 - CGRectGetHeight(self.dateLabel.frame) - 1, CGRectGetWidth(self.bounds), 15);
+        self.stateLabel.frame = CGRectMake(0, CGRectGetHeight(self.frame) / 2 + 5, CGRectGetWidth(self.contentView.frame), 9);
     }
 }
 
@@ -127,7 +127,7 @@
 #pragma mark - getters
 - (UILabel *)dateLabel {
     if (!_dateLabel) {
-        _dateLabel = [[UILabel alloc] initWithFrame:self.bounds];
+        _dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), 15)];
         _dateLabel.textAlignment = NSTextAlignmentCenter;
         _dateLabel.font = [UIFont systemFontOfSize:15];
         _dateLabel.textColor = [UIColor darkTextColor];
@@ -137,7 +137,7 @@
 
 - (UILabel *)stateLabel {
     if (!_stateLabel) {
-        _stateLabel = [[UILabel alloc] init];
+        _stateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), 9)];
         _stateLabel.font = [UIFont systemFontOfSize:9];
         _stateLabel.textAlignment = NSTextAlignmentCenter;
         _stateLabel.textColor = [UIColor colorWithRed:157.0/255.0 green:157.0/255.0 blue:163.0/255.0 alpha:1.0];

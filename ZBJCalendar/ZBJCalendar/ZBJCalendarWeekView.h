@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ZBJCalendarHeaderView : UIView
+@interface ZBJCalendarWeekView : UIView
 
 @property (nonatomic, assign) UIEdgeInsets contentInsets;   // the inner padding
 

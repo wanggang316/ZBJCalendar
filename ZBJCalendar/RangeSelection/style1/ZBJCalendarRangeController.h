@@ -9,7 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @protocol ZBJCalendarRangeSelectorDelegate;
-@interface ZBJCalendarRangeViewController : UIViewController
+
+@interface ZBJCalendarRangeController : UIViewController
 
 @property (nonatomic, weak) id<ZBJCalendarRangeSelectorDelegate> delegate;
 
@@ -20,6 +21,6 @@
 
 @protocol ZBJCalendarRangeSelectorDelegate <NSObject>
 
-- (void)popViewController:(ZBJCalendarRangeViewController *)viewController startDate:(NSDate *)startDate endDate:(NSDate *)endDate;
+- (void)popViewController:(UIViewController *)viewController startDate:(NSDate *)startDate endDate:(NSDate *)endDate;
 
 @end

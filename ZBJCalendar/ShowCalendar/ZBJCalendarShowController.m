@@ -6,19 +6,19 @@
 //  Copyright © 2016 ZBJ. All rights reserved.
 //
 
-#import "ZBJCalendarShowViewController.h"
+#import "ZBJCalendarShowController.h"
 #import "ZBJCalendarShowDelegate.h"
 #import "ZBJCalendarShowCell.h"
 #import "ZBJCalendarSectionHeader.h"
 
-@interface ZBJCalendarShowViewController()
+@interface ZBJCalendarShowController()
 
 @property (nonatomic, strong) ZBJCalendarView *calendarView;
 @property (nonatomic, strong) ZBJCalendarShowDelegate *delegate;
 
 @end
 
-@implementation ZBJCalendarShowViewController
+@implementation ZBJCalendarShowController
 
 - (void)viewDidLoad {
     [super viewDidLoad];

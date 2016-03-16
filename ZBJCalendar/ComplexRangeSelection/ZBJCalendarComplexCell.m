@@ -6,12 +6,12 @@
 //  Copyright © 2016 ZBJ. All rights reserved.
 //
 
-#import "ZBJCalendarCell.h"
+#import "ZBJCalendarComplexCell.h"
 #import "NSDate+ZBJAddition.h"
 
-@interface ZBJCalendarCell ()
+@interface ZBJCalendarComplexCell ()
 
-@property (nonatomic, strong) UILabel *dayLabel;
+@property (nonatomic, strong) UILabel *dateLabel;
 @property (nonatomic, strong) UILabel *priceLabel;
 
 @property (nonatomic, strong) NSCalendar *calendar;
@@ -19,12 +19,12 @@
 
 @end
 
-@implementation ZBJCalendarCell
+@implementation ZBJCalendarComplexCell
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        [self.contentView addSubview:self.dayLabel];
+        [self.contentView addSubview:self.dateLabel];
         self.calendar = [NSDate gregorianCalendar];
     }
     return self;
@@ -34,10 +34,10 @@
     [super layoutSubviews];
     
     if (![self.priceLabel superview] || !self.priceLabel.text) {
-        self.dayLabel.frame = CGRectMake(5, 5, CGRectGetWidth(self.bounds) - 10, CGRectGetWidth(self.bounds) - 10);
+        self.dateLabel.frame = CGRectMake(0, (CGRectGetHeight(self.bounds) - 15) / 2, CGRectGetWidth(self.bounds), 15);
     } else {
-        self.dayLabel.frame = CGRectMake(5, 10, CGRectGetWidth(self.bounds) - 10, 20);
-        self.priceLabel.frame = CGRectMake(0, CGRectGetMaxY(self.dayLabel.frame), CGRectGetWidth(self.frame), 9);
+        self.dateLabel.frame = CGRectMake(0, CGRectGetHeight(self.bounds) / 2 - CGRectGetHeight(self.dateLabel.frame) - 1, CGRectGetWidth(self.bounds), 15);
+        self.priceLabel.frame = CGRectMake(0, CGRectGetHeight(self.frame) / 2 + 5, CGRectGetWidth(self.contentView.frame), 9);
     }
     
     self.backgroundImageView.frame = self.bounds;
@@ -47,9 +47,9 @@
 - (void)setDay:(NSDate *)day {
     _day = day;
     if (_day) {
-        self.dayLabel.text = [NSString stringWithFormat:@"%ld", [self.calendar component:NSCalendarUnitDay fromDate:_day]];
+        self.dateLabel.text = [NSString stringWithFormat:@"%ld", [self.calendar component:NSCalendarUnitDay fromDate:_day]];
     } else {
-        self.dayLabel.text = nil;
+        self.dateLabel.text = nil;
     }
 }
 
@@ -78,7 +78,7 @@
             
             // style
             self.contentView.backgroundColor = [UIColor whiteColor];
-            self.dayLabel.textColor = [UIColor colorWithRed:192.0/255.0 green:192.0/255.0 blue:200.0/255.0 alpha:1.0];
+            self.dateLabel.textColor = [UIColor colorWithRed:192.0/255.0 green:192.0/255.0 blue:200.0/255.0 alpha:1.0];
             break;
         }
         case ZBJCalendarCellStateUnavaible: {
@@ -90,7 +90,7 @@
             
             // style
             self.contentView.backgroundColor = [UIColor clearColor];
-            self.dayLabel.textColor = [UIColor colorWithRed:192.0/255.0 green:192.0/255.0 blue:200.0/255.0 alpha:1.0];
+            self.dateLabel.textColor = [UIColor colorWithRed:192.0/255.0 green:192.0/255.0 blue:200.0/255.0 alpha:1.0];
             self.priceLabel.textColor = [UIColor colorWithRed:192.0/255.0 green:192.0/255.0 blue:200.0/255.0 alpha:1.0];
             
             self.priceLabel.text = @"已租";
@@ -105,7 +105,7 @@
             
             // style
             self.contentView.backgroundColor = [UIColor whiteColor];
-            self.dayLabel.textColor = [UIColor colorWithRed:9.0/255.0 green:9.0/255.0 blue:26.0/255.0 alpha:1.0];
+            self.dateLabel.textColor = [UIColor colorWithRed:9.0/255.0 green:9.0/255.0 blue:26.0/255.0 alpha:1.0];
             self.priceLabel.textColor = [UIColor colorWithRed:157.0/255.0 green:157.0/255.0 blue:163.0/255.0 alpha:1.0];
             break;
         }
@@ -118,7 +118,7 @@
             
             // style
             self.contentView.backgroundColor = [UIColor whiteColor];
-            self.dayLabel.textColor = [UIColor colorWithRed:192.0/255.0 green:192.0/255.0 blue:200.0/255.0 alpha:1.0];
+            self.dateLabel.textColor = [UIColor colorWithRed:192.0/255.0 green:192.0/255.0 blue:200.0/255.0 alpha:1.0];
             self.priceLabel.textColor = [UIColor colorWithRed:192.0/255.0 green:192.0/255.0 blue:200.0/255.0 alpha:1.0];
             break;
         }
@@ -133,7 +133,7 @@
             
             // style
             self.contentView.backgroundColor =  [UIColor colorWithRed:9.0/255.0 green:9.0/255.0 blue:26.0/255.0 alpha:1.0];
-            self.dayLabel.textColor = [UIColor whiteColor];
+            self.dateLabel.textColor = [UIColor whiteColor];
             self.priceLabel.textColor = [UIColor whiteColor];
             
             self.priceLabel.text = @"入住";
@@ -148,7 +148,7 @@
             
             // style
             self.contentView.backgroundColor =  [UIColor colorWithRed:58.0/255.0 green:58.0/255.0 blue:72.0/255.0 alpha:1.0];
-            self.dayLabel.textColor = [UIColor whiteColor];
+            self.dateLabel.textColor = [UIColor whiteColor];
             self.priceLabel.textColor = [UIColor whiteColor];
             break;
         }
@@ -161,7 +161,7 @@
             
             // style
             self.contentView.backgroundColor =  [UIColor colorWithRed:9.0/255.0 green:9.0/255.0 blue:26.0/255.0 alpha:1.0];
-            self.dayLabel.textColor = [UIColor whiteColor];
+            self.dateLabel.textColor = [UIColor whiteColor];
             self.priceLabel.textColor = [UIColor whiteColor];
             
             self.priceLabel.text = @"退房";
@@ -176,7 +176,7 @@
             
             // style
             self.contentView.backgroundColor = [UIColor whiteColor];
-            self.dayLabel.textColor = [UIColor colorWithRed:9.0/255.0 green:9.0/255.0 blue:26.0/255.0 alpha:1.0];
+            self.dateLabel.textColor = [UIColor colorWithRed:9.0/255.0 green:9.0/255.0 blue:26.0/255.0 alpha:1.0];
             self.priceLabel.textColor = [UIColor colorWithRed:157.0/255.0 green:157.0/255.0 blue:163.0/255.0 alpha:1.0];
             
             self.priceLabel.text = @"仅退房";
@@ -184,7 +184,7 @@
         }
         case ZBJCalendarCellStateEmpty: {
             
-            self.dayLabel.text = nil;
+            self.dateLabel.text = nil;
             self.priceLabel.text = nil;
             [self.priceLabel removeFromSuperview];
             self.backgroundView = nil;
@@ -203,19 +203,19 @@
 }
 
 #pragma mark - getters
-- (UILabel *)dayLabel {
-    if (!_dayLabel) {
-        _dayLabel = [[UILabel alloc] init];
-        _dayLabel.textAlignment = NSTextAlignmentCenter;
-        _dayLabel.font = [UIFont systemFontOfSize:15];
-        _dayLabel.textColor = [UIColor darkTextColor];
+- (UILabel *)dateLabel {
+    if (!_dateLabel) {
+        _dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds), 15)];
+        _dateLabel.textAlignment = NSTextAlignmentCenter;
+        _dateLabel.font = [UIFont systemFontOfSize:15];
+        _dateLabel.textColor = [UIColor darkTextColor];
     }
-    return _dayLabel;
+    return _dateLabel;
 }
 
 - (UILabel *)priceLabel {
     if (!_priceLabel) {
-        _priceLabel = [[UILabel alloc] init];
+        _priceLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), 9)];
         _priceLabel.font = [UIFont systemFontOfSize:9];
         _priceLabel.textAlignment = NSTextAlignmentCenter;
         _priceLabel.textColor = [UIColor colorWithRed:157.0/255.0 green:157.0/255.0 blue:163.0/255.0 alpha:1.0];

@@ -21,7 +21,7 @@ typedef CF_ENUM(NSInteger, ZBJCalendarCellState) {
 };
 
 
-@interface ZBJCalendarCell : UICollectionViewCell
+@interface ZBJCalendarComplexCell : UICollectionViewCell
 
 @property (nonatomic, strong) NSDate *day;
 @property (nonatomic, strong) NSNumber *price;

@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "ZBJOfferCalendar.h"
 
-@interface ZBJOfferCalendarView : UIView
+@interface ZBJCalendarShowView : UIView
 
 - (instancetype)initWithFrame:(CGRect)frame offerCal:(ZBJOfferCalendar *)offerCal;
+
 @property (nonatomic, strong) ZBJOfferCalendar *offerCal;
 
 

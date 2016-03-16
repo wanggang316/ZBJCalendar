@@ -16,7 +16,8 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
 };
 
 @protocol ZBJCalendarAdvanceSelectorDelegate;
-@interface ZBJCalendarAdvanceViewController : UIViewController
+
+@interface ZBJCalendarComplexRangeController : UIViewController
 
 @property (nonatomic, weak) id<ZBJCalendarAdvanceSelectorDelegate> delegate;
 
@@ -36,6 +37,6 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
 
 @protocol ZBJCalendarAdvanceSelectorDelegate <NSObject>
 
-- (void)popViewController:(ZBJCalendarAdvanceViewController *)viewController startDate:(NSDate *)startDate endDate:(NSDate *)endDate;
+- (void)popViewController:(UIViewController *)viewController startDate:(NSDate *)startDate endDate:(NSDate *)endDate;
 
 @end

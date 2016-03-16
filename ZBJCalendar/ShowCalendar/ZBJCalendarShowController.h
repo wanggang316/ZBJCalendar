@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ZBJCalendarView.h"
 
-@interface ZBJCalendarShowViewController : UIViewController
+@interface ZBJCalendarShowController : UIViewController
 
 @property (nonatomic, strong) ZBJOfferCalendar *offerCal;
 

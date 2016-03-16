@@ -6,14 +6,14 @@
 //  Copyright © 2016 ZBJ. All rights reserved.
 //
 
-#import "ZBJOfferCalendarView.h"
+#import "ZBJCalendarShowView.h"
 #import "ZBJCalendar.h"
 #import "ZBJCalendarShowDelegate.h"
 #import "ZBJCalendarShowCell.h"
 #import "ZBJCalendarSectionHeader.h"
 #import "ZBJCalendarSectionFooter.h"
 
-@interface ZBJOfferCalendarView()
+@interface ZBJCalendarShowView ()
 
 @property (nonatomic, strong) UIView *backView;
 @property (nonatomic, strong) UILabel *titleLable;
@@ -24,7 +24,7 @@
 
 @end
 
-@implementation ZBJOfferCalendarView
+@implementation ZBJCalendarShowView
 
 - (instancetype)initWithFrame:(CGRect)frame offerCal:(ZBJOfferCalendar *)offerCal {
     if (self = [super initWithFrame:frame]) {

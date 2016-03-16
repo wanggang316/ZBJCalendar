@@ -6,14 +6,14 @@
 //  Copyright © 2016 ZBJ. All rights reserved.
 //
 
-#import "ZBJCalendarRangeViewController.h"
+#import "ZBJCalendarRangeController.h"
 #import "ZBJCalendarView.h"
 #import "ZBJCalenderRangeSelector.h"
 #import "ZBJCalendarRangeCell.h"
 #import "ZBJCalendarSectionHeader.h"
 #import "ZBJCalendarSectionFooter.h"
 
-@interface ZBJCalendarRangeViewController ()
+@interface ZBJCalendarRangeController ()
 
 @property (nonatomic, strong) ZBJCalendarView *calendarView;
 
@@ -23,7 +23,7 @@
 
 @end
 
-@implementation ZBJCalendarRangeViewController
+@implementation ZBJCalendarRangeController
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];

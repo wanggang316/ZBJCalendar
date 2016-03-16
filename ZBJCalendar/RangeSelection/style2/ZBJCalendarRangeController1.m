@@ -6,14 +6,14 @@
 //  Copyright © 2016 ZBJ. All rights reserved.
 //
 
-#import "ZBJRangeViewController.h"
+#import "ZBJCalendarRangeController1.h"
 #import "ZBJCalendarView.h"
 #import "ZBJCalenderRangeSelector.h"
 #import "ZBJCalendarRangeCell.h"
 #import "ZBJCalendarSectionHeader.h"
 #import "ZBJCalendarSectionFooter.h"
 
-@interface ZBJRangeViewController ()
+@interface ZBJCalendarRangeController1 ()
 
 @property (nonatomic, strong) ZBJCalendarView *calendarView;
 
@@ -21,7 +21,7 @@
 
 @end
 
-@implementation ZBJRangeViewController
+@implementation ZBJCalendarRangeController1
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -34,13 +34,7 @@
     
     [self.navigationItem setRightBarButtonItems:@[hidenItem, showItem]];
     
-    
     self.title = @"筛选";
-    
-   
-    
-    
-    
 }
 
 - (void)show {

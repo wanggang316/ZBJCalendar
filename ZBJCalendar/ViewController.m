@@ -7,12 +7,11 @@
 //
 
 #import "ViewController.h"
-#import "ZBJCalendarRangeViewController.h"
-#import "ZBJCalendarShowViewController.h"
-#import "ZBJCalendarAdvanceViewController.h"
-#import "ZBJOfferCalendarView.h"
+#import "ZBJCalendarShowView.h"
+#import "ZBJCalendarRangeController.h"
+#import "ZBJCalendarRangeController1.h"
+#import "ZBJCalendarComplexRangeController.h"
 #import "ZBJOfferCalendar.h"
-#import "ZBJRangeViewController.h"
 
 static NSString * const ZBJCellIdentifier = @"cell";
 
@@ -23,8 +22,8 @@ static NSString * const ZBJCellIdentifier = @"cell";
 @property (nonatomic, strong) NSDate *startDate;
 @property (nonatomic, strong) NSDate *endDate;
 
-@property (nonatomic, strong) ZBJCalendarRangeViewController *rangeController;
-@property (nonatomic, strong) ZBJCalendarAdvanceViewController *advanceCalController;
+@property (nonatomic, strong) ZBJCalendarRangeController *rangeController;
+@property (nonatomic, strong) ZBJCalendarComplexRangeController *advanceCalController;
 
 @end
 
@@ -75,12 +74,12 @@ static NSString * const ZBJCellIdentifier = @"cell";
             }
             
             
-            ZBJOfferCalendarView *calendarView = [[ZBJOfferCalendarView alloc] initWithFrame:[UIApplication sharedApplication].keyWindow.frame offerCal:offerCal];
-            calendarView.alpha = 0.0;
+            ZBJCalendarShowView *controller = [[ZBJCalendarShowView alloc] initWithFrame:[UIApplication sharedApplication].keyWindow.frame offerCal:offerCal];
+            controller.alpha = 0.0;
             
-            [[UIApplication sharedApplication].keyWindow addSubview:calendarView];
+            [[UIApplication sharedApplication].keyWindow addSubview:controller];
             [UIView animateWithDuration:0.3f animations:^{
-                calendarView.alpha = 1.0;
+                controller.alpha = 1.0;
             } completion:^(BOOL finished) {
                 
             }];
@@ -94,7 +93,7 @@ static NSString * const ZBJCellIdentifier = @"cell";
         }
             
         case 2: {
-            ZBJRangeViewController *calendarViewController = [ZBJRangeViewController new];
+            ZBJCalendarRangeController1 *calendarViewController = [ZBJCalendarRangeController1 new];
             calendarViewController.title = self.tableData[indexPath.row];
             [self.navigationController pushViewController:calendarViewController animated:YES];
             break;
@@ -129,17 +128,17 @@ static NSString * const ZBJCellIdentifier = @"cell";
     return _tableData;
 }
 
-- (ZBJCalendarRangeViewController *)rangeController {
+- (ZBJCalendarRangeController *)rangeController {
     if (!_rangeController) {
-        _rangeController = [ZBJCalendarRangeViewController new];
+        _rangeController = [ZBJCalendarRangeController new];
         _rangeController.delegate = self;
     }
     return _rangeController;
 }
 
-- (ZBJCalendarAdvanceViewController *)advanceCalController {
+- (ZBJCalendarComplexRangeController *)advanceCalController {
     if (!_advanceCalController) {
-        _advanceCalController = [ZBJCalendarAdvanceViewController new];
+        _advanceCalController = [ZBJCalendarComplexRangeController new];
         _advanceCalController.delegate = self;
         
         NSString *path = [[NSBundle mainBundle] pathForResource:@"calendar_dates" ofType:@"json"];
