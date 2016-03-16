@@ -25,28 +25,18 @@
 
 @implementation ZBJCalendarRangeViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    
-    self.view.backgroundColor = [UIColor whiteColor];
-   
-    self.title = @"选择入住日期";
-    
-    NSDate *firstDate = [NSDate date];
-    NSCalendar *calendar = [NSCalendar currentCalendar];
-    [calendar setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT"]];
-    NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:firstDate];
-    components.month = components.month + 6; //
-    NSDate *lastDate = [calendar dateFromComponents:components];
-    
-    self.rangeSelector = [[ZBJCalenderRangeSelector alloc] init];
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     
     // initial `startDate` and `endDate`
     if (self.startDate && self.endDate) {
-        self.rangeSelector.selectedState = ZBJCalendarStateSelectedRange;
+
         self.rangeSelector.startDate = self.startDate;
         self.rangeSelector.endDate = self.endDate;
+        [self.rangeSelector setSelectedState:ZBJCalendarStateSelectedRange calendarView:self.calendarView];
+        self.title = @"选择入住日期";
     }
+    
     // add observer
     [self.rangeSelector addObserver:self
                          forKeyPath:@"startDate"
@@ -56,7 +46,31 @@
                          forKeyPath:@"endDate"
                             options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld)
                             context:@""];
+}
+
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
     
+    [self.rangeSelector removeObserver:self forKeyPath:@"startDate"];
+    [self.rangeSelector removeObserver:self forKeyPath:@"endDate"];
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    self.view.backgroundColor = [UIColor whiteColor];
+   
+
+    
+    NSDate *firstDate = [NSDate date];
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    [calendar setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT"]];
+    NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:firstDate];
+    components.month = components.month + 6; //
+    NSDate *lastDate = [calendar dateFromComponents:components];
+    
+    self.rangeSelector = [[ZBJCalenderRangeSelector alloc] init];
     
     self.calendarView.delegate = self.rangeSelector;
     self.calendarView.firstDate = firstDate;
@@ -72,17 +86,16 @@
     [super didReceiveMemoryWarning];
 }
 
-- (void)dealloc {
-    [self.rangeSelector removeObserver:self forKeyPath:@"startDate"];
-    [self.rangeSelector removeObserver:self forKeyPath:@"endDate"];
-}
-
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     
     if ([keyPath isEqualToString:@"startDate"]) {
-        self.startDate = [change objectForKey:NSKeyValueChangeNewKey];
+        if ([change objectForKey:NSKeyValueChangeNewKey] != [change objectForKey:NSKeyValueChangeOldKey]) {
+            self.startDate = [change objectForKey:NSKeyValueChangeNewKey];
+        }
     } else if ([keyPath isEqualToString:@"endDate"]) {
-        self.endDate =  [change objectForKey:NSKeyValueChangeNewKey];
+        if ([change objectForKey:NSKeyValueChangeNewKey] != [change objectForKey:NSKeyValueChangeOldKey]) {
+            self.endDate = [change objectForKey:NSKeyValueChangeNewKey];
+        }
     }
     
     // handle observer values

@@ -23,4 +23,5 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
 
 @property (nonatomic, assign) ZBJCalendarSelectedState selectedState;
 
+- (void)setSelectedState:(ZBJCalendarSelectedState)selectedState calendarView:(ZBJCalendarView *)calendarView;
 @end

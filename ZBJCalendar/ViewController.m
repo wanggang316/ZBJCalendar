@@ -16,11 +16,15 @@
 
 static NSString * const ZBJCellIdentifier = @"cell";
 
-@interface ViewController () <UITableViewDataSource, UITableViewDelegate, ZBJCalendarRangeSelectorDelegate>
+@interface ViewController () <UITableViewDataSource, UITableViewDelegate, ZBJCalendarRangeSelectorDelegate, ZBJCalendarAdvanceSelectorDelegate>
 
 @property (nonatomic, strong) NSArray *tableData;
 
+@property (nonatomic, strong) NSDate *startDate;
+@property (nonatomic, strong) NSDate *endDate;
+
 @property (nonatomic, strong) ZBJCalendarRangeViewController *rangeController;
+@property (nonatomic, strong) ZBJCalendarAdvanceViewController *advanceCalController;
 
 @end
 
@@ -83,6 +87,8 @@ static NSString * const ZBJCellIdentifier = @"cell";
             break;
         }
         case 1: {
+            self.rangeController.startDate = self.startDate;
+            self.rangeController.endDate = self.endDate;
             [self.navigationController pushViewController:self.rangeController animated:YES];
             break;
         }
@@ -94,9 +100,10 @@ static NSString * const ZBJCellIdentifier = @"cell";
             break;
         }
         case 3: {
-            ZBJCalendarAdvanceViewController *calendarViewController = [ZBJCalendarAdvanceViewController new];
-            calendarViewController.title = self.tableData[indexPath.row];
-            [self.navigationController pushViewController:calendarViewController animated:YES];
+            
+            self.advanceCalController.startDate = self.startDate;
+            self.advanceCalController.endDate = self.endDate;
+            [self.navigationController pushViewController:self.advanceCalController animated:YES];
             break;
         }
         default:
@@ -104,13 +111,14 @@ static NSString * const ZBJCellIdentifier = @"cell";
     }
 }
 
-- (void)popViewController:(ZBJCalendarRangeViewController *)viewController startDate:(NSDate *)startDate endDate:(NSDate *)endDate {
+#pragma mark - range && advance delegate
+- (void)popViewController:(UIViewController *)viewController startDate:(NSDate *)startDate endDate:(NSDate *)endDate {
     [viewController.navigationController popViewControllerAnimated:YES];
     
     NSLog(@"----> startDate : %@, endDate: %@", startDate, endDate);
     
-//    self.startDate = startDate;
-//    self.endDate = endDate;
+    self.startDate = startDate;
+    self.endDate = endDate;
 }
 
 #pragma mark - getter
@@ -127,6 +135,29 @@ static NSString * const ZBJCellIdentifier = @"cell";
         _rangeController.delegate = self;
     }
     return _rangeController;
+}
+
+- (ZBJCalendarAdvanceViewController *)advanceCalController {
+    if (!_advanceCalController) {
+        _advanceCalController = [ZBJCalendarAdvanceViewController new];
+        _advanceCalController.delegate = self;
+        
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"calendar_dates" ofType:@"json"];
+        NSData *data = [NSData dataWithContentsOfFile:path];
+        
+        NSError *error;
+        ZBJOfferCalendar *offerCal;
+        NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+        if (!error) {
+            offerCal = [[ZBJOfferCalendar alloc] initWithDictionary:dic];
+        }
+        
+        _advanceCalController.firstDate = offerCal.startDate;
+        _advanceCalController.lastDate = offerCal.endDate;
+        _advanceCalController.dates = offerCal.dates;
+        _advanceCalController.minNights = 2;
+    }
+    return _advanceCalController;
 }
 
 @end
