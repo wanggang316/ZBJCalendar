@@ -53,7 +53,9 @@ const char * const JmoLocaleStoreKey = "jmo.locale";
 #pragma mark -
 + (NSInteger)numberOfMonthsFromDate:(NSDate *)fromDate toDate:(NSDate *)toDate {
     NSCalendar *calendar = [self gregorianCalendar];
-    NSDateComponents *components = [calendar components:NSCalendarUnitMonth fromDate:fromDate toDate:toDate options:NSCalendarMatchStrictly];
+    NSDateComponents *components = [calendar components:NSCalendarUnitMonth fromDate:[fromDate firstDateOfMonth] toDate:[toDate lastDateOfMonth] options:NSCalendarMatchStrictly];
+    // 2016.9.16 - 2016.3.16 = 5  if use [fromDate firstDateOfMonth] and [toDate lastDateOfMonth], the result is 6. ok
+    // 2017.3.16 - 2016.3.16 = 12
     return components.month + 1;
 }
 
