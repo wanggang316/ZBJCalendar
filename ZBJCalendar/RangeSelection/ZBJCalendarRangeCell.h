@@ -18,10 +18,15 @@ typedef CF_ENUM(NSInteger, ZBJCalendarCellState) {
     ZBJCalendarCellStateSelectedEnd,
 };
 
+typedef CF_ENUM(NSInteger, ZBJRangeCellStyle) {
+    ZBJRangeCellStyle1 = 0,
+    ZBJRangeCellStyle2,
+};
+
 @interface ZBJCalendarRangeCell : UICollectionViewCell
 
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, assign) ZBJCalendarCellState cellState;
 
-//@property (nonatomic, strong) UIColor *defaultBackgroundColor
+@property (nonatomic, assign) ZBJRangeCellStyle cellStyle;
 @end

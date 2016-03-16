@@ -27,10 +27,14 @@ typedef CF_ENUM(NSInteger, ZBJSelectionMode) {
 @property (nonatomic, strong) NSDate *lastDate;
 
 @property (nonatomic, assign) ZBJSelectionMode selectionMode;  // default is `YES`, select `startDate` and `endDate`
-@property (nonatomic, assign) UIEdgeInsets contentInsets;   // the inner padding
 
+// layout
+@property (nonatomic, assign) UIEdgeInsets contentInsets;   // the inner padding
 @property (nonatomic, assign) CGFloat sectionHeaderHeight;
 @property (nonatomic, assign) CGFloat sectionFooterHeight;
+@property (nonatomic, assign) CGFloat cellScale; // height/width
+@property (nonatomic, assign) CGFloat minimumLineSpacing;
+@property (nonatomic, assign) CGFloat weekViewHeight;
 
 - (void)registerCellClass:(id)clazz withReuseIdentifier:(NSString *)identifier;
 - (void)registerSectionHeader:(id)clazz withReuseIdentifier:(NSString *)identifier;

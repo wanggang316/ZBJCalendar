@@ -71,6 +71,7 @@
     NSDate *lastDate = [calendar dateFromComponents:components];
     
     self.rangeSelector = [[ZBJCalenderRangeSelector alloc] init];
+    self.rangeSelector.cellStyle = ZBJRangeCellStyle1;
     
     self.calendarView.delegate = self.rangeSelector;
     self.calendarView.firstDate = firstDate;
@@ -131,6 +132,7 @@
         _calendarView.contentInsets = UIEdgeInsetsMake(0, 14, 0, 14);
         _calendarView.sectionHeaderHeight = 52;
         _calendarView.sectionFooterHeight = 13;
+        _calendarView.cellScale = 90.0 / 102.0;
         
     }
     return _calendarView;

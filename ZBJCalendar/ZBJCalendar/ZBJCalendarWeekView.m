@@ -11,7 +11,7 @@
 
 @interface ZBJCalendarWeekView ()
 
-
+@property (nonatomic, strong) CALayer *bottomLine;
 
 @end
 
@@ -49,21 +49,33 @@
             [self addSubview:label];
         }
         
-        CALayer *layer = [CALayer layer];
-        layer.frame = CGRectMake(0, CGRectGetHeight(self.frame) - 0.5, CGRectGetWidth(self.frame), 0.5);
-        layer.backgroundColor = [UIColor colorWithRed:230.0/255.0 green:230.0/255.0 blue:233.0/255.0 alpha:1.0].CGColor;
-        [self.layer addSublayer:layer];
+        if (!self.bottomLine) {
+            self.bottomLine = [CALayer layer];
+            self.bottomLine.frame = CGRectMake(0, CGRectGetHeight(self.frame) - 0.5, CGRectGetWidth(self.frame), 0.5);
+            self.bottomLine.backgroundColor = [UIColor colorWithRed:230.0/255.0 green:230.0/255.0 blue:233.0/255.0 alpha:1.0].CGColor;
+            [self.layer addSublayer:self.bottomLine];
+        }
+       
     }
     return self;
 }
 
-- (void)setContentInsets:(UIEdgeInsets)contentInsets {
-    _contentInsets = contentInsets;
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
     for (int i = 0; i < 7; i++) {
         UILabel *label = [self viewWithTag:10901 + i];
         CGFloat width = (self.frame.size.width - _contentInsets.left - _contentInsets.right) / 7;
         label.frame = CGRectMake(_contentInsets.left + i * width, 0, width, CGRectGetHeight(self.frame));
     }
+    
+    self.bottomLine.frame = CGRectMake(0, CGRectGetHeight(self.frame) - 0.5, CGRectGetWidth(self.frame), 0.5);
+    
+}
+
+- (void)setContentInsets:(UIEdgeInsets)contentInsets {
+    _contentInsets = contentInsets;
+    [self layoutSubviews];
 }
 
 @end

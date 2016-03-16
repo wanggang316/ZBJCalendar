@@ -11,10 +11,10 @@
 
 @interface ZBJCalendarRangeCell()
 
-@property (nonatomic, strong) UILabel *dateLabel;
-@property (nonatomic, strong) UILabel *stateLabel;
 @property (nonatomic, strong) NSCalendar *calendar;
 
+@property (nonatomic, strong) UILabel *dateLabel;
+@property (nonatomic, strong) UILabel *stateLabel;
 @end
 
 @implementation ZBJCalendarRangeCell
@@ -30,16 +30,51 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    if (![self.stateLabel superview] || !self.stateLabel.text) {
-        self.dateLabel.frame = CGRectMake(0, (CGRectGetHeight(self.bounds) - 15) / 2, CGRectGetWidth(self.bounds), 15);
+    if (self.cellStyle == ZBJRangeCellStyle2) {
+
+        if (![self.stateLabel superview] || !self.stateLabel.text) {
+            self.dateLabel.frame = CGRectMake(0, (CGRectGetHeight(self.bounds) - 15) / 2, CGRectGetWidth(self.bounds), 15);
+        } else {
+            self.dateLabel.frame = CGRectMake(0, CGRectGetHeight(self.bounds) / 2 - CGRectGetHeight(self.dateLabel.frame) - 2, CGRectGetWidth(self.bounds), 15);
+            self.stateLabel.frame = CGRectMake(0, CGRectGetHeight(self.frame) / 2 + 5, CGRectGetWidth(self.contentView.frame), 9);
+        }
+        
     } else {
-        self.dateLabel.frame = CGRectMake(0, CGRectGetHeight(self.bounds) / 2 - CGRectGetHeight(self.dateLabel.frame) - 1, CGRectGetWidth(self.bounds), 15);
-        self.stateLabel.frame = CGRectMake(0, CGRectGetHeight(self.frame) / 2 + 5, CGRectGetWidth(self.contentView.frame), 9);
+        if (![self.stateLabel superview] || !self.stateLabel.text) {
+            self.dateLabel.frame = CGRectMake(0, (CGRectGetHeight(self.bounds) - 17) / 2, CGRectGetWidth(self.bounds), 17);
+        } else {
+            self.dateLabel.frame = CGRectMake(0, CGRectGetHeight(self.bounds) / 2 - CGRectGetHeight(self.dateLabel.frame) + 1, CGRectGetWidth(self.bounds), 17);
+            self.stateLabel.frame = CGRectMake(0, CGRectGetHeight(self.frame) / 2 + 4, CGRectGetWidth(self.contentView.frame), 10);
+        }
+       
     }
+    
+   
 }
 
 
 #pragma mark - setters
+
+- (void)setCellStyle:(ZBJRangeCellStyle)cellStyle {
+    
+    if (_cellStyle != cellStyle) {
+        _cellStyle = cellStyle;
+
+        switch (_cellStyle) {
+            case ZBJRangeCellStyle2: {
+                self.dateLabel.font = [UIFont systemFontOfSize:15];
+                self.stateLabel.font = [UIFont systemFontOfSize:9];
+                break;
+            }
+            default: {
+                self.dateLabel.font = [UIFont systemFontOfSize:17];
+                self.stateLabel.font = [UIFont systemFontOfSize:10];
+                break;
+            }
+        }
+    }
+}
+
 - (void)setDate:(NSDate *)date {
     _date = date;
     if (_date) {
@@ -127,9 +162,9 @@
 #pragma mark - getters
 - (UILabel *)dateLabel {
     if (!_dateLabel) {
-        _dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), 15)];
+        _dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), 17)];
         _dateLabel.textAlignment = NSTextAlignmentCenter;
-        _dateLabel.font = [UIFont systemFontOfSize:15];
+        _dateLabel.font = [UIFont systemFontOfSize:17];
         _dateLabel.textColor = [UIColor darkTextColor];
     }
     return _dateLabel;
@@ -137,8 +172,8 @@
 
 - (UILabel *)stateLabel {
     if (!_stateLabel) {
-        _stateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), 9)];
-        _stateLabel.font = [UIFont systemFontOfSize:9];
+        _stateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), 10)];
+        _stateLabel.font = [UIFont systemFontOfSize:10];
         _stateLabel.textAlignment = NSTextAlignmentCenter;
         _stateLabel.textColor = [UIColor colorWithRed:157.0/255.0 green:157.0/255.0 blue:163.0/255.0 alpha:1.0];
     }

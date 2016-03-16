@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ZBJCalendarView.h"
+#import "ZBJCalendarRangeCell.h"
 
 
 typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
@@ -22,6 +23,8 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
 @property (nonatomic, strong) NSDate *endDate;
 
 @property (nonatomic, assign) ZBJCalendarSelectedState selectedState;
+
+@property (nonatomic, assign) ZBJRangeCellStyle cellStyle;
 
 - (void)setSelectedState:(ZBJCalendarSelectedState)selectedState calendarView:(ZBJCalendarView *)calendarView;
 @end

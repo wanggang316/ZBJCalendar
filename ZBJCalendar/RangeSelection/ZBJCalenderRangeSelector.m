@@ -7,7 +7,6 @@
 //
 
 #import "ZBJCalenderRangeSelector.h"
-#import "ZBJCalendarRangeCell.h"
 #import "ZBJCalendarSectionHeader.h"
 
 
@@ -42,6 +41,8 @@
     return YES;
 }
 - (void)calendarView:(ZBJCalendarView *)calendarView configureCell:(ZBJCalendarRangeCell *)cell forDate:(NSDate *)date {
+    
+    cell.cellStyle = self.cellStyle;
     
     cell.date = date;
     

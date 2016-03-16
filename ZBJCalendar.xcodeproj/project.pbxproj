@@ -12,7 +12,6 @@
 		3222AC511C999715008CC724 /* ZBJCalendarSectionHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3222AC4F1C999715008CC724 /* ZBJCalendarSectionHeader.m */; };
 		3222AC6B1C999726008CC724 /* ZBJCalendarComplexRangeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3222AC541C999726008CC724 /* ZBJCalendarComplexRangeController.m */; };
 		3222AC6C1C999726008CC724 /* ZBJCalendarComplexCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3222AC561C999726008CC724 /* ZBJCalendarComplexCell.m */; };
-		3222AC6D1C999726008CC724 /* ZBJCalendarRangeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3222AC5A1C999726008CC724 /* ZBJCalendarRangeCell.m */; };
 		3222AC6E1C999726008CC724 /* ZBJCalendarRangeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3222AC5C1C999726008CC724 /* ZBJCalendarRangeController.m */; };
 		3222AC6F1C999726008CC724 /* ZBJCalendarRangeController1.m in Sources */ = {isa = PBXBuildFile; fileRef = 3222AC5F1C999726008CC724 /* ZBJCalendarRangeController1.m */; };
 		3222AC701C999726008CC724 /* ZBJCalenderRangeSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = 3222AC611C999726008CC724 /* ZBJCalenderRangeSelector.m */; };
@@ -24,6 +23,7 @@
 		323F79221C7D8B4100479C2D /* ZBJCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 323F79211C7D8B4100479C2D /* ZBJCalendarView.m */; };
 		323F79621C80183500479C2D /* NSDate+ZBJAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 323F79611C80183500479C2D /* NSDate+ZBJAddition.m */; };
 		32972F8D1C99A1610093CC1B /* ZBJCalendarShowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32972F8C1C99A1610093CC1B /* ZBJCalendarShowController.m */; };
+		32972F931C99C9B50093CC1B /* ZBJCalendarRangeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 32972F921C99C9B50093CC1B /* ZBJCalendarRangeCell.m */; };
 		32F7EBEB1C16779F00ED2DA4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 32F7EBEA1C16779F00ED2DA4 /* main.m */; };
 		32F7EBEE1C16779F00ED2DA4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 32F7EBED1C16779F00ED2DA4 /* AppDelegate.m */; };
 		32F7EBF11C16779F00ED2DA4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32F7EBF01C16779F00ED2DA4 /* ViewController.m */; };
@@ -63,8 +63,6 @@
 		3222AC541C999726008CC724 /* ZBJCalendarComplexRangeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZBJCalendarComplexRangeController.m; sourceTree = "<group>"; };
 		3222AC551C999726008CC724 /* ZBJCalendarComplexCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBJCalendarComplexCell.h; sourceTree = "<group>"; };
 		3222AC561C999726008CC724 /* ZBJCalendarComplexCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZBJCalendarComplexCell.m; sourceTree = "<group>"; };
-		3222AC591C999726008CC724 /* ZBJCalendarRangeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBJCalendarRangeCell.h; sourceTree = "<group>"; };
-		3222AC5A1C999726008CC724 /* ZBJCalendarRangeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZBJCalendarRangeCell.m; sourceTree = "<group>"; };
 		3222AC5B1C999726008CC724 /* ZBJCalendarRangeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBJCalendarRangeController.h; sourceTree = "<group>"; };
 		3222AC5C1C999726008CC724 /* ZBJCalendarRangeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZBJCalendarRangeController.m; sourceTree = "<group>"; };
 		3222AC5E1C999726008CC724 /* ZBJCalendarRangeController1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBJCalendarRangeController1.h; sourceTree = "<group>"; };
@@ -87,6 +85,8 @@
 		323F79611C80183500479C2D /* NSDate+ZBJAddition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+ZBJAddition.m"; sourceTree = "<group>"; };
 		32972F8B1C99A1610093CC1B /* ZBJCalendarShowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBJCalendarShowController.h; sourceTree = "<group>"; };
 		32972F8C1C99A1610093CC1B /* ZBJCalendarShowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZBJCalendarShowController.m; sourceTree = "<group>"; };
+		32972F911C99C9B50093CC1B /* ZBJCalendarRangeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBJCalendarRangeCell.h; sourceTree = "<group>"; };
+		32972F921C99C9B50093CC1B /* ZBJCalendarRangeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZBJCalendarRangeCell.m; sourceTree = "<group>"; };
 		32F7EBE61C16779F00ED2DA4 /* ZBJCalendar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZBJCalendar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		32F7EBEA1C16779F00ED2DA4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32F7EBEC1C16779F00ED2DA4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -177,6 +177,8 @@
 				3222AC5D1C999726008CC724 /* style2 */,
 				3222AC601C999726008CC724 /* ZBJCalenderRangeSelector.h */,
 				3222AC611C999726008CC724 /* ZBJCalenderRangeSelector.m */,
+				32972F911C99C9B50093CC1B /* ZBJCalendarRangeCell.h */,
+				32972F921C99C9B50093CC1B /* ZBJCalendarRangeCell.m */,
 			);
 			path = RangeSelection;
 			sourceTree = "<group>";
@@ -186,8 +188,6 @@
 			children = (
 				3222AC5B1C999726008CC724 /* ZBJCalendarRangeController.h */,
 				3222AC5C1C999726008CC724 /* ZBJCalendarRangeController.m */,
-				3222AC591C999726008CC724 /* ZBJCalendarRangeCell.h */,
-				3222AC5A1C999726008CC724 /* ZBJCalendarRangeCell.m */,
 			);
 			path = style1;
 			sourceTree = "<group>";
@@ -432,10 +432,10 @@
 				3222AC6E1C999726008CC724 /* ZBJCalendarRangeController.m in Sources */,
 				3222AC721C999726008CC724 /* ZBJCalendarShowDelegate.m in Sources */,
 				3222AC741C999726008CC724 /* ZBJCalendarShowView.m in Sources */,
+				32972F931C99C9B50093CC1B /* ZBJCalendarRangeCell.m in Sources */,
 				3222AC6C1C999726008CC724 /* ZBJCalendarComplexCell.m in Sources */,
 				32972F8D1C99A1610093CC1B /* ZBJCalendarShowController.m in Sources */,
 				32291B7E1C91A7A3002D13B1 /* ZBJOfferCalendar.m in Sources */,
-				3222AC6D1C999726008CC724 /* ZBJCalendarRangeCell.m in Sources */,
 				DD787F091C7EA879008360A1 /* ZBJCalendarWeekView.m in Sources */,
 				3222AC6B1C999726008CC724 /* ZBJCalendarComplexRangeController.m in Sources */,
 			);

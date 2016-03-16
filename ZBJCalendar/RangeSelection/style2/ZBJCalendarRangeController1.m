@@ -101,6 +101,7 @@
         [_calendarView registerSectionHeader:[ZBJCalendarSectionHeader class] withReuseIdentifier:@"sectionHeader"];
         _calendarView.contentInsets = UIEdgeInsetsMake(0, 19, 0, 19);
         _calendarView.sectionHeaderHeight = 52;
+        _calendarView.weekViewHeight = 37;
         
         NSDate *firstDate = [NSDate date];
         NSCalendar *calendar = [NSCalendar currentCalendar];
@@ -110,6 +111,7 @@
         NSDate *lastDate = [calendar dateFromComponents:components];
         
         self.rangeSelector = [[ZBJCalenderRangeSelector alloc] init];
+        self.rangeSelector.cellStyle = ZBJRangeCellStyle2;
         
         // initial `startDate` and `endDate`
         if (self.startDate && self.endDate) {

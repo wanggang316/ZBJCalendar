@@ -44,14 +44,24 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.weekView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), 45);
     
+    
+    // weekViewFrame
+    if (self.weekViewHeight > 0) {
+        self.weekView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), self.weekViewHeight);
+    } else {
+        self.weekView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), 45);
+    }
+    
+    
+    // collecitonViewFrame
     self.collectionView.frame = CGRectMake(0,
                                            CGRectGetMaxY(self.weekView.frame),
                                            CGRectGetWidth(self.frame),
                                            CGRectGetHeight(self.frame) - CGRectGetMaxY(self.weekView.frame));
     
     
+    // cellWith
     NSInteger collectionContentWidth = CGRectGetWidth(self.collectionView.frame) - self.contentInsets.left - self.contentInsets.right;
     NSInteger residue = collectionContentWidth % 7;
 
@@ -73,7 +83,14 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
     self.collectionView.contentInset = self.contentInsets;
     
     UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
-    layout.itemSize = CGSizeMake(cellWidth, cellWidth);
+    
+    // cellHeight
+    if (self.cellScale > 0) {
+        layout.itemSize = CGSizeMake(cellWidth, (int)(cellWidth * self.cellScale));
+    } else {
+        layout.itemSize = CGSizeMake(cellWidth, cellWidth);
+    }
+
     self.collectionView.collectionViewLayout = layout;
     
 }
@@ -98,6 +115,26 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
     _contentInsets = contentInsets;
     self.weekView.contentInsets = _contentInsets;
     self.collectionView.contentInset = _contentInsets;
+
+}
+
+- (void)setWeekViewHeight:(CGFloat)weekViewHeight {
+    _weekViewHeight = weekViewHeight;
+    self.weekView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), self.weekViewHeight);
+}
+
+- (void)setMinimumLineSpacing:(CGFloat)minimumLineSpacing {
+    _minimumLineSpacing = minimumLineSpacing;
+    
+    UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
+
+    if (_minimumLineSpacing > 0) {
+        layout.minimumLineSpacing = _minimumLineSpacing;
+    } else {
+        layout.minimumLineSpacing = 0;
+    }
+    
+    self.collectionView.collectionViewLayout = layout;
 
 }
 
@@ -214,7 +251,7 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
 
 - (ZBJCalendarWeekView *)weekView {
     if (!_weekView) {
-        _weekView = [[ZBJCalendarWeekView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), 45)];
+        _weekView = [[ZBJCalendarWeekView alloc] init];
     }
     return _weekView;
 }
@@ -227,7 +264,7 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
         layout.minimumLineSpacing = 0;
         layout.minimumInteritemSpacing = 0;
         
-        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.weekView.frame), CGRectGetWidth(self.frame), CGRectGetHeight(self.frame) - CGRectGetMaxY(self.weekView.frame)) collectionViewLayout:layout];
+        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
         _collectionView.backgroundColor = [UIColor whiteColor];
         _collectionView.dataSource = self;
         _collectionView.delegate = self;

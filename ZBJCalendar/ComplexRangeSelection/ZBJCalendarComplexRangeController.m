@@ -298,6 +298,8 @@
         _calendarView.contentInsets = UIEdgeInsetsMake(0, 14, 0, 14);
         _calendarView.sectionHeaderHeight = 52;
         _calendarView.sectionFooterHeight = 13;
+        _calendarView.minimumLineSpacing = 0.5;
+        _calendarView.cellScale = 100.0 / 104.0;
     }
     return _calendarView;
 }
