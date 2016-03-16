@@ -12,12 +12,15 @@
 #import "ZBJCalendarAdvanceViewController.h"
 #import "ZBJOfferCalendarView.h"
 #import "ZBJOfferCalendar.h"
+#import "ZBJRangeViewController.h"
 
 static NSString * const ZBJCellIdentifier = @"cell";
 
 @interface ViewController () <UITableViewDataSource, UITableViewDelegate, ZBJCalendarRangeSelectorDelegate>
 
 @property (nonatomic, strong) NSArray *tableData;
+
+@property (nonatomic, strong) ZBJCalendarRangeViewController *rangeController;
 
 @end
 
@@ -80,13 +83,17 @@ static NSString * const ZBJCellIdentifier = @"cell";
             break;
         }
         case 1: {
-            ZBJCalendarRangeViewController *calendarViewController = [ZBJCalendarRangeViewController new];
+            [self.navigationController pushViewController:self.rangeController animated:YES];
+            break;
+        }
+            
+        case 2: {
+            ZBJRangeViewController *calendarViewController = [ZBJRangeViewController new];
             calendarViewController.title = self.tableData[indexPath.row];
-            calendarViewController.delegate = self;
             [self.navigationController pushViewController:calendarViewController animated:YES];
             break;
         }
-        case 2: {
+        case 3: {
             ZBJCalendarAdvanceViewController *calendarViewController = [ZBJCalendarAdvanceViewController new];
             calendarViewController.title = self.tableData[indexPath.row];
             [self.navigationController pushViewController:calendarViewController animated:YES];
@@ -99,15 +106,27 @@ static NSString * const ZBJCellIdentifier = @"cell";
 
 - (void)popViewController:(ZBJCalendarRangeViewController *)viewController startDate:(NSDate *)startDate endDate:(NSDate *)endDate {
     [viewController.navigationController popViewControllerAnimated:YES];
+    
     NSLog(@"----> startDate : %@, endDate: %@", startDate, endDate);
+    
+//    self.startDate = startDate;
+//    self.endDate = endDate;
 }
 
 #pragma mark - getter
 - (NSArray *)tableData {
     if (!_tableData) {
-        _tableData = @[@"ShowOnly", @"RangeSelection", @"Advance"];
+        _tableData = @[@"ShowOnly", @"RangeSelection", @"RangeSelection1", @"Advance"];
     }
     return _tableData;
+}
+
+- (ZBJCalendarRangeViewController *)rangeController {
+    if (!_rangeController) {
+        _rangeController = [ZBJCalendarRangeViewController new];
+        _rangeController.delegate = self;
+    }
+    return _rangeController;
 }
 
 @end

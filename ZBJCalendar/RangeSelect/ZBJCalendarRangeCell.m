@@ -57,7 +57,7 @@
             if (self.stateLabel.superview) {
                 [self.stateLabel removeFromSuperview];
             }
-            self.contentView.backgroundColor = [UIColor whiteColor];
+            self.contentView.backgroundColor = [UIColor clearColor];
             self.dateLabel.textColor = [UIColor colorWithRed:192.0/255.0 green:192.0/255.0 blue:200.0/255.0 alpha:1.0];
             break;
         }
@@ -66,7 +66,7 @@
             if (self.stateLabel.superview) {
                 [self.stateLabel removeFromSuperview];
             }
-            self.contentView.backgroundColor = [UIColor whiteColor];
+            self.contentView.backgroundColor = [UIColor clearColor];
             self.dateLabel.textColor = [UIColor colorWithRed:9.0/255.0 green:9.0/255.0 blue:26.0/255.0 alpha:1.0];
             break;
         }
@@ -74,7 +74,7 @@
             if (self.stateLabel.superview) {
                 [self.stateLabel removeFromSuperview];
             }
-            self.contentView.backgroundColor = [UIColor whiteColor];
+            self.contentView.backgroundColor = [UIColor clearColor];
             self.dateLabel.textColor = [UIColor colorWithRed:192.0/255.0 green:192.0/255.0 blue:200.0/255.0 alpha:1.0];
             break;
         }
@@ -113,7 +113,7 @@
             self.stateLabel.text = nil;
             [self.stateLabel removeFromSuperview];
             
-            self.contentView.backgroundColor = [UIColor whiteColor];
+            self.contentView.backgroundColor = [UIColor clearColor];
             break;
         }
         default: {

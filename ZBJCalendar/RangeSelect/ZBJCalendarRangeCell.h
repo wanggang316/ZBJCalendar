@@ -23,4 +23,5 @@ typedef CF_ENUM(NSInteger, ZBJCalendarCellState) {
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, assign) ZBJCalendarCellState cellState;
 
+//@property (nonatomic, strong) UIColor *defaultBackgroundColor
 @end

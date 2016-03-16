@@ -10,15 +10,10 @@
 #import "ZBJCalendarRangeCell.h"
 #import "ZBJCalendarSectionHeader.h"
 
-typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
-    ZBJCalendarStateSelectedNone,
-    ZBJCalendarStateSelectedStart,
-    ZBJCalendarStateSelectedRange,
-};
 
 @interface ZBJCalenderRangeSelector()
 
-@property (nonatomic, assign) ZBJCalendarSelectedState selectedState;
+
 @end
 
 @implementation ZBJCalenderRangeSelector
@@ -28,7 +23,8 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
     
     // 日期在今天之前
     // 先取到当天的最后一秒: xxxx-xx-xx 23:59:59
-    if ([[date dateByAddingTimeInterval:86400.0 - 1] compare:calendarView.firstDate] == NSOrderedAscending) {
+    if ([[date dateByAddingTimeInterval:86400.0 - 1] compare:calendarView.firstDate] == NSOrderedAscending ||
+        [date compare:calendarView.lastDate] != NSOrderedAscending) {
         return NO;
     }
     switch (self.selectedState) {
@@ -115,16 +111,12 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
                 self.endDate = date;
                 [self setSelectedState:ZBJCalendarStateSelectedRange calendarView:calendarView];
             } else {
+                self.endDate = nil;
                 self.startDate = date;
                 [self setSelectedState:ZBJCalendarStateSelectedStart calendarView:calendarView];
             }
         }
     }
-}
-
-
-- (void)reset {
-   
 }
 
 
@@ -141,7 +133,7 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
             break;
         }
         case ZBJCalendarStateSelectedStart: {
-            self.endDate = nil;
+
             [calendarView.collectionView reloadData];
             break;
         }
@@ -159,5 +151,8 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
     headerView.year = year;
     headerView.month = month;
 }
+
+
+#pragma mark -
 
 @end

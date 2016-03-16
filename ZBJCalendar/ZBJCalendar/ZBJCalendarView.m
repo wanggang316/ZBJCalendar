@@ -80,7 +80,6 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
     
 }
 
-
 #pragma mark - public method
 - (void)registerCellClass:(id)clazz withReuseIdentifier:(NSString *)identifier {
     self.cellIdentifier = identifier;
@@ -102,6 +101,11 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
     self.headerView.contentInsets = _contentInsets;
     self.collectionView.contentInset = _contentInsets;
 
+}
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor {
+    self.collectionView.backgroundColor = backgroundColor;
+    self.headerView.backgroundColor = backgroundColor;
 }
 
 #pragma mark UICollectionViewDataSource

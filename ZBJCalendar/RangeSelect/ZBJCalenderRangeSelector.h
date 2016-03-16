@@ -9,9 +9,18 @@
 #import <Foundation/Foundation.h>
 #import "ZBJCalendarView.h"
 
+
+typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
+    ZBJCalendarStateSelectedNone,
+    ZBJCalendarStateSelectedStart,
+    ZBJCalendarStateSelectedRange,
+};
+
 @interface ZBJCalenderRangeSelector : NSObject <ZBJCalendarDelegate>
 
 @property (nonatomic, strong) NSDate *startDate;
 @property (nonatomic, strong) NSDate *endDate;
+
+@property (nonatomic, assign) ZBJCalendarSelectedState selectedState;
 
 @end

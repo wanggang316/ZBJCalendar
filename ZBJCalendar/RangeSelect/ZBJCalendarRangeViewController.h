@@ -13,6 +13,9 @@
 
 @property (nonatomic, weak) id<ZBJCalendarRangeSelectorDelegate> delegate;
 
+@property (nonatomic, strong) NSDate *startDate;
+@property (nonatomic, strong) NSDate *endDate;
+
 @end
 
 @protocol ZBJCalendarRangeSelectorDelegate <NSObject>
