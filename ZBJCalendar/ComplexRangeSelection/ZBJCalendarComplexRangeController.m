@@ -99,7 +99,8 @@
         if (date) {
             // 日期在今天之前
             // 先取到当天的最后一秒: xxxx-xx-xx 23:59:59
-            if ([[date dateByAddingTimeInterval:86400.0 - 1] compare:calendarView.firstDate] == NSOrderedAscending) {
+            if ([[date dateByAddingTimeInterval:86400.0 - 1] compare:calendarView.firstDate] == NSOrderedAscending ||
+                [date compare:calendarView.lastDate] == NSOrderedDescending) {
                 return NO;
             }
             switch (self.selectedState) {
@@ -166,7 +167,7 @@
     if (date) {
         // 如果小于起始日期或大于结束日期，那么disabled
         if ([[date dateByAddingTimeInterval:86400.0 - 1] compare:calendarView.firstDate] == NSOrderedAscending ||
-            [date compare:calendarView.lastDate] != NSOrderedAscending) { //不大于最后一天
+            [date compare:calendarView.lastDate] == NSOrderedDescending) { //大于最后一天
             
             cellState = ZBJCalendarCellStateDisabled;
         } else {

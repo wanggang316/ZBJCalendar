@@ -38,7 +38,7 @@
     if (date) {
         // 如果小于起始日期或大于结束日期，那么disabled
         if ([[date dateByAddingTimeInterval:86400.0 - 1] compare:calendarView.firstDate] == NSOrderedAscending ||
-            [date compare:calendarView.lastDate] != NSOrderedAscending) { //不小于最后一天
+            [date compare:calendarView.lastDate] == NSOrderedDescending) { //不小于最后一天
             cellState = ZBJCalendarCellStateDisabled;
         } else {
             
