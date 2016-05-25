@@ -9,12 +9,6 @@
 #import "ZBJCalendarWeekView.h"
 #import "NSDate+ZBJAddition.h"
 
-@interface ZBJCalendarWeekView ()
-
-@property (nonatomic, strong) CALayer *bottomLine;
-
-@end
-
 @implementation ZBJCalendarWeekView
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -47,15 +41,19 @@
             label.text = [adjustedSymbols[i] uppercaseString];
             label.textAlignment = NSTextAlignmentCenter;
             [self addSubview:label];
+            
+            if (self.delegate && [self.delegate respondsToSelector:@selector(calendarWeekView:configureWeekDayLabel:atWeekDay:)]) {
+                [self.delegate calendarWeekView:self configureWeekDayLabel:label atWeekDay:i];
+            }
         }
         
+        // bottom line is default style, you
         if (!self.bottomLine) {
             self.bottomLine = [CALayer layer];
             self.bottomLine.frame = CGRectMake(0, CGRectGetHeight(self.frame) - 0.5, CGRectGetWidth(self.frame), 0.5);
             self.bottomLine.backgroundColor = [UIColor colorWithRed:230.0/255.0 green:230.0/255.0 blue:233.0/255.0 alpha:1.0].CGColor;
             [self.layer addSublayer:self.bottomLine];
         }
-       
     }
     return self;
 }

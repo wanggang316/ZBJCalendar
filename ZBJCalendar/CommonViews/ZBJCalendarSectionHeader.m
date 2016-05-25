@@ -12,6 +12,7 @@
 
 @property (nonatomic, strong) UILabel *yearLabel;
 @property (nonatomic, strong) UILabel *monthLabel;
+@property (nonatomic, strong) UIView *bottomLine;
 
 @end
 
@@ -22,14 +23,16 @@
     if (self) {
         [self addSubview:self.yearLabel];
         [self addSubview:self.monthLabel];
+        [self addSubview:self.bottomLine];
     }
     return self;
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.monthLabel.frame = CGRectMake(12, 20, CGRectGetWidth(self.monthLabel.frame), 20);
-    self.yearLabel.frame = CGRectMake(CGRectGetMaxX(self.monthLabel.frame) + 5, CGRectGetMaxY(self.monthLabel.frame) - 2 - 9, 100, 9);
+    self.monthLabel.frame = CGRectMake(13, 25, CGRectGetWidth(self.monthLabel.frame), 20);
+    self.yearLabel.frame = CGRectMake(CGRectGetMaxX(self.monthLabel.frame) + 3, CGRectGetMaxY(self.monthLabel.frame) - 2 - 9, 100, 9);
+    self.bottomLine.frame = CGRectMake(CGRectGetMinX(self.monthLabel.frame), CGRectGetMaxY(self.monthLabel.frame) + 11, 30, 2);
 }
 
 #pragma mark - setters
@@ -47,7 +50,7 @@
 - (UILabel *)yearLabel {
     if (!_yearLabel) {
         _yearLabel = [[UILabel alloc] init];
-        _yearLabel.font = [UIFont systemFontOfSize:9];
+        _yearLabel.font = [UIFont systemFontOfSize:10];
         _yearLabel.textColor = [UIColor darkTextColor];
         _yearLabel.textAlignment = NSTextAlignmentLeft;
     }
@@ -57,10 +60,21 @@
 - (UILabel *)monthLabel {
     if (!_monthLabel) {
         _monthLabel = [[UILabel alloc] init];
-        _monthLabel.font = [UIFont systemFontOfSize:20];
+        _monthLabel.font = [UIFont systemFontOfSize:22];
         _monthLabel.textColor = [UIColor darkTextColor];
     }
     return _monthLabel;
+}
+
+- (UIView *)bottomLine {
+    if (!_bottomLine) {
+        _bottomLine = [[UIView alloc] init];
+        _bottomLine.backgroundColor = [UIColor colorWithRed:230.0/255.0 green:230.0/255.0 blue:233.0/255.0 alpha:1.0];
+        _bottomLine.layer.cornerRadius = 1.0;
+        _bottomLine.clipsToBounds = YES;
+    }
+   
+    return _bottomLine;
 }
 
 

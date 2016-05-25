@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ *  This category provide methods used to corresponding relations between indexpath and date.
+ */
 @interface NSDate (IndexPath)
 
 + (NSDate *)dateForFirstDayInSection:(NSInteger)section firstDate:(NSDate *)firstDate;

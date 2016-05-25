@@ -7,19 +7,12 @@
 //
 
 #import "ZBJCalendarView.h"
-#import "ZBJCalendarWeekView.h"
 #import "NSDate+ZBJAddition.h"
 #import "NSDate+IndexPath.h"
 
-typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
-    ZBJCalendarStateSelectedNone,
-    ZBJCalendarStateSelectedStart,
-    ZBJCalendarStateSelectedRange,
-};
+@interface ZBJCalendarView () <UICollectionViewDataSource, UICollectionViewDelegate, ZBJCalendarWeekViewDelegate>
 
-@interface ZBJCalendarView () <UICollectionViewDataSource, UICollectionViewDelegate>
-@property (nonatomic, strong) ZBJCalendarWeekView *weekView;
-
+@property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSString *cellIdentifier;
 @property (nonatomic, strong) NSString *sectionHeaderIdentifier;
 @property (nonatomic, strong) NSString *sectionFooterIdentifier;
@@ -32,10 +25,9 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        
         self.backgroundColor = [UIColor whiteColor];
-        [self addSubview:self.weekView];
         [self addSubview:self.collectionView];
+        [self addSubview:self.weekView];
         
         self.selectionMode = ZBJSelectionModeRange;
     }
@@ -45,21 +37,18 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    
     // weekViewFrame
     if (self.weekViewHeight > 0) {
         self.weekView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), self.weekViewHeight);
     } else {
-        self.weekView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), 45);
+        self.weekView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), 46);
     }
-    
     
     // collecitonViewFrame
     self.collectionView.frame = CGRectMake(0,
                                            CGRectGetMaxY(self.weekView.frame),
                                            CGRectGetWidth(self.frame),
                                            CGRectGetHeight(self.frame) - CGRectGetMaxY(self.weekView.frame));
-    
     
     // cellWith
     NSInteger collectionContentWidth = CGRectGetWidth(self.collectionView.frame) - self.contentInsets.left - self.contentInsets.right;
@@ -92,7 +81,6 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
     }
 
     self.collectionView.collectionViewLayout = layout;
-    
 }
 
 #pragma mark - public method
@@ -115,32 +103,37 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
     _contentInsets = contentInsets;
     self.weekView.contentInsets = _contentInsets;
     self.collectionView.contentInset = _contentInsets;
-
 }
 
 - (void)setWeekViewHeight:(CGFloat)weekViewHeight {
     _weekViewHeight = weekViewHeight;
-    self.weekView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), self.weekViewHeight);
+    self.weekView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), _weekViewHeight);
 }
 
 - (void)setMinimumLineSpacing:(CGFloat)minimumLineSpacing {
     _minimumLineSpacing = minimumLineSpacing;
     
     UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
-
     if (_minimumLineSpacing > 0) {
         layout.minimumLineSpacing = _minimumLineSpacing;
     } else {
         layout.minimumLineSpacing = 0;
     }
-    
     self.collectionView.collectionViewLayout = layout;
-
 }
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor {
     self.collectionView.backgroundColor = backgroundColor;
     self.weekView.backgroundColor = backgroundColor;
+}
+
+- (void)setAllowsSelection:(BOOL)allowsSelection {
+    _allowsSelection = allowsSelection;
+    self.collectionView.allowsSelection = _allowsSelection;
+}
+
+- (void)reloadData {
+    [self.collectionView reloadData];
 }
 
 #pragma mark UICollectionViewDataSource
@@ -154,15 +147,14 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
     
     if (self.sectionHeaderIdentifier && [kind isEqualToString:UICollectionElementKindSectionHeader]) {
         id headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:self.sectionHeaderIdentifier forIndexPath:indexPath];
-        if (self.delegate && [self.delegate respondsToSelector:@selector(calendarView:configureSectionHeaderView:forYear:month:)]) {
-            [self.delegate calendarView:self configureSectionHeaderView:headerView forYear:components.year month:components.month];
+        if (self.dataSource && [self.dataSource respondsToSelector:@selector(calendarView:configureSectionHeaderView:forYear:month:)]) {
+            [self.dataSource calendarView:self configureSectionHeaderView:headerView forYear:components.year month:components.month];
         }
         return headerView;
     } else if (self.sectionFooterIdentifier && [kind isEqualToString:UICollectionElementKindSectionFooter]) {
         id footerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:self.sectionFooterIdentifier forIndexPath:indexPath];
-
-        if (self.delegate && [self.delegate respondsToSelector:@selector(calendarView:configureSectionFooterView:forYear:month:)]) {
-            [self.delegate calendarView:self configureSectionFooterView:footerView forYear:components.year month:components.month];
+        if (self.dataSource && [self.dataSource respondsToSelector:@selector(calendarView:configureSectionFooterView:forYear:month:)]) {
+            [self.dataSource calendarView:self configureSectionFooterView:footerView forYear:components.year month:components.month];
         }
         return footerView;
     }
@@ -172,6 +164,17 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
 
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    
+    // if headStyle is `ZBJCalendarViewHeadStyleCurrentWeek`, the first month is special
+    if (self.headStyle == ZBJCalendarViewHeadStyleCurrentWeek && section == 0) {
+        NSInteger weekDay = [self.firstDate weekday];
+        NSDate *lastDateOfMonth = [self.firstDate lastDateOfMonth];
+        NSInteger lastDateOfMonthWeekDay = [lastDateOfMonth weekday];
+        NSInteger items = weekDay + [NSDate numberOfNightsFromDate:self.firstDate toDate:lastDateOfMonth] + 7 - lastDateOfMonthWeekDay;
+        return items;
+    }
+    
+    // normal logic
     NSDate *firstDay = [NSDate dateForFirstDayInSection:section firstDate:self.firstDate];
     NSInteger weekDay = [firstDay weekday] -1;
     NSInteger items =  weekDay + [NSDate numberOfDaysInMonth:firstDay];
@@ -187,10 +190,26 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
     
     id cell = [collectionView dequeueReusableCellWithReuseIdentifier:self.cellIdentifier forIndexPath:indexPath];
     
-    NSDate *date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
+    NSDate *date = nil;
+    // if headStyle is `ZBJCalendarViewHeadStyleCurrentWeek`, the first month is special
+    if (self.headStyle == ZBJCalendarViewHeadStyleCurrentWeek && indexPath.section == 0) {
+        NSDate *firstDay = [self.firstDate firstDateOfWeek];
+        NSDate *lastDateOfMonth = [self.firstDate lastDateOfMonth];
+        NSInteger items = [NSDate numberOfNightsFromDate:firstDay toDate:lastDateOfMonth];
+        if (indexPath.row > items) {
+        } else {
+            NSCalendar *calendar = [NSDate gregorianCalendar];
+            NSDateComponents *components = [calendar components:NSCalendarUnitMonth | NSCalendarUnitDay fromDate:firstDay];
+            [components setDay:indexPath.row];
+            [components setMonth:indexPath.section];
+            date = [calendar dateByAddingComponents:components toDate:firstDay options:0];
+        }
+    } else { // normal logic
+        date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
+    }
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(calendarView:configureCell:forDate:)]) {
-        [self.delegate calendarView:self configureCell:cell forDate:date];
+    if (self.dataSource && [self.dataSource respondsToSelector:@selector(calendarView:configureCell:forDate:)]) {
+        [self.dataSource calendarView:self configureCell:cell forDate:date];
     }
    
     return cell;
@@ -201,7 +220,24 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    NSDate *date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
+    NSDate *date = nil;
+    
+    // if headStyle is `ZBJCalendarViewHeadStyleCurrentWeek`, the first month is special
+    if (self.headStyle == ZBJCalendarViewHeadStyleCurrentWeek && indexPath.section == 0) {
+        NSDate *firstDay = [self.firstDate firstDateOfWeek];
+        NSDate *lastDateOfMonth = [self.firstDate lastDateOfMonth];
+        NSInteger items = [NSDate numberOfNightsFromDate:firstDay toDate:lastDateOfMonth];
+        if (indexPath.row > items) {
+        } else {
+            NSCalendar *calendar = [NSDate gregorianCalendar];
+            NSDateComponents *components = [calendar components:NSCalendarUnitMonth | NSCalendarUnitDay fromDate:firstDay];
+            [components setDay:indexPath.row];
+            [components setMonth:indexPath.section];
+            date = [calendar dateByAddingComponents:components toDate:firstDay options:0];
+        }
+    } else { // normal logic
+        date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
+    }
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(calendarView:shouldSelectDate:)]) {
         return [self.delegate calendarView:self shouldSelectDate:date];
@@ -217,7 +253,24 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
    
-    NSDate *date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
+    NSDate *date = nil;
+    
+    // if headStyle is `ZBJCalendarViewHeadStyleCurrentWeek`, the first month is special
+    if (self.headStyle == ZBJCalendarViewHeadStyleCurrentWeek && indexPath.section == 0) {
+        NSDate *firstDay = [self.firstDate firstDateOfWeek];
+        NSDate *lastDateOfMonth = [self.firstDate lastDateOfMonth];
+        NSInteger items = [NSDate numberOfNightsFromDate:firstDay toDate:lastDateOfMonth];
+        if (indexPath.row > items) {
+        } else {
+            NSCalendar *calendar = [NSDate gregorianCalendar];
+            NSDateComponents *components = [calendar components:NSCalendarUnitMonth | NSCalendarUnitDay fromDate:firstDay];
+            [components setDay:indexPath.row];
+            [components setMonth:indexPath.section];
+            date = [calendar dateByAddingComponents:components toDate:firstDay options:0];
+        }
+    } else { // normal logic
+        date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
+    }
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(calendarView:didSelectDate:)]) {
         [self.delegate calendarView:self didSelectDate:date];
@@ -247,11 +300,19 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
     return CGSizeZero;
 }
 
+#pragma mark - ZBJCalendarWeekViewDelegate
+- (void)calendarWeekView:(ZBJCalendarWeekView *)weekView configureWeekDayLabel:(UILabel *)dayLabel atWeekDay:(NSInteger)weekDay {
+    if (self.dataSource && [self.dataSource respondsToSelector:@selector(calendarWeekView:configureWeekDayLabel:atWeekDay:)]) {
+        [self.dataSource calendarView:self configureWeekDayLabel:dayLabel atWeekDay:weekDay];
+    }
+}
+
 #pragma mark - getters
 
 - (ZBJCalendarWeekView *)weekView {
     if (!_weekView) {
         _weekView = [[ZBJCalendarWeekView alloc] init];
+        _weekView.delegate = self;
     }
     return _weekView;
 }

@@ -17,7 +17,7 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
     ZBJCalendarStateSelectedRange,
 };
 
-@interface ZBJCalenderRangeSelector : NSObject <ZBJCalendarDelegate>
+@interface ZBJCalenderRangeSelector : NSObject <ZBJCalendarDelegate, ZBJCalendarDataSource>
 
 @property (nonatomic, strong) NSDate *startDate;
 @property (nonatomic, strong) NSDate *endDate;

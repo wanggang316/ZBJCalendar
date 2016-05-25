@@ -130,6 +130,7 @@
                                 context:@""];
         
         _calendarView.delegate = self.rangeSelector;
+        _calendarView.dataSource = self.rangeSelector;
         _calendarView.firstDate = firstDate;
         _calendarView.lastDate = lastDate;
     }

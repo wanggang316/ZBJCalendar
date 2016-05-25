@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ *  This category provide utility methods for `NSDate`.
+ */
 @interface NSDate (ZBJAddition)
 
 + (NSCalendar *)gregorianCalendar;
@@ -16,15 +19,14 @@
 + (NSInteger)numberOfMonthsFromDate:(NSDate *)fromDate toDate:(NSDate *)toDate;
 + (NSInteger)numberOfDaysFromMonth:(NSDate *)fromMonth toMonth:(NSDate *)toMonth;
 + (NSInteger)numberOfDaysInMonth:(NSDate *)date;
++ (NSInteger)numberOfNightsFromDate:(NSDate *)fromDate toDate:(NSDate *)toDate;
 
 - (NSDate *)firstDateOfMonth;
-
+- (NSDate *)firstDateOfWeek;
 - (NSDate *)lastDateOfMonth;
 
 - (NSInteger)weekday;
 
 - (BOOL)isToday;
-
-
 
 @end

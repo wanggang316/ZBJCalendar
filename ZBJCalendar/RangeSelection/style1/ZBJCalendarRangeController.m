@@ -74,6 +74,7 @@
     self.rangeSelector.cellStyle = ZBJRangeCellStyle1;
     
     self.calendarView.delegate = self.rangeSelector;
+    self.calendarView.dataSource = self.rangeSelector;
     self.calendarView.firstDate = firstDate;
     self.calendarView.lastDate = lastDate;
 

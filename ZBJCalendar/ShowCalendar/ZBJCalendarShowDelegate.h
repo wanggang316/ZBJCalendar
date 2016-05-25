@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import "ZBJCalendarView.h"
+#import "ZBJOfferCalendar.h"
 
-@interface ZBJCalendarShowDelegate : NSObject <ZBJCalendarDelegate>
+@interface ZBJCalendarShowDelegate : NSObject <ZBJCalendarDelegate, ZBJCalendarDataSource>
 
 @property (nonatomic, strong) ZBJOfferCalendar *offerCal;
 

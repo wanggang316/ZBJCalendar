@@ -10,9 +10,8 @@
 #define ZBJCalendar_h
 
 #import "ZBJCalendarView.h"
+#import "ZBJCalendarWeekView.h"
 #import "NSDate+ZBJAddition.h"
 #import "NSDate+IndexPath.h"
-
-
 
 #endif /* ZBJCalendar_h */

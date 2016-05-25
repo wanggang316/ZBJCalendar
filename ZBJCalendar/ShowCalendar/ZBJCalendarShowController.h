@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ZBJCalendarView.h"
+#import "ZBJOfferCalendar.h"
 
 @interface ZBJCalendarShowController : UIViewController
 

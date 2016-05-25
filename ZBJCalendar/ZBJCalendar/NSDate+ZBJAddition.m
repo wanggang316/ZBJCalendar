@@ -73,11 +73,29 @@ const char * const JmoLocaleStoreKey = "jmo.locale";
     return range.length;
 }
 
++ (NSInteger)numberOfNightsFromDate:(NSDate *)fromDate toDate:(NSDate *)toDate {
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    unsigned int unitFlag = NSDayCalendarUnit;
+    NSDateComponents *components = [calendar components:unitFlag fromDate:fromDate toDate:toDate options:0];
+    NSInteger days = [components day];
+    return days;
+}
+
 #pragma mark -
 - (NSDate *)firstDateOfMonth {
     NSCalendar *calendar = [self.class gregorianCalendar];
     NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:self];
     components.day = 1;
+    return [calendar dateFromComponents:components];
+}
+
+- (NSDate *)firstDateOfWeek {
+    
+    NSInteger weekDay = self.weekday;
+    
+    NSCalendar *calendar = [self.class gregorianCalendar];
+    NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitWeekday fromDate:self];
+    components.day = components.day - weekDay + 1;
     return [calendar dateFromComponents:components];
 }
 
@@ -91,7 +109,8 @@ const char * const JmoLocaleStoreKey = "jmo.locale";
 
 - (NSInteger)weekday {
     NSCalendar *calendar = [self.class gregorianCalendar];
-    return [calendar component:NSCalendarUnitWeekday fromDate:self];
+    NSDateComponents *compoents = [calendar components:NSCalendarUnitWeekday fromDate:self];
+    return compoents.weekday;
 }
 
 - (BOOL)isToday {

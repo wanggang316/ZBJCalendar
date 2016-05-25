@@ -131,17 +131,17 @@
         case ZBJCalendarStateSelectedNone: {
             self.startDate = nil;
             self.endDate = nil;
-            [calendarView.collectionView reloadData];
-            calendarView.collectionView.allowsSelection = YES;
+            [calendarView reloadData];
+            calendarView.allowsSelection = YES;
             break;
         }
         case ZBJCalendarStateSelectedStart: {
 
-            [calendarView.collectionView reloadData];
+            [calendarView reloadData];
             break;
         }
         case ZBJCalendarStateSelectedRange: {
-            [calendarView.collectionView reloadData];
+            [calendarView reloadData];
             break;
         }
         default:

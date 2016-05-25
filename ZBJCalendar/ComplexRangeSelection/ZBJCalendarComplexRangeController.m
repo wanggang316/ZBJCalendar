@@ -13,7 +13,7 @@
 #import "ZBJCalendarSectionFooter.h"
 
 
-@interface ZBJCalendarComplexRangeController () <ZBJCalendarDelegate>
+@interface ZBJCalendarComplexRangeController () <ZBJCalendarDelegate, ZBJCalendarDataSource>
 
 @property (nonatomic, strong) ZBJCalendarView *calendarView;
 
@@ -73,8 +73,8 @@
 - (void)reset {
     self.startDate = nil;
     self.endDate = nil;
-    [self.calendarView.collectionView reloadData];
-    self.calendarView.collectionView.allowsSelection = YES;
+    [self.calendarView reloadData];
+    self.calendarView.allowsSelection = YES;
 }
 
 // 计算开始日期之后最近的不可选日期
@@ -293,6 +293,7 @@
     if (!_calendarView) {
         _calendarView = [[ZBJCalendarView alloc] initWithFrame:CGRectMake(0, 64, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 64)];
         _calendarView.delegate = self;
+        _calendarView.dataSource = self;
         [_calendarView registerCellClass:[ZBJCalendarComplexCell class] withReuseIdentifier:@"cell"];
         [_calendarView registerSectionHeader:[ZBJCalendarSectionHeader class] withReuseIdentifier:@"sectionHeader"];
         [_calendarView registerSectionFooter:[ZBJCalendarSectionFooter class] withReuseIdentifier:@"sectionFooter"];
@@ -323,7 +324,7 @@
             [self.tempUnavaibleDates removeAllObjects];
             self.nearestUnavaibleDate = nil;
             
-            [self.calendarView.collectionView reloadData];
+            [self.calendarView reloadData];
             
             // calculate avaible `endDate` based `startDate`.
             // - the days in `minNights` from `startDate` has days unavaible.
@@ -332,7 +333,7 @@
                 // find the data about `theDate` and deal.
                 ZBJOfferDay *day = [self offerDateWithDate:theDate];
                 if (!day.available.boolValue) {
-                    self.calendarView.collectionView.allowsSelection = NO;
+                    self.calendarView.allowsSelection = NO;
                     [self performSelector:@selector(reset) withObject:nil afterDelay:0.8];
                     return;
                 }
@@ -350,12 +351,12 @@
             // - 计算起始日期之后最近的不可选日期
             self.nearestUnavaibleDate = [self findTheNearestUnavaibleDateByStartDate:self.startDate];
             
-            [self.calendarView.collectionView reloadData];
+            [self.calendarView reloadData];
             
             break;
         }
         case ZBJCalendarStateSelectedRange: {
-            [self.calendarView.collectionView reloadData];
+            [self.calendarView reloadData];
             
             
             self.title = [NSString stringWithFormat:@"选择起始日期(至少%ld天)", self.minNights];

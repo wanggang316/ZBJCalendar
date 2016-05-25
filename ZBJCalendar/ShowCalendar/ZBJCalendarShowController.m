@@ -31,6 +31,7 @@
     self.delegate = [[ZBJCalendarShowDelegate alloc] init];
     self.delegate.offerCal = self.offerCal;
     self.calendarView.delegate = self.delegate;
+    self.calendarView.dataSource = self.delegate;
 
     [self.view addSubview:self.calendarView];
 }
@@ -47,7 +48,7 @@
         _calendarView.backgroundColor = [UIColor lightGrayColor];
         [_calendarView registerCellClass:[ZBJCalendarShowCell class] withReuseIdentifier:@"cell"];
         [_calendarView registerSectionHeader:[ZBJCalendarSectionHeader class] withReuseIdentifier:@"header"];
-        _calendarView.selectionMode = ZBJSelectionModeNone;
+        _calendarView.selectionMode = ZBJSelectionModeDisable;
     }
     return _calendarView;
 }
