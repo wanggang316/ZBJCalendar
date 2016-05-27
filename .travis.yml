@@ -1,5 +1,11 @@
-language: objective-c #语言种类
+# language: objective-c #语言种类
 
-xcode_project: ZBJCalendar.xcodeproj # 项目文件相对于.travis.yml文件的路径
+# xcode_project: ZBJCalendar.xcodeproj # 项目文件相对于.travis.yml文件的路径
 
-xcode_scheme: ZBJCalendar #你需要集成测试的scheme
+# xcode_scheme: ZBJCalendar #你需要集成测试的scheme
+
+language: objective-c
+osx_image: xcode7.3
+xcode_project: ZBJCalendar.xcodeproj
+xcode_scheme: ZBJCalendar
+xcode_sdk: iphonesimulator9.2
