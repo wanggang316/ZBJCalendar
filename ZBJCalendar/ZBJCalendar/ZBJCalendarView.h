@@ -2,7 +2,7 @@
 //  ZBJCalendarView.h
 //  ZBJCalendar
 //
-//  Created by wanggang on 2/24/16.
+//  Created by gumpwang on 2/24/16.
 //  Copyright © 2016 ZBJ. All rights reserved.
 //
 
@@ -119,9 +119,11 @@ typedef CF_ENUM(NSInteger, ZBJCalendarViewHeadStyle) {
  *  Reloads everything from scratch, redisplays visible cells.
  */
 - (void)reloadData;
+
+- (id)cellAtDate:(NSDate *)date;
+
+- (void)reloadCellsAtDates:(NSSet<NSDate *> *)dates;
 @end
-
-
 /**
  *  This protocol represents the cell data model object. 
  *  As such, it supplies the cell's information about appearance and data.
@@ -145,11 +147,10 @@ typedef CF_ENUM(NSInteger, ZBJCalendarViewHeadStyle) {
  *
  *  @param calendarView self
  *  @param headerView   current reuse section header or footer view
- *  @param year         current year
- *  @param month        current month
+ *  @param firstDateOfMonth & lastDateOfMonth
  */
-- (void)calendarView:(ZBJCalendarView *)calendarView configureSectionHeaderView:(id)headerView forYear:(NSInteger)year month:(NSInteger)month;
-- (void)calendarView:(ZBJCalendarView *)calendarView configureSectionFooterView:(id)headerView forYear:(NSInteger)year month:(NSInteger)month;
+- (void)calendarView:(ZBJCalendarView *)calendarView configureSectionHeaderView:(id)headerView firstDateOfMonth:(NSDate *)firstDateOfMonth;
+- (void)calendarView:(ZBJCalendarView *)calendarView configureSectionFooterView:(id)headerView lastDateOfMonth:(NSDate *)lastDateOfMonth;
 
 /**
  *  This method is used for configure the cell of the week view with the `weekDay`
@@ -163,6 +164,7 @@ typedef CF_ENUM(NSInteger, ZBJCalendarViewHeadStyle) {
 
 @protocol ZBJCalendarDelegate <NSObject>
 
+@optional
 /**
  *  Return whether the date is selectable
  *
@@ -173,13 +175,13 @@ typedef CF_ENUM(NSInteger, ZBJCalendarViewHeadStyle) {
  */
 - (BOOL)calendarView:(ZBJCalendarView *)calendarView shouldSelectDate:(NSDate *)date;
 
-@optional
 /**
  *  Correspond the selection event of the calendarView with current `date`.
  *
  *  @param calendarView self
  *  @param date         current date
  */
-- (void)calendarView:(ZBJCalendarView *)calendarView didSelectDate:(NSDate *)date;
+- (void)calendarView:(ZBJCalendarView *)calendarView didSelectDate:(NSDate *)date ofCell:(id)cell;
+- (void)calendarView:(ZBJCalendarView *)calendarView didDeselectDate:(NSDate *)date ofCell:(id)cell;
 
 @end

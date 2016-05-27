@@ -2,7 +2,7 @@
 //  NSDate+ZBJAddition.h
 //  ZBJCalendar
 //
-//  Created by wanggang on 2/26/16.
+//  Created by gumpwang on 2/26/16.
 //  Copyright © 2016 ZBJ. All rights reserved.
 //
 
@@ -16,6 +16,7 @@
 + (NSCalendar *)gregorianCalendar;
 + (NSLocale *)locale;
 
++ (NSDate *)today;
 + (NSInteger)numberOfMonthsFromDate:(NSDate *)fromDate toDate:(NSDate *)toDate;
 + (NSInteger)numberOfDaysFromMonth:(NSDate *)fromMonth toMonth:(NSDate *)toMonth;
 + (NSInteger)numberOfDaysInMonth:(NSDate *)date;
@@ -28,5 +29,6 @@
 - (NSInteger)weekday;
 
 - (BOOL)isToday;
+- (BOOL)isWeekend;
 
 @end

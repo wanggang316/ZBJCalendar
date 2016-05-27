@@ -1,13 +1,17 @@
 //
-//  ZBJCalendarHeaderView.m
+//  ZBJCalendarWeekView.m
 //  ZBJCalendar
 //
-//  Created by meili cao on 16/2/25.
+//  Created by gumpwang on 16/2/25.
 //  Copyright © 2016年 ZBJ. All rights reserved.
 //
 
 #import "ZBJCalendarWeekView.h"
 #import "NSDate+ZBJAddition.h"
+
+@interface ZBJCalendarWeekView ()
+@property (nonatomic, strong) NSMutableArray *adjustedSymbols;
+@end
 
 @implementation ZBJCalendarWeekView
 
@@ -31,20 +35,18 @@
             [adjustedSymbols insertObject:lastObject atIndex:0];
         }
         
+        self.adjustedSymbols = adjustedSymbols;
         
-        for (int i = 0 ; i < adjustedSymbols.count; i++) {
+        for (int i = 0 ; i < self.adjustedSymbols.count; i++) {
             CGFloat w = CGRectGetWidth(self.frame)/7;
             UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(w * i, 0, w, CGRectGetHeight(self.frame))];
             label.tag = 10901 + i;
             label.textColor = [UIColor darkTextColor];
             label.font = [UIFont systemFontOfSize:15];
-            label.text = [adjustedSymbols[i] uppercaseString];
+            label.text = [self.adjustedSymbols[i] uppercaseString];
             label.textAlignment = NSTextAlignmentCenter;
             [self addSubview:label];
             
-            if (self.delegate && [self.delegate respondsToSelector:@selector(calendarWeekView:configureWeekDayLabel:atWeekDay:)]) {
-                [self.delegate calendarWeekView:self configureWeekDayLabel:label atWeekDay:i];
-            }
         }
         
         // bottom line is default style, you
@@ -60,15 +62,22 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
     for (int i = 0; i < 7; i++) {
         UILabel *label = [self viewWithTag:10901 + i];
         CGFloat width = (self.frame.size.width - _contentInsets.left - _contentInsets.right) / 7;
         label.frame = CGRectMake(_contentInsets.left + i * width, 0, width, CGRectGetHeight(self.frame));
     }
-    
     self.bottomLine.frame = CGRectMake(0, CGRectGetHeight(self.frame) - 0.5, CGRectGetWidth(self.frame), 0.5);
-    
+}
+
+- (void)setDelegate:(id<ZBJCalendarWeekViewDelegate>)delegate {
+    _delegate = delegate;
+    for (int i = 0; i < self.adjustedSymbols.count; i++) {
+        UILabel *label = [self viewWithTag:10901 + i];
+        if (label && _delegate && [_delegate respondsToSelector:@selector(calendarWeekView:configureWeekDayLabel:atWeekDay:)]) {
+            [_delegate calendarWeekView:self configureWeekDayLabel:label atWeekDay:i];
+        }
+    }
 }
 
 - (void)setContentInsets:(UIEdgeInsets)contentInsets {

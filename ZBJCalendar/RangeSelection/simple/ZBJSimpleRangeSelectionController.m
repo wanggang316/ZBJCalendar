@@ -1,46 +1,65 @@
 //
-//  ZBJCalenderRangeSelector.m
+//  ZBJSimpleRangeSelectionController.m
 //  ZBJCalendar
 //
-//  Created by wanggang on 3/15/16.
+//  Created by gumpwang on 2/26/16.
 //  Copyright © 2016 ZBJ. All rights reserved.
 //
 
-#import "ZBJCalenderRangeSelector.h"
+#import "ZBJSimpleRangeSelectionController.h"
+#import "ZBJCalendar.h"
+#import "ZBJSimpleRangeSelectionCell.h"
 #import "ZBJCalendarSectionHeader.h"
+#import "ZBJCalendarSectionFooter.h"
 
+typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
+    ZBJCalendarStateSelectedNone,
+    ZBJCalendarStateSelectedStart,
+    ZBJCalendarStateSelectedRange,
+};
 
-@interface ZBJCalenderRangeSelector()
+@interface ZBJSimpleRangeSelectionController () <ZBJCalendarDelegate, ZBJCalendarDataSource>
 
+@property (nonatomic, strong) ZBJCalendarView *calendarView;
+@property (nonatomic, assign) ZBJCalendarSelectedState selectedState;
+@property (nonatomic, assign) ZBJRangeCellStyle cellStyle;
 
 @end
 
-@implementation ZBJCalenderRangeSelector
+@implementation ZBJSimpleRangeSelectionController
 
-#pragma mark - ZBJCalendarDelegate
-- (BOOL)calendarView:(ZBJCalendarView *)calendarView shouldSelectDate:(NSDate *)date {
+- (void)viewDidLoad {
+    [super viewDidLoad];
     
-    // 日期在今天之前
-    // 先取到当天的最后一秒: xxxx-xx-xx 23:59:59
-    if ([[date dateByAddingTimeInterval:86400.0 - 1] compare:calendarView.firstDate] == NSOrderedAscending ||
-        [date compare:calendarView.lastDate] != NSOrderedAscending) {
-        return NO;
-    }
-    switch (self.selectedState) {
-        case ZBJCalendarStateSelectedStart: {
-            // self.startDate && !self.endDate && 结束日期 < 起始日期
-            if ([date compare:self.startDate] == NSOrderedAscending) {
-                return NO;
-            }
-            break;
-        }
-        default:
-            break;
-            
-    }
-    return YES;
+    self.view.backgroundColor = [UIColor whiteColor];
+    
+    NSDate *firstDate = [NSDate date];
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    [calendar setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT"]];
+    NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:firstDate];
+    components.month = components.month + 6; //
+    NSDate *lastDate = [calendar dateFromComponents:components];
+    
+    self.calendarView.delegate = self;
+    self.calendarView.dataSource = self;
+    self.calendarView.firstDate = firstDate;
+    self.calendarView.lastDate = lastDate;
+
+    [self.view addSubview:self.calendarView];
 }
-- (void)calendarView:(ZBJCalendarView *)calendarView configureCell:(ZBJCalendarRangeCell *)cell forDate:(NSDate *)date {
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+}
+
+- (void)pop {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(popViewController:startDate:endDate:)]) {
+        [self.delegate popViewController:self startDate:self.startDate endDate:self.endDate];
+    }
+}
+
+#pragma mark - ZBJCalendarDelegate && ZBJCalendarDataSource
+- (void)calendarView:(ZBJCalendarView *)calendarView configureCell:(ZBJSimpleRangeSelectionCell *)cell forDate:(NSDate *)date {
     
     cell.cellStyle = self.cellStyle;
     
@@ -94,10 +113,10 @@
     } else {
         cellState = ZBJCalendarCellStateEmpty;
     }
-   
+    
     cell.cellState = cellState;
 }
-- (void)calendarView:(ZBJCalendarView *)calendarView didSelectDate:(NSDate *)date {
+- (void)calendarView:(ZBJCalendarView *)calendarView didSelectDate:(NSDate *)date ofCell:(id)cell {
     
     if (calendarView.selectionMode == ZBJSelectionModeRange) {
         if (date) {
@@ -120,11 +139,8 @@
     }
 }
 
-
-
-
 - (void)setSelectedState:(ZBJCalendarSelectedState)selectedState calendarView:(ZBJCalendarView *)calendarView {
-
+    
     _selectedState = selectedState;
     
     switch (_selectedState) {
@@ -136,12 +152,14 @@
             break;
         }
         case ZBJCalendarStateSelectedStart: {
-
+            
             [calendarView reloadData];
             break;
         }
         case ZBJCalendarStateSelectedRange: {
             [calendarView reloadData];
+            // pop self
+            [self performSelector:@selector(pop) withObject:nil afterDelay:0.4];
             break;
         }
         default:
@@ -150,12 +168,30 @@
 }
 
 
-- (void)calendarView:(ZBJCalendarView *)calendarView configureSectionHeaderView:(ZBJCalendarSectionHeader *)headerView forYear:(NSInteger)year month:(NSInteger)month {
-    headerView.year = year;
-    headerView.month = month;
+- (void)calendarView:(ZBJCalendarView *)calendarView configureSectionHeaderView:(ZBJCalendarSectionHeader *)headerView firstDateOfMonth:(NSDate *)firstDateOfMonth {
+    NSCalendar *calendar = [NSDate gregorianCalendar];
+    NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:firstDateOfMonth];
+    headerView.year = components.year;
+    headerView.month = components.month;
 }
 
 
+
+
 #pragma mark -
+- (ZBJCalendarView *)calendarView {
+    if (!_calendarView) {
+        _calendarView = [[ZBJCalendarView alloc] initWithFrame:CGRectMake(0, 64, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 64)];
+        [_calendarView registerCellClass:[ZBJSimpleRangeSelectionCell class] withReuseIdentifier:@"cell"];
+        [_calendarView registerSectionHeader:[ZBJCalendarSectionHeader class] withReuseIdentifier:@"sectionHeader"];
+        [_calendarView registerSectionFooter:[ZBJCalendarSectionFooter class] withReuseIdentifier:@"sectionFooter"];
+        _calendarView.contentInsets = UIEdgeInsetsMake(0, 14, 0, 14);
+        _calendarView.sectionHeaderHeight = 52;
+        _calendarView.sectionFooterHeight = 13;
+        _calendarView.cellScale = 90.0 / 102.0;
+        
+    }
+    return _calendarView;
+}
 
 @end

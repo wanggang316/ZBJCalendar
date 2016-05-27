@@ -1,14 +1,14 @@
 //
-//  ZBJOfferCalendar.h
+//  ZBJCalendarDates.h
 //  ZBJCalendar
 //
-//  Created by wanggang on 3/10/16.
+//  Created by gumpwang on 3/10/16.
 //  Copyright © 2016 ZBJ. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
-@interface ZBJOfferCalendar : NSObject
+@interface ZBJCalendarDates : NSObject
 
 @property (nonatomic, strong) NSNumber *offerId;
 @property (nonatomic, strong) NSDate *startDate;
@@ -20,7 +20,7 @@
 
 @end
 
-@interface ZBJOfferDay : NSObject
+@interface ZBJCalendarDate : NSObject
 
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSNumber *available;

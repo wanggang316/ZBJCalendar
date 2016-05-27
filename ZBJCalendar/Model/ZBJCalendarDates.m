@@ -1,21 +1,20 @@
 //
-//  ZBJOfferCalendar.m
+//  ZBJCalendarDates.m
 //  ZBJCalendar
 //
-//  Created by wanggang on 3/10/16.
+//  Created by gumpwang on 3/10/16.
 //  Copyright © 2016 ZBJ. All rights reserved.
 //
 
-#import "ZBJOfferCalendar.h"
+#import "ZBJCalendarDates.h"
 
-@interface ZBJOfferCalendar()
+@interface ZBJCalendarDates()
 
 @property (nonatomic, strong, readwrite) NSMutableSet *adates;
 
 @end
 
-@implementation ZBJOfferCalendar
-
+@implementation ZBJCalendarDates
 
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary {
     if (self = [super init]) {
@@ -31,7 +30,7 @@
         self.adates = [NSMutableSet new];
         NSArray *datesArr = [dictionary objectForKey:@"dates"];
         for (NSDictionary *dic in datesArr) {
-            [self.adates addObject:[[ZBJOfferDay alloc] initWithDictionary:dic]];
+            [self.adates addObject:[[ZBJCalendarDate alloc] initWithDictionary:dic]];
         }
     }
     return self;
@@ -44,7 +43,7 @@
 @end
 
 
-@implementation ZBJOfferDay
+@implementation ZBJCalendarDate
 
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary {
     if (self = [super init]) {

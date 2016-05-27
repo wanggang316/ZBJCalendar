@@ -1,29 +1,35 @@
 //
-//  ZBJCalendarAdvanceViewController.m
+//  ZBJComplexRangeSelectionController.m
 //  ZBJCalendar
 //
-//  Created by wanggang on 3/10/16.
+//  Created by gumpwang on 3/10/16.
 //  Copyright © 2016 ZBJ. All rights reserved.
 //
 
-#import "ZBJCalendarComplexRangeController.h"
-#import "ZBJCalendarView.h"
-#import "ZBJCalendarComplexCell.h"
+#import "ZBJComplexRangeSelectionController.h"
+#import "ZBJCalendar.h"
+#import "ZBJComplexRangeSelectionCell.h"
 #import "ZBJCalendarSectionHeader.h"
 #import "ZBJCalendarSectionFooter.h"
 
+typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
+    ZBJCalendarStateSelectedNone,
+    ZBJCalendarStateSelectedStart,
+    ZBJCalendarStateSelectedRange,
+};
 
-@interface ZBJCalendarComplexRangeController () <ZBJCalendarDelegate, ZBJCalendarDataSource>
+@interface ZBJComplexRangeSelectionController () <ZBJCalendarDelegate, ZBJCalendarDataSource>
 
 @property (nonatomic, strong) ZBJCalendarView *calendarView;
 
+@property (nonatomic, assign) ZBJCalendarSelectedState selectedState;
 
 @property (nonatomic, strong) NSMutableSet *tempUnavaibleDates;
 @property (nonatomic, strong) NSDate *nearestUnavaibleDate;
 
 @end
 
-@implementation ZBJCalendarComplexRangeController
+@implementation ZBJComplexRangeSelectionController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -58,10 +64,9 @@
     }
 }
 
-
 #pragma mark - private methods
-- (ZBJOfferDay *)offerDateWithDate:(NSDate *)date {
-    for (ZBJOfferDay *day in self.dates) {
+- (ZBJCalendarDate *)offerDateWithDate:(NSDate *)date {
+    for (ZBJCalendarDate *day in self.dates) {
         if ([day.date isEqualToDate:date]) {
             return day;
             break;
@@ -80,7 +85,7 @@
 // 计算开始日期之后最近的不可选日期
 - (NSDate *)findTheNearestUnavaibleDateByStartDate:(NSDate *)date {
     NSDate *nextDate = [date dateByAddingTimeInterval:86400.0];
-    ZBJOfferDay *theDay = [self offerDateWithDate:nextDate];
+    ZBJCalendarDate *theDay = [self offerDateWithDate:nextDate];
     if (theDay) {
         if (![theDay.available boolValue]) {
             return nextDate;
@@ -126,19 +131,15 @@
                     }
                     
                     // 如果不满足上面的条件，那么根据data中的avaible来判断是否可选
-                    ZBJOfferDay *day = [self offerDateWithDate:date];
+                    ZBJCalendarDate *day = [self offerDateWithDate:date];
                     if (day) {
                         return [day.available boolValue];
                     }
                     break;
                 }
                 case ZBJCalendarStateSelectedRange: {
-//                    if ([self.nearestUnavaibleDate isEqualToDate:date]) {
-//                        return NO;
-//                    }
-                    
                     // 如果不满足上面的条件，那么根据data中的avaible来判断是否可选
-                    ZBJOfferDay *day = [self offerDateWithDate:date];
+                    ZBJCalendarDate *day = [self offerDateWithDate:date];
                     if (day) {
                         return [day.available boolValue];
                     }
@@ -157,7 +158,7 @@
 }
 
 
-- (void)calendarView:(ZBJCalendarView *)calendarView configureCell:(ZBJCalendarComplexCell *)cell forDate:(NSDate *)date {
+- (void)calendarView:(ZBJCalendarView *)calendarView configureCell:(ZBJComplexRangeSelectionCell *)cell forDate:(NSDate *)date {
     
     cell.day = date;
 
@@ -172,7 +173,7 @@
             cellState = ZBJCalendarCellStateDisabled;
         } else {
             
-            ZBJOfferDay *day = [self offerDateWithDate:date];
+            ZBJCalendarDate *day = [self offerDateWithDate:date];
             price = day.price;
             
             BOOL isAvaible = day.available.boolValue;
@@ -255,7 +256,7 @@
     cell.cellState = cellState;
     
 }
-- (void)calendarView:(ZBJCalendarView *)calendarView didSelectDate:(NSDate *)date {
+- (void)calendarView:(ZBJCalendarView *)calendarView didSelectDate:(NSDate *)date ofCell:(id)cell {
     if (calendarView.selectionMode == ZBJSelectionModeRange) {
         if (date) {
             if (!self.startDate) {
@@ -281,11 +282,11 @@
     }
 }
 
-
-
-- (void)calendarView:(ZBJCalendarView *)calendarView configureSectionHeaderView:(ZBJCalendarSectionHeader *)headerView forYear:(NSInteger)year month:(NSInteger)month {
-    headerView.year = year;
-    headerView.month = month;
+- (void)calendarView:(ZBJCalendarView *)calendarView configureSectionHeaderView:(ZBJCalendarSectionHeader *)headerView firstDateOfMonth:(NSDate *)firstDateOfMonth {
+    NSCalendar *calendar = [NSDate gregorianCalendar];
+    NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:firstDateOfMonth];
+    headerView.year = components.year;
+    headerView.month = components.month;
 }
 
 #pragma mark - getters
@@ -294,7 +295,7 @@
         _calendarView = [[ZBJCalendarView alloc] initWithFrame:CGRectMake(0, 64, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 64)];
         _calendarView.delegate = self;
         _calendarView.dataSource = self;
-        [_calendarView registerCellClass:[ZBJCalendarComplexCell class] withReuseIdentifier:@"cell"];
+        [_calendarView registerCellClass:[ZBJComplexRangeSelectionCell class] withReuseIdentifier:@"cell"];
         [_calendarView registerSectionHeader:[ZBJCalendarSectionHeader class] withReuseIdentifier:@"sectionHeader"];
         [_calendarView registerSectionFooter:[ZBJCalendarSectionFooter class] withReuseIdentifier:@"sectionFooter"];
         _calendarView.contentInsets = UIEdgeInsetsMake(0, 14, 0, 14);
@@ -331,7 +332,7 @@
             for (int i = 1; i < self.minNights; i++) {
                 NSDate *theDate = [self.startDate dateByAddingTimeInterval:(i * 24 * 60 * 60)];
                 // find the data about `theDate` and deal.
-                ZBJOfferDay *day = [self offerDateWithDate:theDate];
+                ZBJCalendarDate *day = [self offerDateWithDate:theDate];
                 if (!day.available.boolValue) {
                     self.calendarView.allowsSelection = NO;
                     [self performSelector:@selector(reset) withObject:nil afterDelay:0.8];
@@ -346,21 +347,14 @@
                 NSDate *theDate = [self.startDate dateByAddingTimeInterval:(i * 24 * 60 * 60)];
                 [self.tempUnavaibleDates addObject:theDate];
             }
-            
-            
             // - 计算起始日期之后最近的不可选日期
             self.nearestUnavaibleDate = [self findTheNearestUnavaibleDateByStartDate:self.startDate];
-            
             [self.calendarView reloadData];
-            
             break;
         }
         case ZBJCalendarStateSelectedRange: {
             [self.calendarView reloadData];
-            
-            
             self.title = [NSString stringWithFormat:@"选择起始日期(至少%ld天)", self.minNights];
-
             break;
         }
         default:

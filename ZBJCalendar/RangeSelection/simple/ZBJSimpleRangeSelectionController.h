@@ -1,8 +1,8 @@
 //
-//  CalendarViewController.h
+//  ZBJSimpleRangeSelectionController.h
 //  ZBJCalendar
 //
-//  Created by wanggang on 2/26/16.
+//  Created by gumpwang on 2/26/16.
 //  Copyright © 2016 ZBJ. All rights reserved.
 //
 
@@ -10,7 +10,7 @@
 
 @protocol ZBJCalendarRangeSelectorDelegate;
 
-@interface ZBJCalendarRangeController : UIViewController
+@interface ZBJSimpleRangeSelectionController : UIViewController
 
 @property (nonatomic, weak) id<ZBJCalendarRangeSelectorDelegate> delegate;
 

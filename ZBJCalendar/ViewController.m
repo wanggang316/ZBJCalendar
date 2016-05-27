@@ -2,16 +2,16 @@
 //  ViewController.m
 //  ZBJCalendar
 //
-//  Created by 王刚 on 15/12/8.
+//  Created by gumpwang on 15/12/8.
 //  Copyright © 2015年 ZBJ. All rights reserved.
 //
 
 #import "ViewController.h"
 #import "ZBJCalendarShowView.h"
-#import "ZBJCalendarRangeController.h"
-#import "ZBJCalendarRangeController1.h"
-#import "ZBJCalendarComplexRangeController.h"
-#import "ZBJOfferCalendar.h"
+#import "ZBJSimpleRangeSelectionController.h"
+#import "ZBJComplexRangeSelectionController.h"
+#import "ZBJCalendarDates.h"
+#import "ZBJSingleSelectionController.h"
 
 static NSString * const ZBJCellIdentifier = @"cell";
 
@@ -22,8 +22,8 @@ static NSString * const ZBJCellIdentifier = @"cell";
 @property (nonatomic, strong) NSDate *startDate;
 @property (nonatomic, strong) NSDate *endDate;
 
-@property (nonatomic, strong) ZBJCalendarRangeController *rangeController;
-@property (nonatomic, strong) ZBJCalendarComplexRangeController *advanceCalController;
+@property (nonatomic, strong) ZBJSimpleRangeSelectionController *rangeController;
+@property (nonatomic, strong) ZBJComplexRangeSelectionController *advanceCalController;
 
 @end
 
@@ -36,7 +36,7 @@ static NSString * const ZBJCellIdentifier = @"cell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.tableView.tableFooterView = [UIView new];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -45,13 +45,21 @@ static NSString * const ZBJCellIdentifier = @"cell";
 
 
 #pragma mark - UITableViewDataSource
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return self.tableData.count;
 }
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [self.tableData[section][@"cells"] count];
+}
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    return self.tableData[section][@"sectionTitle"];
+}
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ZBJCellIdentifier forIndexPath:indexPath];
-    cell.textLabel.text = self.tableData[indexPath.row];
+    
+    NSDictionary *cellData = self.tableData[indexPath.section][@"cells"][indexPath.row];
+    cell.textLabel.text = cellData[@"cellTitle"];
     return cell;
 }
 
@@ -60,49 +68,66 @@ static NSString * const ZBJCellIdentifier = @"cell";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    switch (indexPath.row) {
+    switch (indexPath.section) {
         case 0: {
-            
-            NSString *path = [[NSBundle mainBundle] pathForResource:@"calendar_dates" ofType:@"json"];
-            NSData *data = [NSData dataWithContentsOfFile:path];
-            
-            NSError *error;
-            ZBJOfferCalendar *offerCal;
-            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
-            if (!error) {
-                offerCal = [[ZBJOfferCalendar alloc] initWithDictionary:dic];
+            switch (indexPath.row) {
+                case 0: {
+                    NSString *path = [[NSBundle mainBundle] pathForResource:@"calendar_dates" ofType:@"json"];
+                    NSData *data = [NSData dataWithContentsOfFile:path];
+                    
+                    NSError *error;
+                    ZBJCalendarDates *calendarDates;
+                    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+                    if (!error) {
+                        calendarDates = [[ZBJCalendarDates alloc] initWithDictionary:dic];
+                    }
+                    
+                    ZBJCalendarShowView *controller = [[ZBJCalendarShowView alloc] initWithFrame:[UIApplication sharedApplication].keyWindow.frame calendarDates:calendarDates];
+                    controller.alpha = 0.0;
+                    
+                    [[UIApplication sharedApplication].keyWindow addSubview:controller];
+                    [UIView animateWithDuration:0.2f animations:^{
+                        controller.alpha = 1.0;
+                    } completion:^(BOOL finished) {
+                        
+                    }];
+                    break;
+                }
+                default:
+                    break;
             }
-            
-            
-            ZBJCalendarShowView *controller = [[ZBJCalendarShowView alloc] initWithFrame:[UIApplication sharedApplication].keyWindow.frame offerCal:offerCal];
-            controller.alpha = 0.0;
-            
-            [[UIApplication sharedApplication].keyWindow addSubview:controller];
-            [UIView animateWithDuration:0.3f animations:^{
-                controller.alpha = 1.0;
-            } completion:^(BOOL finished) {
-                
-            }];
             break;
         }
         case 1: {
-            self.rangeController.startDate = self.startDate;
-            self.rangeController.endDate = self.endDate;
-            [self.navigationController pushViewController:self.rangeController animated:YES];
+            switch (indexPath.row) {
+                case 0: {
+                    ZBJSingleSelectionController *controller = [[ZBJSingleSelectionController alloc] init];
+                    [self.navigationController pushViewController:controller animated:YES];
+                    break;
+                }
+                default:
+                    break;
+            }
             break;
         }
-            
         case 2: {
-            ZBJCalendarRangeController1 *calendarViewController = [ZBJCalendarRangeController1 new];
-            calendarViewController.title = self.tableData[indexPath.row];
-            [self.navigationController pushViewController:calendarViewController animated:YES];
-            break;
-        }
-        case 3: {
             
-            self.advanceCalController.startDate = self.startDate;
-            self.advanceCalController.endDate = self.endDate;
-            [self.navigationController pushViewController:self.advanceCalController animated:YES];
+            switch (indexPath.row) {
+                case 0: {
+                    self.rangeController.startDate = self.startDate;
+                    self.rangeController.endDate = self.endDate;
+                    [self.navigationController pushViewController:self.rangeController animated:YES];
+                    break;
+                }
+                case 1: {
+                    self.advanceCalController.startDate = self.startDate;
+                    self.advanceCalController.endDate = self.endDate;
+                    [self.navigationController pushViewController:self.advanceCalController animated:YES];
+                    break;
+                }
+                default:
+                    break;
+            }
             break;
         }
         default:
@@ -123,37 +148,43 @@ static NSString * const ZBJCellIdentifier = @"cell";
 #pragma mark - getter
 - (NSArray *)tableData {
     if (!_tableData) {
-        _tableData = @[@"ShowOnly", @"RangeSelection", @"RangeSelection1", @"Advance"];
+        _tableData = @[@{@"sectionTitle": @"Show",
+                        @"cells": @[@{@"cellTitle": @"view"}]},
+                       @{@"sectionTitle": @"Single Selection",
+                         @"cells": @[@{@"cellTitle": @"general"}]},
+                       @{@"sectionTitle": @"Range Selection",
+                         @"cells": @[@{@"cellTitle": @"simple"}, @{@"cellTitle": @"complex"}]}
+                      ];
     }
     return _tableData;
 }
 
-- (ZBJCalendarRangeController *)rangeController {
+- (ZBJSimpleRangeSelectionController *)rangeController {
     if (!_rangeController) {
-        _rangeController = [ZBJCalendarRangeController new];
+        _rangeController = [ZBJSimpleRangeSelectionController new];
         _rangeController.delegate = self;
     }
     return _rangeController;
 }
 
-- (ZBJCalendarComplexRangeController *)advanceCalController {
+- (ZBJComplexRangeSelectionController *)advanceCalController {
     if (!_advanceCalController) {
-        _advanceCalController = [ZBJCalendarComplexRangeController new];
+        _advanceCalController = [ZBJComplexRangeSelectionController new];
         _advanceCalController.delegate = self;
         
         NSString *path = [[NSBundle mainBundle] pathForResource:@"calendar_dates" ofType:@"json"];
         NSData *data = [NSData dataWithContentsOfFile:path];
         
         NSError *error;
-        ZBJOfferCalendar *offerCal;
+        ZBJCalendarDates *calendarDates;
         NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
         if (!error) {
-            offerCal = [[ZBJOfferCalendar alloc] initWithDictionary:dic];
+            calendarDates = [[ZBJCalendarDates alloc] initWithDictionary:dic];
         }
         
-        _advanceCalController.firstDate = offerCal.startDate;
-        _advanceCalController.lastDate = offerCal.endDate;
-        _advanceCalController.dates = offerCal.dates;
+        _advanceCalController.firstDate = calendarDates.startDate;
+        _advanceCalController.lastDate = calendarDates.endDate;
+        _advanceCalController.dates = calendarDates.dates;
         _advanceCalController.minNights = 2;
     }
     return _advanceCalController;

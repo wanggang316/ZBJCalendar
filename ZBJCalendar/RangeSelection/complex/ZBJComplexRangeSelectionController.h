@@ -1,23 +1,17 @@
 //
-//  ZBJCalendarAdvanceViewController.h
+//  ZBJComplexRangeSelectionController.h
 //  ZBJCalendar
 //
-//  Created by wanggang on 3/10/16.
+//  Created by gumpwang on 3/10/16.
 //  Copyright © 2016 ZBJ. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-#import "ZBJOfferCalendar.h"
-
-typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
-    ZBJCalendarStateSelectedNone,
-    ZBJCalendarStateSelectedStart,
-    ZBJCalendarStateSelectedRange,
-};
+#import "ZBJCalendarDates.h"
 
 @protocol ZBJCalendarAdvanceSelectorDelegate;
 
-@interface ZBJCalendarComplexRangeController : UIViewController
+@interface ZBJComplexRangeSelectionController : UIViewController
 
 @property (nonatomic, weak) id<ZBJCalendarAdvanceSelectorDelegate> delegate;
 
@@ -26,10 +20,8 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
 
 @property (nonatomic, strong) NSSet *dates;
 
-
 @property (nonatomic, assign) NSInteger minNights; // 最小入住天数
 
-@property (nonatomic, assign) ZBJCalendarSelectedState selectedState;
 @property (nonatomic, strong) NSDate *startDate;
 @property (nonatomic, strong) NSDate *endDate;
 

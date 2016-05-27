@@ -1,58 +1,39 @@
 //
-//  ZBJOfferCalendarView.m
+//  ZBJCalendarShowView.m
 //  ZBJCalendar
 //
-//  Created by wanggang on 3/15/16.
+//  Created by gumpwang on 3/15/16.
 //  Copyright © 2016 ZBJ. All rights reserved.
 //
 
 #import "ZBJCalendarShowView.h"
 #import "ZBJCalendar.h"
-#import "ZBJCalendarShowDelegate.h"
 #import "ZBJCalendarShowCell.h"
 #import "ZBJCalendarSectionHeader.h"
 #import "ZBJCalendarSectionFooter.h"
 
-@interface ZBJCalendarShowView ()
+@interface ZBJCalendarShowView () <ZBJCalendarDataSource>
 
 @property (nonatomic, strong) UIView *backView;
 @property (nonatomic, strong) UILabel *titleLable;
 @property (nonatomic, strong) ZBJCalendarView *calendarView;
 @property (nonatomic, strong) UIButton *cancelButton;
 
-@property (nonatomic, strong) ZBJCalendarShowDelegate *delegate;
-
 @end
 
 @implementation ZBJCalendarShowView
 
-- (instancetype)initWithFrame:(CGRect)frame offerCal:(ZBJOfferCalendar *)offerCal {
+- (instancetype)initWithFrame:(CGRect)frame calendarDates:(ZBJCalendarDates *)calendarDates {
     if (self = [super initWithFrame:frame]) {
-        
         self.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.8];
-        
         [self addSubview:self.backView];
-        
-        self.offerCal = offerCal;
-
+        self.calendarDates = calendarDates;
     }
     return self;
 }
 
-
-- (void)setOfferCal:(ZBJOfferCalendar *)offerCal {
-    _offerCal = offerCal;
-    self.calendarView.firstDate = self.offerCal.startDate;
-    self.calendarView.lastDate = self.offerCal.endDate;
-    
-    self.delegate = [[ZBJCalendarShowDelegate alloc] init];
-    self.delegate.offerCal = self.offerCal;
-    self.calendarView.delegate = self.delegate;
-    self.calendarView.dataSource = self.delegate;
-}
-
 - (void)cancel:(id)sender {
-    [UIView animateWithDuration:0.3 animations:^{
+    [UIView animateWithDuration:0.2 animations:^{
         self.alpha = 0.0;
     } completion:^(BOOL finished) {
         [self removeFromSuperview];
@@ -61,11 +42,63 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
     self.cancelButton.center = CGPointMake(self.backView.frame.size.width/2, CGRectGetHeight(self.backView.frame) - 15 - 13);
 }
 
-#pragma mark -
+
+
+#pragma mark - private methods
+- (ZBJCalendarDate *)offerDateWithDate:(NSDate *)date {
+    for (ZBJCalendarDate *day in self.calendarDates.dates) {
+        if ([day.date isEqualToDate:date]) {
+            return day;
+            break;
+        }
+    }
+    return nil;
+}
+
+#pragma mark - ZBJCalendarDataSource
+- (void)calendarView:(ZBJCalendarView *)calendarView configureCell:(ZBJCalendarShowCell *)cell forDate:(NSDate *)date {
+    
+    cell.date = date;
+    
+    ZBJCalendarCellState cellState = -1;
+    NSNumber *price = nil;
+    
+    if (date) {
+        // 如果小于起始日期或大于结束日期，那么disabled
+        if ([[date dateByAddingTimeInterval:86400.0 - 1] compare:calendarView.firstDate] == NSOrderedAscending ||
+            [date compare:calendarView.lastDate] == NSOrderedDescending) { //不小于最后一天
+            cellState = ZBJCalendarCellStateDisabled;
+        } else {
+            
+            ZBJCalendarDate *day = [self offerDateWithDate:date];
+            price = day.price;
+            
+            if (day.available.boolValue) {
+                cellState = ZBJCalendarCellStateAvaible;
+            } else {
+                cellState = ZBJCalendarCellStateUnavaible;
+            }
+        }
+    } else {
+        cellState = ZBJCalendarCellStateEmpty;
+    }
+    
+    cell.price = price;
+    cell.cellState = cellState;
+}
+
+- (void)calendarView:(ZBJCalendarView *)calendarView configureSectionHeaderView:(ZBJCalendarSectionHeader *)headerView firstDateOfMonth:(NSDate *)firstDateOfMonth {
+    NSCalendar *calendar = [NSDate gregorianCalendar];
+    NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:firstDateOfMonth];
+    headerView.year = components.year;
+    headerView.month = components.month;
+}
+
+
+#pragma mark - getters
 - (ZBJCalendarView *)calendarView {
     if (!_calendarView) {
         _calendarView = [[ZBJCalendarView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.titleLable.frame) + 17, CGRectGetWidth(self.backView.frame), CGRectGetHeight(self.backView.frame) - CGRectGetMaxY(self.titleLable.frame) - 17 - 55)];
@@ -111,6 +144,14 @@
         [_cancelButton addTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _cancelButton;
+}
+
+#pragma mark - setters
+- (void)setCalendarDates:(ZBJCalendarDates *)calendarDates {
+    _calendarDates = calendarDates;
+    self.calendarView.firstDate = self.calendarDates.startDate;
+    self.calendarView.lastDate = self.calendarDates.endDate;
+    self.calendarView.dataSource = self;
 }
 
 @end

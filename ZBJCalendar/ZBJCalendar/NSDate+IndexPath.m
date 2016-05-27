@@ -2,7 +2,7 @@
 //  NSDate+IndexPath.m
 //  ZBJCalendar
 //
-//  Created by wanggang on 2/29/16.
+//  Created by gumpwang on 2/29/16.
 //  Copyright © 2016 ZBJ. All rights reserved.
 //
 
@@ -36,6 +36,21 @@
         dateToReturn = [calendar dateByAddingComponents:components toDate:[firstDate firstDateOfMonth] options:0];
     }
     return dateToReturn;
+}
+
++ (NSIndexPath *)indexPathAtDate:(NSDate *)date firstDate:(NSDate *)firstDate {
+    NSCalendar *calendar = [NSDate gregorianCalendar];
+    NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:date];
+    
+    NSDateComponents *firstDateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:firstDate];
+    
+    NSDate *firstDateOfMonth = [date firstDateOfMonth];
+    NSDateComponents *firstDateOfMonthComponents = [calendar components:NSCalendarUnitWeekday fromDate:firstDateOfMonth];
+    
+    NSInteger section = (components.year - firstDateComponents.year) * 12 + components.month - firstDateComponents.month;
+    NSInteger index = firstDateOfMonthComponents.weekday + components.day - 2;
+
+    return [NSIndexPath indexPathForItem:index inSection:section];
 }
 
 @end

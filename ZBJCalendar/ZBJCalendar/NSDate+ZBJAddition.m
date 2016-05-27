@@ -2,7 +2,7 @@
 //  NSDate+ZBJAddition.m
 //  ZBJCalendar
 //
-//  Created by wanggang on 2/26/16.
+//  Created by gumpwang on 2/26/16.
 //  Copyright © 2016 ZBJ. All rights reserved.
 //
 
@@ -22,13 +22,12 @@ const char * const JmoLocaleStoreKey = "jmo.locale";
 
 + (NSCalendar *)gregorianCalendar
 {
-    NSCalendar* cal = objc_getAssociatedObject(self, JmoCalendarStoreKey);
+    NSCalendar *cal = objc_getAssociatedObject(self, JmoCalendarStoreKey);
     if (nil == cal) {
         cal = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
         [cal setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT"]];
         [cal setLocale:[self locale]];
         [self setGregorianCalendar:cal];
-        
     }
     return cal;
 }
@@ -49,8 +48,19 @@ const char * const JmoLocaleStoreKey = "jmo.locale";
 }
 
 
-
 #pragma mark -
++ (NSDate *)today {
+    NSDate *sourceDate = [NSDate date];
+    
+    NSTimeZone *sourceTimeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
+    NSTimeZone *destinationTimeZone = [NSTimeZone systemTimeZone];
+    
+    NSInteger sourceGMTOffset = [sourceTimeZone secondsFromGMTForDate:sourceDate];
+    NSInteger destinationGMTOffset = [destinationTimeZone secondsFromGMTForDate:sourceDate];
+    NSTimeInterval interval = destinationGMTOffset - sourceGMTOffset;
+    
+    return [[NSDate alloc] initWithTimeInterval:interval sinceDate:sourceDate];
+}
 + (NSInteger)numberOfMonthsFromDate:(NSDate *)fromDate toDate:(NSDate *)toDate {
     NSCalendar *calendar = [self gregorianCalendar];
     NSDateComponents *components = [calendar components:NSCalendarUnitMonth fromDate:[fromDate firstDateOfMonth] toDate:[toDate lastDateOfMonth] options:NSCalendarMatchStrictly];
@@ -74,8 +84,8 @@ const char * const JmoLocaleStoreKey = "jmo.locale";
 }
 
 + (NSInteger)numberOfNightsFromDate:(NSDate *)fromDate toDate:(NSDate *)toDate {
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    unsigned int unitFlag = NSDayCalendarUnit;
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    unsigned int unitFlag = NSCalendarUnitDay;
     NSDateComponents *components = [calendar components:unitFlag fromDate:fromDate toDate:toDate options:0];
     NSInteger days = [components day];
     return days;
@@ -121,6 +131,19 @@ const char * const JmoLocaleStoreKey = "jmo.locale";
        [today month] == [otherDay month] &&
        [today year] == [otherDay year] &&
        [today era] == [otherDay era]) {
+        return YES;
+    }
+    return NO;
+}
+
+- (BOOL)isWeekend {
+    NSCalendar *calendar = [self.class gregorianCalendar];
+    NSRange weekdayRange = [calendar maximumRangeOfUnit:NSCalendarUnitWeekday];
+    NSDateComponents *components = [calendar components:NSCalendarUnitWeekday fromDate:self];
+    NSUInteger weekdayOfDate = [components weekday];
+    
+    if (weekdayOfDate == weekdayRange.location || weekdayOfDate == weekdayRange.length) {
+        //the date falls somewhere on the first or last days of the week
         return YES;
     }
     return NO;

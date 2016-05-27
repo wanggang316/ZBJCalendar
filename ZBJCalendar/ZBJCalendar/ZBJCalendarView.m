@@ -2,7 +2,7 @@
 //  ZBJCalendarView.m
 //  ZBJCalendar
 //
-//  Created by wanggang on 2/24/16.
+//  Created by gumpwang on 2/24/16.
 //  Copyright © 2016 ZBJ. All rights reserved.
 //
 
@@ -103,6 +103,7 @@
     _contentInsets = contentInsets;
     self.weekView.contentInsets = _contentInsets;
     self.collectionView.contentInset = _contentInsets;
+    self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(_contentInsets.top, 0, _contentInsets.bottom, 0);
 }
 
 - (void)setWeekViewHeight:(CGFloat)weekViewHeight {
@@ -132,8 +133,51 @@
     self.collectionView.allowsSelection = _allowsSelection;
 }
 
+- (void)setDataSource:(id<ZBJCalendarDataSource>)dataSource {
+    _dataSource = dataSource;
+    self.weekView.delegate = self;
+}
+
 - (void)reloadData {
     [self.collectionView reloadData];
+}
+
+- (id)cellAtDate:(NSDate *)date {
+    NSIndexPath *indexPath = [NSDate indexPathAtDate:date firstDate:self.firstDate];
+    return [self.collectionView cellForItemAtIndexPath:indexPath];
+}
+
+- (void)reloadCellsAtDates:(NSSet<NSDate *> *)dates {
+    NSMutableArray *indexPaths = [NSMutableArray new];
+    for (NSDate *date in dates) {
+        NSIndexPath *indexPath = [NSDate indexPathAtDate:date firstDate:self.firstDate];
+        [indexPaths addObject:indexPath];
+    }
+    [self.collectionView reloadItemsAtIndexPaths:indexPaths];
+}
+
+#pragma mark - private methods
+- (NSDate *)dateForCollectionView:(UICollectionView *)collection atIndexPath:(NSIndexPath *)indexPath {
+    NSDate *date = nil;
+    
+    // if headStyle is `ZBJCalendarViewHeadStyleCurrentWeek`, the first month is special
+    if (self.headStyle == ZBJCalendarViewHeadStyleCurrentWeek && indexPath.section == 0) {
+        NSDate *firstDay = [self.firstDate firstDateOfWeek];
+        NSDate *lastDateOfMonth = [self.firstDate lastDateOfMonth];
+        NSInteger items = [NSDate numberOfNightsFromDate:firstDay toDate:lastDateOfMonth];
+        if (indexPath.row > items) {
+        } else {
+            NSCalendar *calendar = [NSDate gregorianCalendar];
+            NSDateComponents *components = [calendar components:NSCalendarUnitMonth | NSCalendarUnitDay fromDate:firstDay];
+            [components setDay:indexPath.row];
+            [components setMonth:indexPath.section];
+            date = [calendar dateByAddingComponents:components toDate:firstDay options:0];
+        }
+    } else { // normal logic
+        date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
+    }
+
+    return date;
 }
 
 #pragma mark UICollectionViewDataSource
@@ -142,19 +186,16 @@
     
     NSDate *firstDateOfMonth = [NSDate dateForFirstDayInSection:indexPath.section firstDate:self.firstDate];
     
-    NSCalendar *calendar = [NSDate gregorianCalendar];
-    NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:firstDateOfMonth];
-    
     if (self.sectionHeaderIdentifier && [kind isEqualToString:UICollectionElementKindSectionHeader]) {
         id headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:self.sectionHeaderIdentifier forIndexPath:indexPath];
-        if (self.dataSource && [self.dataSource respondsToSelector:@selector(calendarView:configureSectionHeaderView:forYear:month:)]) {
-            [self.dataSource calendarView:self configureSectionHeaderView:headerView forYear:components.year month:components.month];
+        if (self.dataSource && [self.dataSource respondsToSelector:@selector(calendarView:configureSectionHeaderView:firstDateOfMonth:)]) {
+            [self.dataSource calendarView:self configureSectionHeaderView:headerView firstDateOfMonth:firstDateOfMonth];
         }
         return headerView;
     } else if (self.sectionFooterIdentifier && [kind isEqualToString:UICollectionElementKindSectionFooter]) {
         id footerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:self.sectionFooterIdentifier forIndexPath:indexPath];
-        if (self.dataSource && [self.dataSource respondsToSelector:@selector(calendarView:configureSectionFooterView:forYear:month:)]) {
-            [self.dataSource calendarView:self configureSectionFooterView:footerView forYear:components.year month:components.month];
+        if (self.dataSource && [self.dataSource respondsToSelector:@selector(calendarView:configureSectionFooterView:lastDateOfMonth:)]) {
+            [self.dataSource calendarView:self configureSectionFooterView:footerView lastDateOfMonth:[firstDateOfMonth lastDateOfMonth]];
         }
         return footerView;
     }
@@ -190,23 +231,7 @@
     
     id cell = [collectionView dequeueReusableCellWithReuseIdentifier:self.cellIdentifier forIndexPath:indexPath];
     
-    NSDate *date = nil;
-    // if headStyle is `ZBJCalendarViewHeadStyleCurrentWeek`, the first month is special
-    if (self.headStyle == ZBJCalendarViewHeadStyleCurrentWeek && indexPath.section == 0) {
-        NSDate *firstDay = [self.firstDate firstDateOfWeek];
-        NSDate *lastDateOfMonth = [self.firstDate lastDateOfMonth];
-        NSInteger items = [NSDate numberOfNightsFromDate:firstDay toDate:lastDateOfMonth];
-        if (indexPath.row > items) {
-        } else {
-            NSCalendar *calendar = [NSDate gregorianCalendar];
-            NSDateComponents *components = [calendar components:NSCalendarUnitMonth | NSCalendarUnitDay fromDate:firstDay];
-            [components setDay:indexPath.row];
-            [components setMonth:indexPath.section];
-            date = [calendar dateByAddingComponents:components toDate:firstDay options:0];
-        }
-    } else { // normal logic
-        date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
-    }
+    NSDate *date = [self dateForCollectionView:collectionView atIndexPath:indexPath];
     
     if (self.dataSource && [self.dataSource respondsToSelector:@selector(calendarView:configureCell:forDate:)]) {
         [self.dataSource calendarView:self configureCell:cell forDate:date];
@@ -220,25 +245,8 @@
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    NSDate *date = nil;
-    
-    // if headStyle is `ZBJCalendarViewHeadStyleCurrentWeek`, the first month is special
-    if (self.headStyle == ZBJCalendarViewHeadStyleCurrentWeek && indexPath.section == 0) {
-        NSDate *firstDay = [self.firstDate firstDateOfWeek];
-        NSDate *lastDateOfMonth = [self.firstDate lastDateOfMonth];
-        NSInteger items = [NSDate numberOfNightsFromDate:firstDay toDate:lastDateOfMonth];
-        if (indexPath.row > items) {
-        } else {
-            NSCalendar *calendar = [NSDate gregorianCalendar];
-            NSDateComponents *components = [calendar components:NSCalendarUnitMonth | NSCalendarUnitDay fromDate:firstDay];
-            [components setDay:indexPath.row];
-            [components setMonth:indexPath.section];
-            date = [calendar dateByAddingComponents:components toDate:firstDay options:0];
-        }
-    } else { // normal logic
-        date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
-    }
-    
+    NSDate *date = [self dateForCollectionView:collectionView atIndexPath:indexPath];
+ 
     if (self.delegate && [self.delegate respondsToSelector:@selector(calendarView:shouldSelectDate:)]) {
         return [self.delegate calendarView:self shouldSelectDate:date];
     }
@@ -253,27 +261,11 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
    
-    NSDate *date = nil;
+    NSDate *date = [self dateForCollectionView:collectionView atIndexPath:indexPath];
     
-    // if headStyle is `ZBJCalendarViewHeadStyleCurrentWeek`, the first month is special
-    if (self.headStyle == ZBJCalendarViewHeadStyleCurrentWeek && indexPath.section == 0) {
-        NSDate *firstDay = [self.firstDate firstDateOfWeek];
-        NSDate *lastDateOfMonth = [self.firstDate lastDateOfMonth];
-        NSInteger items = [NSDate numberOfNightsFromDate:firstDay toDate:lastDateOfMonth];
-        if (indexPath.row > items) {
-        } else {
-            NSCalendar *calendar = [NSDate gregorianCalendar];
-            NSDateComponents *components = [calendar components:NSCalendarUnitMonth | NSCalendarUnitDay fromDate:firstDay];
-            [components setDay:indexPath.row];
-            [components setMonth:indexPath.section];
-            date = [calendar dateByAddingComponents:components toDate:firstDay options:0];
-        }
-    } else { // normal logic
-        date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];
-    }
-    
-    if (self.delegate && [self.delegate respondsToSelector:@selector(calendarView:didSelectDate:)]) {
-        [self.delegate calendarView:self didSelectDate:date];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(calendarView:didSelectDate:ofCell:)]) {
+        id cell = [collectionView cellForItemAtIndexPath:indexPath];
+        [self.delegate calendarView:self didSelectDate:date ofCell:cell];
     }
 }
 
@@ -302,7 +294,7 @@
 
 #pragma mark - ZBJCalendarWeekViewDelegate
 - (void)calendarWeekView:(ZBJCalendarWeekView *)weekView configureWeekDayLabel:(UILabel *)dayLabel atWeekDay:(NSInteger)weekDay {
-    if (self.dataSource && [self.dataSource respondsToSelector:@selector(calendarWeekView:configureWeekDayLabel:atWeekDay:)]) {
+    if (self.dataSource && [self.dataSource respondsToSelector:@selector(calendarView:configureWeekDayLabel:atWeekDay:)]) {
         [self.dataSource calendarView:self configureWeekDayLabel:dayLabel atWeekDay:weekDay];
     }
 }
@@ -312,7 +304,6 @@
 - (ZBJCalendarWeekView *)weekView {
     if (!_weekView) {
         _weekView = [[ZBJCalendarWeekView alloc] init];
-        _weekView.delegate = self;
     }
     return _weekView;
 }

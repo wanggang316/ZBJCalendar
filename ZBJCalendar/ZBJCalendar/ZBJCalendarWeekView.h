@@ -1,8 +1,8 @@
 //
-//  ZBJCalendarHeaderView.h
+//  ZBJCalendarWeekView.h
 //  ZBJCalendar
 //
-//  Created by meili cao on 16/2/25.
+//  Created by gumpwang on 16/2/25.
 //  Copyright © 2016年 ZBJ. All rights reserved.
 //
 

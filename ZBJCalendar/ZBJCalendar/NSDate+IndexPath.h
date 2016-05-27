@@ -2,7 +2,7 @@
 //  NSDate+IndexPath.h
 //  ZBJCalendar
 //
-//  Created by wanggang on 2/29/16.
+//  Created by gumpwang on 2/29/16.
 //  Copyright © 2016 ZBJ. All rights reserved.
 //
 
@@ -15,5 +15,6 @@
 
 + (NSDate *)dateForFirstDayInSection:(NSInteger)section firstDate:(NSDate *)firstDate;
 + (NSDate *)dateAtIndexPath:(NSIndexPath *)indexPath firstDate:(NSDate *)firstDate;
++ (NSIndexPath *)indexPathAtDate:(NSDate *)date firstDate:(NSDate *)firstDate;
 
 @end

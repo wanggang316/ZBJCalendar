@@ -1,15 +1,15 @@
 //
-//  ZBJCalendarViewCell.m
+//  ZBJSimpleRangeSelectionCell.m
 //  ZBJCalendar
 //
-//  Created by wanggang on 3/15/16.
+//  Created by gumpwang on 3/15/16.
 //  Copyright © 2016 ZBJ. All rights reserved.
 //
 
-#import "ZBJCalendarRangeCell.h"
+#import "ZBJSimpleRangeSelectionCell.h"
 #import "NSDate+ZBJAddition.h"
 
-@interface ZBJCalendarRangeCell()
+@interface ZBJSimpleRangeSelectionCell()
 
 @property (nonatomic, strong) NSCalendar *calendar;
 
@@ -17,7 +17,7 @@
 @property (nonatomic, strong) UILabel *stateLabel;
 @end
 
-@implementation ZBJCalendarRangeCell
+@implementation ZBJSimpleRangeSelectionCell
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {

@@ -1,15 +1,15 @@
 //
-//  ZBJCalendarCell.m
+//  ZBJComplexRangeSelectionCell.m
 //  ZBJCalendar
 //
-//  Created by wanggang on 2/24/16.
+//  Created by gumpwang on 2/24/16.
 //  Copyright © 2016 ZBJ. All rights reserved.
 //
 
-#import "ZBJCalendarComplexCell.h"
+#import "ZBJComplexRangeSelectionCell.h"
 #import "NSDate+ZBJAddition.h"
 
-@interface ZBJCalendarComplexCell ()
+@interface ZBJComplexRangeSelectionCell ()
 
 @property (nonatomic, strong) UILabel *dateLabel;
 @property (nonatomic, strong) UILabel *priceLabel;
@@ -19,7 +19,7 @@
 
 @end
 
-@implementation ZBJCalendarComplexCell
+@implementation ZBJComplexRangeSelectionCell
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];

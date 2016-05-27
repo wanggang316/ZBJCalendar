@@ -2,7 +2,7 @@
 //  AppDelegate.m
 //  ZBJCalendar
 //
-//  Created by 王刚 on 15/12/8.
+//  Created by gumpwang on 15/12/8.
 //  Copyright © 2015年 ZBJ. All rights reserved.
 //
 
@@ -18,9 +18,9 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:9.0/255.0 green:9.0/255.0 blue:26.0/255.0 alpha:0.8]];
-    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
-    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
+//    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:9.0/255.0 green:9.0/255.0 blue:26.0/255.0 alpha:0.8]];
+//    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+//    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
     return YES;
 }
 

@@ -2,7 +2,7 @@
 //  ZBJCalendarShowCell.m
 //  ZBJCalendar
 //
-//  Created by wanggang on 3/15/16.
+//  Created by gumpwang on 3/15/16.
 //  Copyright © 2016 ZBJ. All rights reserved.
 //
 
@@ -62,19 +62,16 @@
     _cellState = cellState;
     switch (_cellState) {
         case ZBJCalendarCellStateDisabled: {
-            
             self.backgroundView = nil;
             self.dateLabel.textColor = [UIColor colorWithRed:192.0/255.0 green:192.0/255.0 blue:200.0/255.0 alpha:1.0];
             break;
         }
         case ZBJCalendarCellStateAvaible: {
-            
             self.backgroundView = nil;
             self.dateLabel.textColor = [UIColor colorWithRed:9.0/255.0 green:9.0/255.0 blue:26.0/255.0 alpha:1.0];
             break;
         }
         case ZBJCalendarCellStateUnavaible: {
-            
             self.backgroundView = self.backgroundImageView;
             
             self.dateLabel.textColor = [UIColor colorWithRed:192.0/255.0 green:192.0/255.0 blue:200.0/255.0 alpha:1.0];
