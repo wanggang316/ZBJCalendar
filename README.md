@@ -1,20 +1,20 @@
 
-# ZBJCalendar [![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/wanggang316/ZBJCalendar/master/LICENSE)[![GitHub release](https://img.shields.io/github/release/ZBJCalendar/ZBJCalendar.svg)](https://github.com/wanggang316/ZBJCalendar/releases)
+## ZBJCalendar [![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/wanggang316/ZBJCalendar/master/LICENSE)  [![GitHub release](https://img.shields.io/github/release/ZBJCalendar/ZBJCalendar.svg)](https://github.com/wanggang316/ZBJCalendar/releases)
 
-ZBJCalendar is a simple way to create a calendar view. The concept of ZBJCalendar is UICollectionView or UITableView.
+> ZBJCalendar is a simple way to create a calendar view. The concept of ZBJCalendar is UICollectionView or UITableView.
 
-As we know, UICollectionView and UITableView set up the corresponding relations between cell and indexPath. Differently, ZBJCalendar set up the corresponding relations between cell and date, this is important to understand ZBJCalendar.
+> As we know, UICollectionView and UITableView set up the corresponding relations between cell and indexPath. Differently, ZBJCalendar set up the corresponding relations between cell and date, this is important to understand ZBJCalendar.
 
-# Requirements
+## Requirements
 
  * iOS7 or later
 
-# Installation
+## Installation
 `pod 'ZBJCalendar'`
 
-# Architecture
+## Architecture
 
-## ZBJCalendarView
+### ZBJCalendarView
 
 This is the main class of ZBJCalendar, an instance of this is a calendar view.
 
@@ -32,7 +32,7 @@ Also, it contains some familiar methods like:
  * `- (id)cellAtDate:(NSDate *)date;`
  * `- (void)reloadCellsAtDates:(NSSet<NSDate *> *)dates;`
 
-### <ZBJCalendarDataSource>
+#### <ZBJCalendarDataSource>
 
 A protocol to custom the cell data model object. It supplies the cell and supplementary view's information about appearance and data.
 
@@ -41,35 +41,30 @@ A protocol to custom the cell data model object. It supplies the cell and supple
 * `- (void)calendarView:(ZBJCalendarView *)calendarView configureSectionFooterView:(id)headerView lastDateOfMonth:(NSDate *)lastDateOfMonth;`
 * `- (void)calendarView:(ZBJCalendarView *)calendarView configureWeekDayLabel:(UILabel *)dayLabel atWeekDay:(NSInteger)weekDay;`
 
-### <ZBJCalendarDelegate>
+#### <ZBJCalendarDelegate>
 
 A protocol use to handle the display and behaviour of ZBJCalendar.
 
 * `- (BOOL)calendarView:(ZBJCalendarView *)calendarView shouldSelectDate:(NSDate *)date;`
 * `- (void)calendarView:(ZBJCalendarView *)calendarView didSelectDate:(NSDate *)date ofCell:(id)cell;`
 
-## ZBJCalendarWeekView
+### ZBJCalendarWeekView
 
 ZBJCalendar provider a week view by this class, you can change it's style by implement <ZBJCalendarDataSource>
 
-## NSDate+ZBJAddition
+### NSDate+ZBJAddition
 
 This category provide utility methods for `NSDate`.
 
-## NSDate+IndexPath
+### NSDate+IndexPath
 
  This category provide methods used to corresponding relations between indexpath and date.
 
 
-# Examples
+## Examples
 
-![show](./screenshots/show.png)
+![show](./screenshots/00.png)
 
-![single_selection](./screenshots/single_selection.png)
-
-![complex_range_selection](./screenshots/complex_range_selection.png)
-
-
-# License
+## License
 
 ZBJCalendar is released under the MIT license.
