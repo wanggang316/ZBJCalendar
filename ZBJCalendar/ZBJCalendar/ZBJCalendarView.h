@@ -182,6 +182,5 @@ typedef CF_ENUM(NSInteger, ZBJCalendarViewHeadStyle) {
  *  @param date         current date
  */
 - (void)calendarView:(ZBJCalendarView *)calendarView didSelectDate:(NSDate *)date ofCell:(id)cell;
-- (void)calendarView:(ZBJCalendarView *)calendarView didDeselectDate:(NSDate *)date ofCell:(id)cell;
 
 @end
