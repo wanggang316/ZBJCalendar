@@ -12,7 +12,7 @@
 typedef CF_ENUM(NSInteger, ZBJSelectionMode) {
     ZBJSelectionModeDisable = 0,    // Can not select
     ZBJSelectionModeSingle,         // Single selection mode
-    ZBJSelectionModeRange,          // Range selection mode
+    ZBJSelectionModeMutiple,        // Mutile selection mode
 };
 
 typedef CF_ENUM(NSInteger, ZBJCalendarViewHeadStyle) {

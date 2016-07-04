@@ -29,7 +29,7 @@
         [self addSubview:self.collectionView];
         [self addSubview:self.weekView];
         
-        self.selectionMode = ZBJSelectionModeRange;
+        self.selectionMode = ZBJSelectionModeMutiple;
     }
     return self;
 }
@@ -333,7 +333,8 @@
             self.collectionView.allowsSelection = YES;
             break;
         }
-        case ZBJSelectionModeRange: {
+        case ZBJSelectionModeMutiple: {
+            self.collectionView.allowsSelection = YES;
             self.collectionView.allowsMultipleSelection = YES;
             break;
         }
