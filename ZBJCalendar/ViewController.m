@@ -12,6 +12,7 @@
 #import "ZBJComplexRangeSelectionController.h"
 #import "ZBJCalendarDates.h"
 #import "ZBJSingleSelectionController.h"
+#import "ZBJSimpleMutipleSelectionViewController.h"
 
 static NSString * const ZBJCellIdentifier = @"cell";
 
@@ -25,6 +26,7 @@ static NSString * const ZBJCellIdentifier = @"cell";
 @property (nonatomic, strong) ZBJSimpleRangeSelectionController *rangeController;
 @property (nonatomic, strong) ZBJComplexRangeSelectionController *advanceCalController;
 
+@property (nonatomic, strong) ZBJSimpleMutipleSelectionViewController *mutipleSelectionController;
 @end
 
 @implementation ViewController
@@ -130,6 +132,17 @@ static NSString * const ZBJCellIdentifier = @"cell";
             }
             break;
         }
+        case 3: {
+            
+            switch (indexPath.row) {
+                case 0:
+                    [self.navigationController pushViewController:self.mutipleSelectionController animated:YES];
+                    break;
+                    
+                default:
+                    break;
+            }
+        }
         default:
             break;
     }
@@ -153,7 +166,9 @@ static NSString * const ZBJCellIdentifier = @"cell";
                        @{@"sectionTitle": @"Single Selection",
                          @"cells": @[@{@"cellTitle": @"general"}]},
                        @{@"sectionTitle": @"Range Selection",
-                         @"cells": @[@{@"cellTitle": @"simple"}, @{@"cellTitle": @"complex"}]}
+                         @"cells": @[@{@"cellTitle": @"simple"}, @{@"cellTitle": @"complex"}]},
+                       @{@"sectionTitle": @"Mutiple Selection",
+                         @"cells": @[@{@"cellTitle": @"simple"}]}
                       ];
     }
     return _tableData;
@@ -188,6 +203,13 @@ static NSString * const ZBJCellIdentifier = @"cell";
         _advanceCalController.minNights = 2;
     }
     return _advanceCalController;
+}
+
+- (ZBJSimpleMutipleSelectionViewController *)mutipleSelectionController {
+    if (!_mutipleSelectionController) {
+        _mutipleSelectionController = [[ZBJSimpleMutipleSelectionViewController alloc] init];
+    }
+    return _mutipleSelectionController;
 }
 
 @end
