@@ -10,4 +10,7 @@
 
 @interface ZBJSimpleMutipleSelectionViewController : UIViewController
 
+@property (nonatomic, assign) NSInteger year;
+@property (nonatomic, assign) NSInteger month;
+
 @end

@@ -58,13 +58,21 @@
             self.topLine.hidden = YES;
             break;
         }
+        case ZBJCalendarCellStateDisabled: {
+            self.dateLabel.backgroundColor = [UIColor whiteColor];
+            self.dateLabel.layer.cornerRadius = 0;
+            
+            self.dateLabel.textColor = [UIColor lightGrayColor];
+            
+            self.topLine.hidden = NO;
+            
+            break;
+        }
         case ZBJCalendarCellStateNormal: {
             self.dateLabel.backgroundColor = [UIColor whiteColor];
             self.dateLabel.layer.cornerRadius = 0;
             
-            if ([self.date isWeekend]) {
-                self.dateLabel.textColor = [UIColor lightGrayColor];
-            } else if ([self.date isToday]) {
+            if ([self.date isToday]) {
                 self.dateLabel.textColor = [UIColor  colorWithRed:255.0/255.0 green:60.0/255.0 blue:57.0/255.0 alpha:1.0];
             } else {
                 self.dateLabel.textColor = [UIColor darkTextColor];

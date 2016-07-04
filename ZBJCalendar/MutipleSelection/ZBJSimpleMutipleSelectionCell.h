@@ -10,6 +10,7 @@
 
 typedef CF_ENUM(NSInteger, ZBJCalendarCellState) {
     ZBJCalendarCellStateEmpty,
+    ZBJCalendarCellStateDisabled,
     ZBJCalendarCellStateNormal,
     ZBJCalendarCellStateSelected,
 };

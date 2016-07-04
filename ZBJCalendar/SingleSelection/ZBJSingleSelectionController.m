@@ -93,7 +93,7 @@
     NSDate *oldDate = [self.selectedDate copy];
     self.selectedDate = date;
 
-    [calendarView reloadCellsAtDates:[NSMutableSet setWithObjects:oldDate, self.selectedDate, nil]];
+    [calendarView reloadItemsAtDates:[NSMutableSet setWithObjects:oldDate, self.selectedDate, nil]];
 //    if (date) {
         NSLog(@"selected date is : %@", self.selectedDate);
 //        cell.cellState = ZBJCalendarCellStateSelected;

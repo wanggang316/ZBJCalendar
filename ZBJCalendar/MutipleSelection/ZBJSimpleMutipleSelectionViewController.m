@@ -9,13 +9,15 @@
 #import "ZBJSimpleMutipleSelectionViewController.h"
 #import "ZBJCalendar.h"
 #import "ZBJSimpleMutipleSelectionCell.h"
-#import "ZBJSingleSelectionHeaderView.h"
+#import "ZBJMutipleSelectionSectionHeaderView.h"
 #import "UINavigationBar+ZBJAddition.h"
 
 @interface ZBJSimpleMutipleSelectionViewController () <ZBJCalendarDataSource, ZBJCalendarDelegate>
 
 @property (nonatomic, strong) ZBJCalendarView *calendarView;
-@property (nonatomic, strong) NSDate *selectedDate;
+
+@property (nonatomic, strong) NSMutableArray *selectedMonths;
+@property (nonatomic, strong) NSMutableArray *selectedDates;
 
 @end
 
@@ -54,7 +56,8 @@
     
     [self.view addSubview:self.calendarView];
     
-    self.selectedDate = firstDate;
+    self.selectedDates = [NSMutableArray new];
+    self.selectedMonths = [NSMutableArray new];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -62,12 +65,39 @@
 }
 
 
+- (void)addDateFromMonth:(NSDate *)month {
+    
+    NSCalendar *calendar = [NSDate gregorianCalendar];
+    NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday fromDate:month];
+    
+    NSInteger count = [NSDate numberOfDaysInMonth:month];
+    
+    if ([self.selectedMonths containsObject:month]) {
+        [self.selectedMonths removeObject:month];
+        for (int i = 1; i <= count; i++) {
+            components.day = i;
+            NSDate *date = [calendar dateFromComponents:components];
+            [self.selectedDates removeObject:date];
+        }
+    } else {
+        [self.selectedMonths addObject:month];
+        for (int i = 1; i <= count; i++) {
+            components.day = i;
+            NSDate *date = [calendar dateFromComponents:components];
+            [self.selectedDates addObject:date];
+        }
+    }
+}
+
 #pragma mark - ZBJCalendarDataSource
 - (void)calendarView:(ZBJCalendarView *)calendarView configureCell:(ZBJSimpleMutipleSelectionCell *)cell forDate:(NSDate *)date {
     
     cell.date = date;
     if (date) {
-        if ([date isEqualToDate:self.selectedDate]) {
+        if ([[date dateByAddingTimeInterval:86400.0 - 1] compare:calendarView.firstDate] == NSOrderedAscending ||
+            [date compare:calendarView.lastDate] == NSOrderedDescending) { //大于最后一天
+            cell.cellState = ZBJCalendarCellStateDisabled;
+        } else if ([self.selectedDates containsObject:date]) {
             cell.cellState = ZBJCalendarCellStateSelected;
         } else {
             cell.cellState = ZBJCalendarCellStateNormal;
@@ -77,8 +107,14 @@
     }
 }
 
-- (void)calendarView:(ZBJCalendarView *)calendarView configureSectionHeaderView:(ZBJSingleSelectionHeaderView *)headerView firstDateOfMonth:(NSDate *)firstDateOfMonth {
+- (void)calendarView:(ZBJCalendarView *)calendarView configureSectionHeaderView:(ZBJMutipleSelectionSectionHeaderView *)headerView firstDateOfMonth:(NSDate *)firstDateOfMonth {
     headerView.firstDateOfMonth = firstDateOfMonth;
+    
+    __weak ZBJSimpleMutipleSelectionViewController *me = self;
+    headerView.tapHandler = ^(NSDate *month) {
+        [me addDateFromMonth:month];
+        [me.calendarView reloadItemsAtMonths:[NSMutableSet setWithObjects:month, nil]];
+    };
 }
 
 - (void)calendarView:(ZBJCalendarView *)calendarView configureWeekDayLabel:(UILabel *)dayLabel atWeekDay:(NSInteger)weekDay {
@@ -89,17 +125,26 @@
 }
 
 #pragma mark - ZBJCalendarDelegate
+- (BOOL)calendarView:(ZBJCalendarView *)calendarView shouldSelectDate:(NSDate *)date {
+    if (date) {
+        if ([[date dateByAddingTimeInterval:86400.0 - 1] compare:calendarView.firstDate] == NSOrderedAscending ||
+            [date compare:calendarView.lastDate] == NSOrderedDescending) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
 - (void)calendarView:(ZBJCalendarView *)calendarView didSelectDate:(NSDate *)date ofCell:(ZBJSimpleMutipleSelectionCell *)cell {
     
-    NSIndexPath *oldIndexPath = [self.selectedDate copy];
-    self.selectedDate = date;
+    if ([self.selectedDates containsObject:date]) {
+        [self.selectedDates removeObject:date];
+    } else {
+        [self.selectedDates addObject:date];
+    }
     
-    [calendarView reloadCellsAtDates:[NSMutableSet setWithObjects:oldIndexPath, self.selectedDate, nil]];
-    //    if (date) {
-    NSLog(@"selected date is : %@", self.selectedDate);
-    //        cell.cellState = ZBJCalendarCellStateSelected;
-    //    }
-    
+    [calendarView reloadItemsAtDates:[NSMutableSet setWithObjects:date, nil]];
+    NSLog(@"selected dates is : %@", self.selectedDates);
 }
 
 
@@ -108,8 +153,8 @@
     if (!_calendarView) {
         _calendarView = [[ZBJCalendarView alloc] initWithFrame:CGRectMake(0, 64, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 64)];
         [_calendarView registerCellClass:[ZBJSimpleMutipleSelectionCell class] withReuseIdentifier:@"cell"];
-        [_calendarView registerSectionHeader:[ZBJSingleSelectionHeaderView class] withReuseIdentifier:@"sectionHeader"];
-        _calendarView.selectionMode = ZBJSelectionModeSingle;
+        [_calendarView registerSectionHeader:[ZBJMutipleSelectionSectionHeaderView class] withReuseIdentifier:@"sectionHeader"];
+        _calendarView.selectionMode = ZBJSelectionModeMutiple;
         _calendarView.dataSource = self;
         _calendarView.delegate = self;
         _calendarView.backgroundColor = [UIColor whiteColor];
