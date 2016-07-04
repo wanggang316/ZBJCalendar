@@ -147,7 +147,7 @@
     return [self.collectionView cellForItemAtIndexPath:indexPath];
 }
 
-- (void)reloadCellsAtDates:(NSSet<NSDate *> *)dates {
+- (void)reloadItemsAtDates:(NSSet<NSDate *> *)dates {
     NSMutableArray *indexPaths = [NSMutableArray new];
     for (NSDate *date in dates) {
         NSIndexPath *indexPath = [NSDate indexPathAtDate:date firstDate:self.firstDate];
@@ -155,6 +155,16 @@
     }
     [self.collectionView reloadItemsAtIndexPaths:indexPaths];
 }
+
+- (void)reloadItemsAtMonths:(NSSet<NSDate *> *)months {
+    NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+    for (NSDate *date in months) {
+        NSIndexPath *indexPath = [NSDate indexPathAtDate:date firstDate:self.firstDate];
+        [indexSet addIndex:indexPath.section];
+    }
+    [self.collectionView reloadSections:indexSet];
+}
+
 
 #pragma mark - private methods
 - (NSDate *)dateForCollectionView:(UICollectionView *)collection atIndexPath:(NSIndexPath *)indexPath {
@@ -331,6 +341,7 @@
     switch (_selectionMode) {
         case ZBJSelectionModeSingle: {
             self.collectionView.allowsSelection = YES;
+            self.collectionView.allowsMultipleSelection = NO;
             break;
         }
         case ZBJSelectionModeMutiple: {
@@ -340,6 +351,7 @@
         }
         default: {
             self.collectionView.allowsSelection = NO;
+            self.collectionView.allowsMultipleSelection = NO;
             break;
         }
     }

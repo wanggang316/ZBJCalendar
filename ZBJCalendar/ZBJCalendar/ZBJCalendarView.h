@@ -122,7 +122,9 @@ typedef CF_ENUM(NSInteger, ZBJCalendarViewHeadStyle) {
 
 - (id)cellAtDate:(NSDate *)date;
 
-- (void)reloadCellsAtDates:(NSSet<NSDate *> *)dates;
+- (void)reloadItemsAtDates:(NSSet<NSDate *> *)dates;
+
+- (void)reloadItemsAtMonths:(NSSet<NSDate *> *)months;
 @end
 /**
  *  This protocol represents the cell data model object. 
