@@ -90,10 +90,10 @@
 #pragma mark - ZBJCalendarDelegate
 - (void)calendarView:(ZBJCalendarView *)calendarView didSelectDate:(NSDate *)date ofCell:(ZBJSingleSelectionCell *)cell {
     
-    NSIndexPath *oldIndexPath = [self.selectedDate copy];
+    NSDate *oldDate = [self.selectedDate copy];
     self.selectedDate = date;
 
-    [calendarView reloadCellsAtDates:[NSMutableSet setWithObjects:oldIndexPath, self.selectedDate, nil]];
+    [calendarView reloadCellsAtDates:[NSMutableSet setWithObjects:oldDate, self.selectedDate, nil]];
 //    if (date) {
         NSLog(@"selected date is : %@", self.selectedDate);
 //        cell.cellState = ZBJCalendarCellStateSelected;
