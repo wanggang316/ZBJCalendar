@@ -16,8 +16,9 @@
 
 @property (nonatomic, strong) ZBJCalendarView *calendarView;
 
-@property (nonatomic, strong) NSMutableArray *selectedMonths;
-@property (nonatomic, strong) NSMutableArray *selectedDates;
+@property (nonatomic, strong) NSMutableSet *selectedMonths;
+@property (nonatomic, strong) NSMutableSet *selectedDates;
+@property (nonatomic, strong) NSMutableDictionary *selectedTypes;
 
 @end
 
@@ -56,8 +57,9 @@
     
     [self.view addSubview:self.calendarView];
     
-    self.selectedDates = [NSMutableArray new];
-    self.selectedMonths = [NSMutableArray new];
+    self.selectedDates = [NSMutableSet new];
+    self.selectedMonths = [NSMutableSet new];
+    self.selectedTypes = [NSMutableDictionary new];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -93,12 +95,18 @@
 - (void)calendarView:(ZBJCalendarView *)calendarView configureCell:(ZBJSimpleMutipleSelectionCell *)cell forDate:(NSDate *)date {
     
     cell.date = date;
+    
     if (date) {
         if ([[date dateByAddingTimeInterval:86400.0 - 1] compare:calendarView.firstDate] == NSOrderedAscending ||
             [date compare:calendarView.lastDate] == NSOrderedDescending) { //大于最后一天
             cell.cellState = ZBJCalendarCellStateDisabled;
         } else if ([self.selectedDates containsObject:date]) {
-            cell.cellState = ZBJCalendarCellStateSelected;
+            NSNumber *type = self.selectedTypes[date];
+            if (type) {
+                cell.cellState = type.integerValue;
+            } else {
+                cell.cellState = ZBJCalendarCellStateSelected;
+            }
         } else {
             cell.cellState = ZBJCalendarCellStateNormal;
         }
@@ -143,9 +151,40 @@
         [self.selectedDates addObject:date];
     }
     
-    [calendarView reloadItemsAtDates:[NSMutableSet setWithObjects:date, nil]];
+    [self setSelectedTypes];
+//    [calendarView reloadItemsAtDates:[NSMutableSet setWithObjects:date, nil]];
+    [calendarView reloadData];
     NSLog(@"selected dates is : %@", self.selectedDates);
 }
+
+
+
+- (void)setSelectedTypes {
+    
+    for (NSDate *date in self.selectedDates) {
+        NSCalendar *calendar = [NSDate gregorianCalendar];
+        NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:date];
+        
+        components.day = components.day + 1;
+        NSDate *nextDate = [calendar dateFromComponents:components];
+        
+        components.day = components.day - 2;
+        NSDate *preDate = [calendar dateFromComponents:components];
+        
+        BOOL containsNextDate = [self.selectedDates containsObject:nextDate];
+        BOOL containsPreDate = [self.selectedDates containsObject:preDate];
+        
+        if (containsNextDate && containsPreDate) {
+            self.selectedTypes[date] = @5;
+        } else if (containsNextDate) {
+            self.selectedTypes[date] = @4;
+        } else if (containsPreDate) {
+            self.selectedTypes[date] = @6;
+        } else {
+            self.selectedTypes[date] = @3;
+        }
+    }
+ }
 
 
 #pragma mark -
@@ -158,8 +197,8 @@
         _calendarView.dataSource = self;
         _calendarView.delegate = self;
         _calendarView.backgroundColor = [UIColor whiteColor];
-        _calendarView.contentInsets = UIEdgeInsetsMake(0, 14, 0, 14);
-        _calendarView.cellScale = 140.0 / 100.0;
+        _calendarView.contentInsets = UIEdgeInsetsMake(0, 12.5, 0, 12.5);
+        _calendarView.cellScale = 1;
         _calendarView.sectionHeaderHeight = 27;
         _calendarView.weekViewHeight = 20;
         _calendarView.weekView.backgroundColor = [UIColor colorWithRed:249.0f/255.0f green:249.0f/255.0f blue:249.0f/255.0f alpha:1.0];

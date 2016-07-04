@@ -9,10 +9,13 @@
 #import <UIKit/UIKit.h>
 
 typedef CF_ENUM(NSInteger, ZBJCalendarCellState) {
-    ZBJCalendarCellStateEmpty,
-    ZBJCalendarCellStateDisabled,
-    ZBJCalendarCellStateNormal,
-    ZBJCalendarCellStateSelected,
+    ZBJCalendarCellStateEmpty = 0,
+    ZBJCalendarCellStateDisabled = 1,
+    ZBJCalendarCellStateNormal = 2,
+    ZBJCalendarCellStateSelected = 3,
+    ZBJCalendarCellStateSelectedLeft = 4,
+    ZBJCalendarCellStateSelectedMiddle = 5,
+    ZBJCalendarCellStateSelectedRight = 6,
 };
 
 @interface ZBJSimpleMutipleSelectionCell : UICollectionViewCell

@@ -14,7 +14,7 @@
 @property (nonatomic, strong) UILabel *dateLabel;
 @property (nonatomic, strong) NSCalendar *calendar;
 
-@property (nonatomic, strong) CALayer *topLine;
+@property (nonatomic, strong) UIImageView *backView;
 
 @end
 
@@ -23,8 +23,8 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
+        [self.contentView addSubview:self.backView];
         [self.contentView addSubview:self.dateLabel];
-        [self.contentView.layer addSublayer:self.topLine];
         self.calendar = [NSDate gregorianCalendar];
     }
     return self;
@@ -32,8 +32,10 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.topLine.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), 0.5);
-    self.dateLabel.center = CGPointMake(CGRectGetWidth(self.frame) / 2, CGRectGetHeight(self.frame) / 2 - 13);
+    CGFloat min = MIN(CGRectGetHeight(self.frame), CGRectGetWidth(self.frame));
+    self.dateLabel.frame = CGRectMake(0, 0, min, min);
+    self.dateLabel.center = CGPointMake(CGRectGetWidth(self.frame) / 2, CGRectGetHeight(self.frame) / 2);
+    self.backView.frame = self.bounds;
 }
 
 
@@ -47,51 +49,79 @@
 }
 
 - (void)setCellState:(ZBJCalendarCellState)cellState {
+    
     _cellState = cellState;
+    
     switch (_cellState) {
         case ZBJCalendarCellStateEmpty: {
-            self.dateLabel.text = nil;
-            self.dateLabel.textColor = [UIColor whiteColor];
-            self.dateLabel.backgroundColor = [UIColor whiteColor];
-            self.dateLabel.layer.cornerRadius = 0;
             
-            self.topLine.hidden = YES;
+            self.backView.image = nil;
+            self.dateLabel.text = nil;
+            
+            self.dateLabel.textColor = [UIColor whiteColor];
+            
             break;
         }
         case ZBJCalendarCellStateDisabled: {
-            self.dateLabel.backgroundColor = [UIColor whiteColor];
-            self.dateLabel.layer.cornerRadius = 0;
             
+            self.backView.image = nil;
             self.dateLabel.textColor = [UIColor lightGrayColor];
-            
-            self.topLine.hidden = NO;
             
             break;
         }
         case ZBJCalendarCellStateNormal: {
-            self.dateLabel.backgroundColor = [UIColor whiteColor];
-            self.dateLabel.layer.cornerRadius = 0;
             
+            self.backView.image = nil;
             if ([self.date isToday]) {
                 self.dateLabel.textColor = [UIColor  colorWithRed:255.0/255.0 green:60.0/255.0 blue:57.0/255.0 alpha:1.0];
             } else {
                 self.dateLabel.textColor = [UIColor darkTextColor];
             }
             
-            self.topLine.hidden = NO;
             break;
         }
         case ZBJCalendarCellStateSelected: {
             self.dateLabel.textColor = [UIColor whiteColor];
-            self.dateLabel.layer.cornerRadius = 17;
+            
+            self.backView.image = [UIImage imageNamed:@"selected"];
+            
+            if ([self.date isToday]) {
+            } else {
+            }
+            break;
+        }
+        case ZBJCalendarCellStateSelectedLeft: {
+            
+            self.dateLabel.textColor = [UIColor whiteColor];
+            self.backView.image = [UIImage imageNamed:@"left"];
+            
+            if ([self.date isToday]) {
+            } else {
+            }
+            
+            break;
+        }
+        case ZBJCalendarCellStateSelectedRight: {
+            
+            self.dateLabel.textColor = [UIColor whiteColor];
+            self.backView.image = [UIImage imageNamed:@"right"];
+            
+            if ([self.date isToday]) {
+            } else {
+            }
+            
+            break;
+        }
+        case ZBJCalendarCellStateSelectedMiddle: {
+            
+            self.dateLabel.textColor = [UIColor whiteColor];
+            self.backView.image = [UIImage imageNamed:@"middle"];
             
             if ([self.date isToday]) {
                 self.dateLabel.backgroundColor = [UIColor  colorWithRed:255.0/255.0 green:60.0/255.0 blue:57.0/255.0 alpha:1.0];
             } else {
-                self.dateLabel.backgroundColor = [UIColor darkTextColor];
             }
             
-            self.topLine.hidden = NO;
             break;
         }
         default:
@@ -113,13 +143,21 @@
     return _dateLabel;
 }
 
-- (CALayer *)topLine {
-    if (!_topLine) {
-        _topLine = [CALayer layer];
-        _topLine.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), 0.5);
-        _topLine.backgroundColor = [UIColor colorWithRed:204.0/255.0 green:204.0/255.0 blue:204.0/255.0 alpha:1.0].CGColor;
+- (UIImageView *)backView {
+    if (!_backView) {
+        _backView = [[UIImageView alloc] init];
+        _backView.contentMode = UIViewContentModeScaleAspectFill;
     }
-    return _topLine;
+    return _backView;
 }
+
+//- (CALayer *)topLine {
+//    if (!_topLine) {
+//        _topLine = [CALayer layer];
+//        _topLine.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), 0.5);
+//        _topLine.backgroundColor = [UIColor colorWithRed:204.0/255.0 green:204.0/255.0 blue:204.0/255.0 alpha:1.0].CGColor;
+//    }
+//    return _topLine;
+//}
 
 @end
