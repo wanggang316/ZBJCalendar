@@ -257,7 +257,7 @@ typedef CF_ENUM(NSInteger, ZBJCalendarSelectedState) {
     
 }
 - (void)calendarView:(ZBJCalendarView *)calendarView didSelectDate:(NSDate *)date ofCell:(id)cell {
-    if (calendarView.selectionMode == ZBJSelectionModeRange) {
+    if (calendarView.selectionMode == ZBJSelectionModeMutiple) {
         if (date) {
             if (!self.startDate) {
                 self.startDate = date;
