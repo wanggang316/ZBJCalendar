@@ -83,10 +83,14 @@
         }
     } else {
         [self.selectedMonths addObject:month];
+        NSDateComponents *todayComponents = [calendar components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:[NSDate date]];
+        NSDate *today = [calendar dateFromComponents:todayComponents];
         for (int i = 1; i <= count; i++) {
             components.day = i;
             NSDate *date = [calendar dateFromComponents:components];
-            [self.selectedDates addObject:date];
+            if ([date compare:today] != NSOrderedAscending) {
+                [self.selectedDates addObject:date];
+            }
         }
     }
 }
@@ -121,7 +125,9 @@
     __weak ZBJSimpleMutipleSelectionViewController *me = self;
     headerView.tapHandler = ^(NSDate *month) {
         [me addDateFromMonth:month];
-        [me.calendarView reloadItemsAtMonths:[NSMutableSet setWithObjects:month, nil]];
+        [me setSelectedTypes];
+        [me.calendarView reloadData];
+        NSLog(@"selected dates is : %@", self.selectedDates);
     };
 }
 
@@ -152,7 +158,6 @@
     }
     
     [self setSelectedTypes];
-//    [calendarView reloadItemsAtDates:[NSMutableSet setWithObjects:date, nil]];
     [calendarView reloadData];
     NSLog(@"selected dates is : %@", self.selectedDates);
 }
@@ -175,13 +180,13 @@
         BOOL containsPreDate = [self.selectedDates containsObject:preDate];
         
         if (containsNextDate && containsPreDate) {
-            self.selectedTypes[date] = @5;
+            self.selectedTypes[date] = @(ZBJCalendarCellStateSelectedMiddle);
         } else if (containsNextDate) {
-            self.selectedTypes[date] = @4;
+            self.selectedTypes[date] = @(ZBJCalendarCellStateSelectedLeft);
         } else if (containsPreDate) {
-            self.selectedTypes[date] = @6;
+            self.selectedTypes[date] = @(ZBJCalendarCellStateSelectedRight);
         } else {
-            self.selectedTypes[date] = @3;
+            self.selectedTypes[date] = @(ZBJCalendarCellStateSelected);
         }
     }
  }
@@ -199,7 +204,7 @@
         _calendarView.backgroundColor = [UIColor whiteColor];
         _calendarView.contentInsets = UIEdgeInsetsMake(0, 12.5, 0, 12.5);
         _calendarView.cellScale = 1;
-        _calendarView.sectionHeaderHeight = 27;
+        _calendarView.sectionHeaderHeight = 50;
         _calendarView.weekViewHeight = 20;
         _calendarView.weekView.backgroundColor = [UIColor colorWithRed:249.0f/255.0f green:249.0f/255.0f blue:249.0f/255.0f alpha:1.0];
     }

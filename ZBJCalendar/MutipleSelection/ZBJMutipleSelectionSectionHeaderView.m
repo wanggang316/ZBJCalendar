@@ -32,8 +32,7 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.monthLabel.frame = CGRectMake(0, 0, CGRectGetWidth(self.monthLabel.frame), 20);
-    self.monthLabel.center = CGPointMake(25 * ((self.weekday - 1) * 2 + 1), CGRectGetHeight(self.frame) / 2);
+    self.monthLabel.frame = CGRectMake(10, (CGRectGetHeight(self.frame) - 20) / 2, CGRectGetWidth(self.monthLabel.frame), 20);
 }
 
 #pragma mark - events
@@ -48,8 +47,7 @@
     _firstDateOfMonth = firstDateOfMonth;
     NSCalendar *calendar = [NSDate gregorianCalendar];
     NSDateComponents *components = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday fromDate:firstDateOfMonth];
-    self.weekday = components.weekday;
-    self.monthLabel.text = [NSString stringWithFormat:@"%ld月", components.month];
+    self.monthLabel.text = [NSString stringWithFormat:@"%ld月%ld", components.month, components.year];
     [self.monthLabel sizeToFit];
     [self layoutSubviews];
 }
@@ -59,9 +57,10 @@
 - (UILabel *)monthLabel {
     if (!_monthLabel) {
         _monthLabel = [[UILabel alloc] init];
-        _monthLabel.font = [UIFont systemFontOfSize:17];
-        _monthLabel.textColor = [UIColor darkTextColor];
+        _monthLabel.font = [UIFont systemFontOfSize:18];
+        _monthLabel.textColor = [UIColor grayColor];
     }
     return _monthLabel;
 }
+
 @end
