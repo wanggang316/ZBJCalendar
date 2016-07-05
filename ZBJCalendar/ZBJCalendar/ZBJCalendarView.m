@@ -70,6 +70,8 @@
         self.contentInsets = inset;
     }
     self.collectionView.contentInset = self.contentInsets;
+    self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(self.contentInsets.top, 0, self.contentInsets.bottom, 0);
+    self.weekView.contentInsets = self.contentInsets;
     
     UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
     
@@ -97,13 +99,6 @@
 - (void)registerSectionFooter:(id)clazz withReuseIdentifier:(NSString *)identifier{
     self.sectionFooterIdentifier = identifier;
     [self.collectionView registerClass:clazz forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:identifier];
-}
-
-- (void)setContentInsets:(UIEdgeInsets)contentInsets {
-    _contentInsets = contentInsets;
-    self.weekView.contentInsets = _contentInsets;
-    self.collectionView.contentInset = _contentInsets;
-    self.collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(_contentInsets.top, 0, _contentInsets.bottom, 0);
 }
 
 - (void)setWeekViewHeight:(CGFloat)weekViewHeight {
