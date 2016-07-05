@@ -54,74 +54,45 @@
     
     switch (_cellState) {
         case ZBJCalendarCellStateEmpty: {
-            
             self.backView.image = nil;
             self.dateLabel.text = nil;
-            
             self.dateLabel.textColor = [UIColor whiteColor];
-            
             break;
         }
         case ZBJCalendarCellStateDisabled: {
-            
             self.backView.image = nil;
             self.dateLabel.textColor = [UIColor lightGrayColor];
-            
             break;
         }
         case ZBJCalendarCellStateNormal: {
-            
             self.backView.image = nil;
             if ([self.date isToday]) {
                 self.dateLabel.textColor = [UIColor  colorWithRed:255.0/255.0 green:60.0/255.0 blue:57.0/255.0 alpha:1.0];
             } else {
                 self.dateLabel.textColor = [UIColor darkTextColor];
             }
-            
             break;
         }
         case ZBJCalendarCellStateSelected: {
             self.dateLabel.textColor = [UIColor whiteColor];
-            
-            self.backView.image = [UIImage imageNamed:@"selected"];
-            
-            if ([self.date isToday]) {
-            } else {
-            }
+            self.backView.image = [UIImage imageNamed:@"cal_selected"];
             break;
         }
         case ZBJCalendarCellStateSelectedLeft: {
             
             self.dateLabel.textColor = [UIColor whiteColor];
-            self.backView.image = [UIImage imageNamed:@"left"];
-            
-            if ([self.date isToday]) {
-            } else {
-            }
+            self.backView.image = [UIImage imageNamed:@"cal_selected_left"];
             
             break;
         }
         case ZBJCalendarCellStateSelectedRight: {
-            
             self.dateLabel.textColor = [UIColor whiteColor];
-            self.backView.image = [UIImage imageNamed:@"right"];
-            
-            if ([self.date isToday]) {
-            } else {
-            }
-            
+            self.backView.image = [UIImage imageNamed:@"cal_selected_right"];
             break;
         }
         case ZBJCalendarCellStateSelectedMiddle: {
-            
             self.dateLabel.textColor = [UIColor whiteColor];
-            self.backView.image = [UIImage imageNamed:@"middle"];
-            
-            if ([self.date isToday]) {
-                self.dateLabel.backgroundColor = [UIColor  colorWithRed:255.0/255.0 green:60.0/255.0 blue:57.0/255.0 alpha:1.0];
-            } else {
-            }
-            
+            self.backView.image = [UIImage imageNamed:@"cal_selected_middle"];
             break;
         }
         default:
