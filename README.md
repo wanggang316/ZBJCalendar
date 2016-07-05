@@ -1,5 +1,5 @@
 
-## ZBJCalendar [![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/wanggang316/ZBJCalendar/master/LICENSE)  [![GitHub release](https://img.shields.io/github/release/ZBJCalendar/ZBJCalendar.svg)](https://github.com/wanggang316/ZBJCalendar/releases)
+## ZBJCalendar [![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/wanggang316/ZBJCalendar/master/LICENSE) 
 
 > ZBJCalendar is a simple way to create a calendar view. The concept of ZBJCalendar is UICollectionView or UITableView.
 
