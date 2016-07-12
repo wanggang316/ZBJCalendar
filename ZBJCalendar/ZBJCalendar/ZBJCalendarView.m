@@ -83,6 +83,10 @@
     }
 
     self.collectionView.collectionViewLayout = layout;
+    
+    if (!CGPointEqualToPoint(self.collectionView.contentOffset, CGPointMake(self.contentOffset.x - self.contentInsets.left, self.contentOffset.y - self.contentInsets.top))) {
+        self.collectionView.contentOffset = CGPointMake(self.contentOffset.x - self.contentInsets.left, self.contentOffset.y - self.contentInsets.top);
+    }
 }
 
 #pragma mark - public method
@@ -158,6 +162,16 @@
         [indexSet addIndex:indexPath.section];
     }
     [self.collectionView reloadSections:indexSet];
+}
+
+- (void)setContentOffset:(CGPoint)contentOffset {
+    _contentOffset = contentOffset;
+    [self.collectionView setContentOffset:_contentOffset animated:YES];
+}
+
+- (void)setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated {
+    _contentOffset = contentOffset;
+    [self.collectionView setContentOffset:_contentOffset animated:YES];
 }
 
 
@@ -302,6 +316,12 @@
 
 #pragma mark- UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    //  `contentOffset.x` = `collectionView.contentOffset.x` + `collectionView.contentInset.left`
+    //  `contentOffset.y` = `collectionView.contentOffset.y` + `collectionView.contentInset.top`
+    
+    NSLog(@"x: %f, y: %f", scrollView.contentOffset.x, scrollView.contentOffset.y);
+    _contentOffset = CGPointMake(scrollView.contentOffset.x + self.collectionView.contentInset.left, scrollView.contentOffset.y + self.collectionView.contentInset.top);
+    
     if (self.delegate && [self.delegate respondsToSelector:@selector(scrollViewDidScroll:)]) {
         [self.delegate scrollViewDidScroll:scrollView];
     }

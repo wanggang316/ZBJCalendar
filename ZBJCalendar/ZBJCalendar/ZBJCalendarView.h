@@ -93,6 +93,12 @@ typedef CF_ENUM(NSInteger, ZBJCalendarViewHeadStyle) {
 @property (nonatomic, assign) CGFloat sectionFooterHeight;
 
 /**
+ *  Calendar offset which is not contains contentInset
+ *  `contentOffset.x` = `collectionView.contentOffset.x` + `collectionView.contentInset.left`
+ *  `contentOffset.y` = `collectionView.contentOffset.y` + `collectionView.contentInset.top`
+ */
+@property (nonatomic, assign) CGPoint contentOffset;
+/**
  * In calendar view, the cell width is calculated as by this expression, `cellWidth = (calendar.width - contentInsets.left - contentInsets.right) / 7`
    cellWidth is variable with the screen changing,
    So, we define a scale to calculate cellHeight is convenient, `cellScale = cellHeight / cellWidth`.
@@ -143,6 +149,14 @@ typedef CF_ENUM(NSInteger, ZBJCalendarViewHeadStyle) {
  *  @param months month element in this set should contains year and month
  */
 - (void)reloadItemsAtMonths:(NSSet<NSDate *> *)months;
+
+/**
+ *  Set content offset of calendar view
+ *
+ *  @param contentOffset
+ *  @param animated
+ */
+- (void)setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated;
 
 @end
 /**
