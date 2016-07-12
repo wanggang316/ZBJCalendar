@@ -25,7 +25,7 @@
     NSInteger weekDay = [firstDay weekday];
     NSDate *dateToReturn = nil;
     
-    if (indexPath.row < (weekDay-1)) {
+    if (indexPath.row < (weekDay - 1) || indexPath.row > weekDay - 1 + [NSDate numberOfDaysInMonth:firstDay] - 1) {
         dateToReturn = nil;
     } else {
         NSCalendar *calendar = [NSDate gregorianCalendar];
