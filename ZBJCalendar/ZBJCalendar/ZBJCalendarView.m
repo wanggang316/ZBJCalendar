@@ -50,7 +50,7 @@
                                            CGRectGetWidth(self.frame),
                                            CGRectGetHeight(self.frame) - CGRectGetMaxY(self.weekView.frame));
     
-    // cellWith
+    // cellWidth
     NSInteger collectionContentWidth = CGRectGetWidth(self.collectionView.frame) - self.contentInsets.left - self.contentInsets.right;
     NSInteger residue = collectionContentWidth % 7;
 
@@ -297,6 +297,33 @@
     return CGSizeZero;
 }
 
+#pragma mark- UIScrollViewDelegate
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(scrollViewDidScroll:)]) {
+        [self.delegate scrollViewDidScroll:scrollView];
+    }
+}
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(scrollViewWillBeginDragging:)]) {
+        [self.delegate scrollViewWillBeginDragging:scrollView];
+    }
+}
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
+        [self.delegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
+    }
+}
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(scrollViewWillBeginDecelerating:)]) {
+        [self.delegate scrollViewWillBeginDecelerating:scrollView];
+    }
+}
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
+        [self.delegate scrollViewDidEndDecelerating:scrollView];
+    }
+}
+
 #pragma mark - ZBJCalendarWeekViewDelegate
 - (void)calendarWeekView:(ZBJCalendarWeekView *)weekView configureWeekDayLabel:(UILabel *)dayLabel atWeekDay:(NSInteger)weekDay {
     if (self.dataSource && [self.dataSource respondsToSelector:@selector(calendarView:configureWeekDayLabel:atWeekDay:)]) {
@@ -329,7 +356,6 @@
     return _collectionView;
 }
 
-
 #pragma mark - setters
 - (void)setSelectionMode:(ZBJSelectionMode)selectionMode {
     _selectionMode = selectionMode;
@@ -351,6 +377,5 @@
         }
     }
 }
-
 
 @end

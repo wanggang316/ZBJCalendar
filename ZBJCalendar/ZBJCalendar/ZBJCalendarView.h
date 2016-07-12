@@ -91,6 +91,7 @@ typedef CF_ENUM(NSInteger, ZBJCalendarViewHeadStyle) {
 @property (nonatomic, assign) CGFloat weekViewHeight;
 @property (nonatomic, assign) CGFloat sectionHeaderHeight;
 @property (nonatomic, assign) CGFloat sectionFooterHeight;
+
 /**
  * In calendar view, the cell width is calculated as by this expression, `cellWidth = (calendar.width - contentInsets.left - contentInsets.right) / 7`
    cellWidth is variable with the screen changing,
@@ -120,11 +121,29 @@ typedef CF_ENUM(NSInteger, ZBJCalendarViewHeadStyle) {
  */
 - (void)reloadData;
 
+/**
+ *  Get corresponding cell with `date`
+ *
+ *  @param date
+ *
+ *  @return The corresponding cell.
+ */
 - (id)cellAtDate:(NSDate *)date;
 
+/**
+ *  Reload cell with `NSDate` set.
+ *
+ *  @param dates
+ */
 - (void)reloadItemsAtDates:(NSSet<NSDate *> *)dates;
 
+/**
+ *  Reload month section with `NSDate` set
+ *
+ *  @param months month element in this set should contains year and month
+ */
 - (void)reloadItemsAtMonths:(NSSet<NSDate *> *)months;
+
 @end
 /**
  *  This protocol represents the cell data model object. 
@@ -184,5 +203,16 @@ typedef CF_ENUM(NSInteger, ZBJCalendarViewHeadStyle) {
  *  @param date         current date
  */
 - (void)calendarView:(ZBJCalendarView *)calendarView didSelectDate:(NSDate *)date ofCell:(id)cell;
+
+/**
+ *  ScrollView delegate methods
+ *
+ *  @param scrollView UICollectionView
+ */
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView;
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView;
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate;
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView;
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView;
 
 @end
