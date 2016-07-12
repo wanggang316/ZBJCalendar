@@ -166,12 +166,14 @@
 
 - (void)setContentOffset:(CGPoint)contentOffset {
     _contentOffset = contentOffset;
-    [self.collectionView setContentOffset:_contentOffset animated:YES];
+    CGPoint origin = CGPointMake(_contentOffset.x - self.contentInsets.left, _contentOffset.y - self.contentInsets.top);
+    [self.collectionView setContentOffset:origin animated:YES];
 }
 
 - (void)setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated {
     _contentOffset = contentOffset;
-    [self.collectionView setContentOffset:_contentOffset animated:YES];
+    CGPoint origin = CGPointMake(_contentOffset.x - self.contentInsets.left, _contentOffset.y - self.contentInsets.top);
+    [self.collectionView setContentOffset:origin animated:YES];
 }
 
 
