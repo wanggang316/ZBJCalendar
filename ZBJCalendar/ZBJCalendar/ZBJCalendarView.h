@@ -98,6 +98,12 @@ typedef CF_ENUM(NSInteger, ZBJCalendarViewHeadStyle) {
  *  `contentOffset.y` = `collectionView.contentOffset.y` + `collectionView.contentInset.top`
  */
 @property (nonatomic, assign) CGPoint contentOffset;
+
+/**
+ *  Calendar content size which is not contains weekHeight in vertical.
+ */
+@property (nonatomic, assign, readonly) CGSize contentSize;
+
 /**
  * In calendar view, the cell width is calculated as by this expression, `cellWidth = (calendar.width - contentInsets.left - contentInsets.right) / 7`
    cellWidth is variable with the screen changing,

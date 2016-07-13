@@ -167,8 +167,9 @@
 - (void)setContentOffset:(CGPoint)contentOffset {
     _contentOffset = contentOffset;
     CGPoint origin = CGPointMake(_contentOffset.x - self.contentInsets.left, _contentOffset.y - self.contentInsets.top);
-    [self.collectionView setContentOffset:origin animated:YES];
+    [self.collectionView setContentOffset:origin];
 }
+
 
 - (void)setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated {
     _contentOffset = contentOffset;
@@ -176,6 +177,9 @@
     [self.collectionView setContentOffset:origin animated:YES];
 }
 
+- (CGSize)contentSize {
+    return self.collectionView.contentSize;
+}
 
 #pragma mark - private methods
 - (NSDate *)dateForCollectionView:(UICollectionView *)collection atIndexPath:(NSIndexPath *)indexPath {
@@ -320,8 +324,6 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     //  `contentOffset.x` = `collectionView.contentOffset.x` + `collectionView.contentInset.left`
     //  `contentOffset.y` = `collectionView.contentOffset.y` + `collectionView.contentInset.top`
-    
-    NSLog(@"x: %f, y: %f", scrollView.contentOffset.x, scrollView.contentOffset.y);
     _contentOffset = CGPointMake(scrollView.contentOffset.x + self.collectionView.contentInset.left, scrollView.contentOffset.y + self.collectionView.contentInset.top);
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(scrollViewDidScroll:)]) {
