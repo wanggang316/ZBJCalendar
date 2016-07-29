@@ -192,11 +192,16 @@
         NSInteger items = [NSDate numberOfNightsFromDate:firstDay toDate:lastDateOfMonth];
         if (indexPath.row > items) {
         } else {
+
             NSCalendar *calendar = [NSDate gregorianCalendar];
             NSDateComponents *components = [calendar components:NSCalendarUnitMonth | NSCalendarUnitDay fromDate:firstDay];
             [components setDay:indexPath.row];
             [components setMonth:indexPath.section];
             date = [calendar dateByAddingComponents:components toDate:firstDay options:0];
+            
+            if (![self.firstDate isSameMonthWithDate:date]) {
+                date = nil;
+            }
         }
     } else { // normal logic
         date = [NSDate dateAtIndexPath:indexPath firstDate:self.firstDate];

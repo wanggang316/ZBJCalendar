@@ -31,4 +31,6 @@
 - (BOOL)isToday;
 - (BOOL)isWeekend;
 
+//- (BOOL)isEqualToDate:(NSDate *)date toUnitGranularity:(NSCalendarUnit)unit;
+- (BOOL)isSameMonthWithDate:(NSDate *)date;
 @end

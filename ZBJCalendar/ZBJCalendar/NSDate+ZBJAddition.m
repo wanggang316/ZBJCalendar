@@ -149,6 +149,14 @@ const char * const JmoLocaleStoreKey = "jmo.locale";
     return NO;
 }
 
+- (BOOL)isSameMonthWithDate:(NSDate *)date {
+
+    NSCalendar *calendar = [self.class gregorianCalendar];
+    NSDateComponents *components = [calendar components:NSCalendarUnitMonth fromDate:self];
+    NSDateComponents *toComponents = [calendar components:NSCalendarUnitMonth fromDate:date];
+    
+    return components.month == toComponents.month;
+}
 
 
 
