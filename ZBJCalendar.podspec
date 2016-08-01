@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "ZBJCalendar"
-  s.version      = "0.0.8"
+  s.version      = "0.0.9"
   s.summary      = "ZBJCalendar is a simple calendar framework."
 
   s.homepage     = "https://github.com/wanggang316/ZBJCalendar"
