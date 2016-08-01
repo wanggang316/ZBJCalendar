@@ -70,14 +70,18 @@
     self.bottomLine.frame = CGRectMake(0, CGRectGetHeight(self.frame) - 0.5, CGRectGetWidth(self.frame), 0.5);
 }
 
-- (void)setDelegate:(id<ZBJCalendarWeekViewDelegate>)delegate {
-    _delegate = delegate;
+- (void)reloadWeekView {
     for (int i = 0; i < self.adjustedSymbols.count; i++) {
         UILabel *label = [self viewWithTag:10901 + i];
         if (label && _delegate && [_delegate respondsToSelector:@selector(calendarWeekView:configureWeekDayLabel:atWeekDay:)]) {
             [_delegate calendarWeekView:self configureWeekDayLabel:label atWeekDay:i];
         }
     }
+}
+
+- (void)setDelegate:(id<ZBJCalendarWeekViewDelegate>)delegate {
+    _delegate = delegate;
+    [self reloadWeekView];
 }
 
 - (void)setContentInsets:(UIEdgeInsets)contentInsets {

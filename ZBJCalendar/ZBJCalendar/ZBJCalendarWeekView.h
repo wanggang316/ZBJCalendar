@@ -32,6 +32,12 @@
  *  Default line at the bottom of week view.
  */
 @property (nonatomic, strong) CALayer *bottomLine;
+
+/**
+ *  reload week View manual
+ */
+- (void)reloadWeekView;
+
 @end
 
 @protocol ZBJCalendarWeekViewDelegate <NSObject>
