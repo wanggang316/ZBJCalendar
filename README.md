@@ -9,8 +9,11 @@
 
  * iOS7 or later
 
-## Installation
+## Installation with CocoaPods
 `pod 'ZBJCalendar'`
+
+## Installation with Carthage
+`github "wanggang316/ZBJCalendar"`
 
 ## Architecture
 
