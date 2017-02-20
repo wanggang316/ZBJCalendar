@@ -247,12 +247,13 @@
     
     // normal logic
     NSDate *firstDay = [NSDate dateForFirstDayInSection:section firstDate:self.firstDate];
-    NSInteger weekDay = [firstDay weekday] -1;
+    NSInteger firstWeekDay = [firstDay weekday] - [NSDate gregorianCalendar].firstWeekday;
+    if (firstWeekDay < 0) {
+        firstWeekDay += 7;
+    }
     
-    NSDate *lastDateOfMonth = [firstDay lastDateOfMonth];
-    NSInteger lastWeekDay = [lastDateOfMonth weekday];
-    
-    NSInteger items =  weekDay + [NSDate numberOfDaysInMonth:firstDay] + 7 - lastWeekDay;    return items;
+    NSInteger items =  firstWeekDay + [NSDate numberOfDaysInMonth:firstDay];
+    return items;
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {

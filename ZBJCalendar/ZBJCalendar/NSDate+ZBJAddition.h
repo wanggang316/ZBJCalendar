@@ -13,6 +13,7 @@
  */
 @interface NSDate (ZBJAddition)
 
++ (void)setGregorianCalendar:(NSCalendar *)gregorianCalendar;
 + (NSCalendar *)gregorianCalendar;
 + (NSLocale *)locale;
 

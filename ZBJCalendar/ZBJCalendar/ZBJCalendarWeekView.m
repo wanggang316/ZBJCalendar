@@ -27,12 +27,12 @@
         NSArray *weekdaySymbols = nil;
         
         weekdaySymbols = [dateFormatter veryShortWeekdaySymbols];
-
+        
         NSMutableArray *adjustedSymbols = [NSMutableArray arrayWithArray:weekdaySymbols];
-        for (NSInteger index = 0; index < (1 - calendar.firstWeekday + weekdaySymbols.count + 1); index++) {
-            NSString *lastObject = [adjustedSymbols lastObject];
-            [adjustedSymbols removeLastObject];
-            [adjustedSymbols insertObject:lastObject atIndex:0];
+        for (NSInteger index = 1; index < calendar.firstWeekday; index++) {
+            NSString *firstObject = [adjustedSymbols firstObject];
+            [adjustedSymbols removeObjectAtIndex:0];
+            [adjustedSymbols addObject:firstObject];
         }
         
         self.adjustedSymbols = adjustedSymbols;
