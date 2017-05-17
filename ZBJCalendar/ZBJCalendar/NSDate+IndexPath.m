@@ -33,7 +33,7 @@
     [components setMonth:indexPath.section];
     NSDate *dateToReturn = [calendar dateByAddingComponents:components toDate:[firstDate firstDateOfMonth] options:0];
     
-    if (dateToReturn < firstDay || dateToReturn > lastDate) {
+    if ([dateToReturn timeIntervalSinceNow] < [firstDay timeIntervalSinceNow] || [dateToReturn timeIntervalSinceNow] > [lastDate timeIntervalSinceNow]) {
         return nil;
     }
     return dateToReturn;
