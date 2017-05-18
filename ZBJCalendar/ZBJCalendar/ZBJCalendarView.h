@@ -25,7 +25,7 @@ typedef CF_ENUM(NSInteger, ZBJCalendarViewHeadStyle) {
 /**
  * `ZBJCalendarView` provide a convenience way to write a calendar view. The concept of `ZBJCalendarView` is `UICollectionView` or `UITableView`, some properties contains `dataSource` which to used to custom cells or headers and `delegate` which used to handle the display and behaviour of the day cells.
  *
- * The structure of `ZBJCalendarView` is simple, it contains a `weekView` as public and a `collectionView` as private.
+ * The structure of `ZBJCalendarView` is simple, it contains a `weekView` as public.
     - The `weekView` is an instance of `ZBJCalendarWeekView` that you can implements the methods in `dataSource` about week view.
     - The `collectionView` is an instance of `UICollectionView`, the UICollectionView cell correspond the day of the calendar.
  *
@@ -36,6 +36,11 @@ typedef CF_ENUM(NSInteger, ZBJCalendarViewHeadStyle) {
  *
  */
 @interface ZBJCalendarView : UIView
+
+/**
+ CollectionView is public
+ */
+@property (nonatomic, strong) UICollectionView *collectionView;
 
 /**
  * A reference of `ZBJCalendarDataSource` used to custom calendar day cells.
