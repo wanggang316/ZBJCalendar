@@ -12,7 +12,6 @@
 
 @interface ZBJCalendarView () <UICollectionViewDataSource, UICollectionViewDelegate, ZBJCalendarWeekViewDelegate>
 
-@property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSString *cellIdentifier;
 @property (nonatomic, strong) NSString *sectionHeaderIdentifier;
 @property (nonatomic, strong) NSString *sectionFooterIdentifier;
